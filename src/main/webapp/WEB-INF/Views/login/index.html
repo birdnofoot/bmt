@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<!--
+Copyright (C) 2015 Uhlig e Korovsky Tecnologia Ltda - ME
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<html>
+    <head th:replace="fragments/header :: head">
+        <title th:text="#{system.name}">Bacula Manager Tool</title>
+
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <meta name="description" content=""/>
+        <meta name="author" content="Uhlig &amp; Korovsky Tecnologia Ltda - ME"/>
+
+        <link rel="icon" href="../../../images/favicon.gif" th:href="@{/images/favicon.gif}"/>
+    </head>
+    <body>
+        <div><h1>LOGIN</h1></div>
+        <div role="main">
+            <th:block th:if="${error != null}">
+                <div th:replace="fragments/alerts :: alert (type='danger', title=#{error.title}, message=${session['SPRING_SECURITY_LAST_EXCEPTION'].message})"  th:remove="tag">&nbsp;</div>
+            </th:block>
+            <th:block th:if="${logout != null}">
+                <div th:replace="fragments/alerts :: alert (type='success', title='', message=#{login.logout})"  th:remove="tag">&nbsp;</div>
+            </th:block>
+            <div>
+                <form role="form" accept-charset="UTF-8" method="post" th:action="@{/login/check}">
+                    <fieldset>
+                        <div class="form-group">
+                            <input id="username" name="username" type="text" placeholder="Username" required="true"/>
+                        </div>
+                        <div class="form-group">
+                            <input id="password" name="password" type="password" placeholder="Password" value=""/>
+                        </div>
+                        <div class="control-group">
+                            <div class="controls">
+                                <button id="submitbutton" name="submitbutton" type="submit">Access</button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </body>
+</html>

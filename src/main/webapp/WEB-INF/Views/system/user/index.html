@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<!--
+Copyright (C) 2015 Uhlig e Korovsky Tecnologia Ltda - ME
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<html>
+    <head th:replace="fragments/header :: head">
+        <title th:text="#{system.name}">Bacula Manager Tool</title>
+
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <meta name="description" content=""/>
+        <meta name="author" content="Uhlig &amp; Korovsky Tecnologia Ltda - ME"/>
+
+        <link rel="icon" href="../../../images/favicon.gif" th:href="@{/images/favicon.gif}"/>
+    </head>
+    <body>
+        <div th:replace="fragments/navbar :: navbar">&nbsp;</div>
+        <div>
+            <a href="#" th:href="@{/system/user/add}" sec:authorize="hasAnyRole('ROLE_SYSTEM_USER_ADD')">Add new user</a>
+        </div> 
+        <table id="tbusers">
+            <thead>
+                <th>Name</th>
+                <th>E-Mail</th>
+                <th>Enabled</th>
+                <th>Actions</th>
+            </thead>
+            <tbody>
+                <tr th:if="${page == null}">
+                    <td colspan="4">No users found</td>
+                </tr>
+                <tr th:if="${page != null}" th:each="user : ${page}">
+                    <td th:text="${{user.firstName}}">firstName</td>
+                    <td th:text="${{user.email}}">E-Mail</td>
+                    <td th:text="${user.enabled}? 'active' : 'inactive'">active</td>
+                    <td>
+                        <div class="pull-right action-buttons">
+                            <a href="#" th:href="@{'/system/user/edit/'+${user.id}}" sec:authorize="hasAnyRole('ROLE_SYSTEM_USER_EDIT')">Edit</a>
+                            <a href="#" th:href="@{'/system/user/delete/'+${user.id}}" sec:authorize="hasAnyRole('ROLE_SYSTEM_USER_DELETE')">Delete</a>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div th:replace="fragments/footer :: footer">&nbsp;</div>
+    </body>
+</html>
