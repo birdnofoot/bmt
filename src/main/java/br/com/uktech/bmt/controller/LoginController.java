@@ -31,9 +31,14 @@ import org.springframework.web.servlet.ModelAndView;
  * @author Carlos Alberto Cipriano Korovsky <carlos.korovsky@uktech.com.br>
  */
 @Controller
-public class LoginController {
+public class LoginController implements BasicModuleController {
     
-    private final Logger logger = LoggerFactory.getLogger(LoginController.class);
+    private final Logger logger = LoggerFactory.getLogger(LoginController.class);    
+    
+    @Override
+    public String getModule() {
+        return "login";
+    }
     
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public ModelAndView login() {

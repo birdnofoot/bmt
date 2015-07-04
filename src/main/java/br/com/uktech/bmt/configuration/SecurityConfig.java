@@ -84,6 +84,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
             .antMatchers("/login/**").permitAll()
             .antMatchers("/logout/**").permitAll()
+            .antMatchers("/system/user").hasRole("SYSTEM_USER_READ")
+            .antMatchers("/system/user/add").hasRole("SYSTEM_MODULE_ADD")
+            .antMatchers("/system/user/save").hasRole("SYSTEM_MODULE_ADD")
+            .antMatchers("/system/user/edit/*").hasRole("SYSTEM_MODULE_EDIT")
+            .antMatchers("/system/user/update").hasRole("SYSTEM_MODULE_EDIT")
+            .antMatchers("/system/user/delete/*").hasRole("SYSTEM_USER_DELETE")
             .antMatchers("/").authenticated()
             .anyRequest().authenticated();
 

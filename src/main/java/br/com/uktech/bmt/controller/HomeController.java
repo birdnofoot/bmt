@@ -30,15 +30,24 @@ import org.springframework.web.servlet.ModelAndView;
  * @author Carlos Alberto Cipriano Korovsky <carlos.korovsky@uktech.com.br>
  */
 @Controller
-public class HomeController {
+public class HomeController implements BasicCategoryModuleController {
     
     private final Logger logger = LoggerFactory.getLogger(HomeController.class);
-    
+
+    @Override
+    public String getCategory() {
+        return "dashboard";
+    }
+
+    @Override
+    public String getModule() {
+        return "home";
+    }
+
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public ModelAndView index(HttpServletRequest request, HttpServletResponse response) {
         ModelAndView mav;
         mav = new ModelAndView("home/index");
-        mav.addObject("module", "home");
         return mav;
     }
     

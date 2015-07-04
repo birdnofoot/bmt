@@ -17,6 +17,7 @@
 package br.com.uktech.bmt.service;
 
 import br.com.uktech.bmt.dto.SystemUserDto;
+import br.com.uktech.bmt.dto.SystemUserFormDto;
 import br.com.uktech.bmt.model.SystemUser;
 import br.com.uktech.bmt.model.repository.SystemUserRepository;
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,7 +39,36 @@ public class SystemUserServiceImpl implements SystemUserService {
     private SystemUserRepository repository;
     
     @Autowired
+    private PasswordEncoder encoder;
+    
+    @Autowired
     private Mapper mapper;
+
+    @Override
+    public SystemUserFormDto newSystemUser() {
+        return new SystemUserFormDto();
+    }
+    
+    @Override
+    public SystemUserDto save(SystemUserFormDto sysuser) {
+        SystemUser user = new SystemUser();
+        user.setId(sysuser.getId());
+        user.setFirstName(sysuser.getFirstName());
+        user.setMiddleName(sysuser.getMiddleName());
+        user.setLastName(sysuser.getLastName());
+        user.setEmail(sysuser.getEmail());
+        user.setPassword(encoder.encode(sysuser.getPassword()));
+        user.setAccountExpiration(sysuser.getAccountExpiration());
+        user.setAccountCanExpire(sysuser.getAccountCanExpire());
+        user.setLocked(sysuser.getLocked());
+        user.setCredentialExpiration(sysuser.getCredentialExpiration());
+        user.setCredentialCanExpire(sysuser.getCredentialCanExpire());
+        user.setEnabled(sysuser.getEnabled());
+        user = repository.save(user);
+        SystemUserDto userDto = new SystemUserDto();
+        mapper.map(user, userDto);
+        return userDto;
+    }
     
     @Transactional(readOnly = true)
     @Override

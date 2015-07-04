@@ -1,0 +1,22 @@
+{
+    "elements": {},
+    "attributes": {
+        "th:text": {
+            "context": "title"
+        },
+        "th:if": {},
+        "th:checked": {
+            "context": "input"
+        },
+        "th:action": {
+            "context": "form"
+        },
+        "th:replace": {},
+        "th:href": {
+            "context": "link"
+        },
+        "th:value": {
+            "context": "input"
+        }
+    }
+}

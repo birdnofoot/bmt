@@ -32,20 +32,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <div>
             <a href="#" th:href="@{/system/user/add}" sec:authorize="hasAnyRole('ROLE_SYSTEM_USER_ADD')">Add new user</a>
         </div> 
-        <table id="tbusers">
+        <table id="tbusers" border="1" style="width:100%">
             <thead>
-                <th>Name</th>
-                <th>E-Mail</th>
-                <th>Enabled</th>
-                <th>Actions</th>
+                <th th:text="#{view.system.user[lastName]} + ', ' + #{view.system.user[firstName]}">Last name, First name</th>
+                <th th:text="#{view.system.user[email]}">E-Mail</th>
+                <th th:text="#{view.system.user[enabled]}">Enabled</th>
+                <th th:text="#{view.default[action]}">Action</th>
             </thead>
             <tbody>
                 <tr th:if="${page == null}">
                     <td colspan="4">No users found</td>
                 </tr>
                 <tr th:if="${page != null}" th:each="user : ${page}">
-                    <td th:text="${{user.firstName}}">firstName</td>
-                    <td th:text="${{user.email}}">E-Mail</td>
+                   
+                    <td th:text="${user.lastName} + ', ' + ${user.firstName}">firstName</td>
+                    <td th:text="${user.email}">E-Mail</td>
                     <td th:text="${user.enabled}? 'active' : 'inactive'">active</td>
                     <td>
                         <div class="pull-right action-buttons">

@@ -14,20 +14,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package br.com.uktech.bmt.service;
+package br.com.uktech.bmt.controller;
 
-import br.com.uktech.bmt.dto.SystemUserDto;
-import br.com.uktech.bmt.dto.SystemUserFormDto;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 /**
  *
  * @author Carlos Alberto Cipriano Korovsky <carlos.korovsky@uktech.com.br>
  */
-public interface SystemUserService {
-    public SystemUserFormDto newSystemUser();
-    public SystemUserDto save(SystemUserFormDto sysuser);
-    public SystemUserDto getUserByEmail(String email);
-    public Page<SystemUserDto> searchAllUsers(Pageable p);
+public interface BasicCategoryModuleController extends BasicModuleController {
+    
+    @ModelAttribute("category")
+    public String getCategory();
+    
 }

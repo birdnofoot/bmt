@@ -57,7 +57,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         registry.addResourceHandler("/scripts/**").addResourceLocations("/scripts/");
         registry.addResourceHandler("/styles/**").addResourceLocations("/styles/");
         registry.addResourceHandler("/fonts/**").addResourceLocations("/fonts/");
-        registry.addResourceHandler("/gtfs/**").addResourceLocations("/gtfs/");
     }
     
     @Bean
