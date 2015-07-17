@@ -14,14 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package br.com.uktech.bmt.bacula;
+package br.com.uktech.bmt.bacula.lib;
 
-import br.com.uktech.bmt.bacula.lib.DataPackage;
-import br.com.uktech.bmt.bacula.lib.Constants;
-import br.com.uktech.bmt.bacula.lib.Authentication;
+import br.com.uktech.bmt.bacula.bean.Version;
 import br.com.uktech.bmt.bacula.exceptions.BaculaAuthenticationException;
 import br.com.uktech.bmt.bacula.exceptions.BaculaInvalidDataSize;
 import br.com.uktech.bmt.bacula.exceptions.BaculaNoInteger;
+import br.com.uktech.bmt.bacula.lib.parser.ParseVersion;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -192,21 +191,15 @@ public class ConnectionImpl implements Connection {
     }
     
     @Override
-    public byte[] getDirectorVersion() {
+    public Version getDirectorVersion() {
         DataPackage data = new DataPackage(Constants.Connection.Commands.VERSION);
-        byte[] version = new byte[3];
-        
+        Version version = null;
         try {
             DataPackage returnedData = this.sendAndReceive(data, false);
-            version[0] = 5;
-            version[1] = 0;
-            version[2] = 3;
+            version = ParseVersion.parse(returnedData.getData());
         }
         catch (IOException | BaculaInvalidDataSize | BaculaNoInteger ex) {
             this.logger.error(ex.getLocalizedMessage());
-            version[0] = 0;
-            version[1] = 0;
-            version[2] = 0;
         }
         
         return version;

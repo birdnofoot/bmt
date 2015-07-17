@@ -14,9 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package br.com.uktech.bmt.bacula;
+package br.com.uktech.bmt.bacula.lib;
 
-import br.com.uktech.bmt.bacula.lib.DataPackage;
+import br.com.uktech.bmt.bacula.bean.Version;
 import br.com.uktech.bmt.bacula.exceptions.BaculaAuthenticationException;
 import br.com.uktech.bmt.bacula.exceptions.BaculaInvalidDataSize;
 import br.com.uktech.bmt.bacula.exceptions.BaculaNoInteger;
@@ -40,6 +40,6 @@ public interface Connection {
     
     public String getHostname();
     
-    public byte[] getDirectorVersion();
+    public Version getDirectorVersion();
     
 }

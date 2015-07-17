@@ -16,6 +16,7 @@
  */
 package br.com.uktech.bmt.bacula.bean;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -25,7 +26,7 @@ import java.util.Objects;
  *
  * @author Carlos Alberto Cipriano Korovsky <carlos.korovsky@uktech.com.br>
  */
-public class StatusDirector {
+public class StatusDirector implements Serializable {
     
     private String banner;
     private Calendar upSince;

@@ -16,7 +16,6 @@
  */
 package br.com.uktech.bmt.bacula.lib;
 
-import br.com.uktech.bmt.bacula.Connection;
 import br.com.uktech.bmt.bacula.exceptions.BaculaAuthenticationException;
 import br.com.uktech.bmt.bacula.exceptions.BaculaAuthenticationFailed;
 import br.com.uktech.bmt.bacula.exceptions.BaculaInvalidDataSize;

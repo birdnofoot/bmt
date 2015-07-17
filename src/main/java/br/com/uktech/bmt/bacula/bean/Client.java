@@ -16,10 +16,12 @@
  */
 package br.com.uktech.bmt.bacula.bean;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Carlos Alberto Cipriano Korovsky <carlos.korovsky@uktech.com.br>
  */
-public class Client {
+public class Client implements Serializable {
     
 }

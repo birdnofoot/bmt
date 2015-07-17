@@ -16,6 +16,9 @@
  */
 package br.com.uktech.bmt.bacula;
 
+import br.com.uktech.bmt.bacula.bean.Version;
+import br.com.uktech.bmt.bacula.lib.Connection;
+import br.com.uktech.bmt.bacula.lib.ConnectionFactory;
 import br.com.uktech.bmt.bacula.console.BaculaConsole5;
 import br.com.uktech.bmt.bacula.console.BaculaConsole7;
 import br.com.uktech.bmt.bacula.exceptions.BaculaAuthenticationException;
@@ -51,8 +54,8 @@ public class BaculaConsoleFactory {
         if (console == null) {
             Connection connection = ConnectionFactory.getFactory().getConnection(address, port, password);
             connection.connect();
-            byte[] version = connection.getDirectorVersion();
-            switch (version[0]) {
+            Version version = connection.getDirectorVersion();
+            switch (version.getMajor()) {
                 case 5: 
                     console = new BaculaConsole5(directorName, connection);
                     break;

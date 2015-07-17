@@ -62,7 +62,7 @@ public interface Constants {
         }
 
         interface Messages {
-            public static String OK = new StringBuffer("1000 OK: ").append(Constants.Bmt.APP_NAME).append(" Version: ").append(Constants.Bmt.VERSION).append("\n").toString();
+            //public static String OK = new StringBuffer("1000 OK: ").append(Constants.Bmt.APP_NAME).append(" Version: ").append(Constants.Bmt.VERSION).append("\n").toString();
             public static String HELLO = new StringBuffer("Hello *UserAgent* calling\n").toString();
             public static String AUTH_OK = "1000 OK auth\n";
             public static String YOU_HAVE_MESSAGES = "You have messages.";

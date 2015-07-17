@@ -17,6 +17,7 @@
 package br.com.uktech.bmt.bacula.bean;
 
 import br.com.uktech.bmt.bacula.lib.Constants;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -26,7 +27,7 @@ import java.util.Objects;
  *
  * @author Carlos Alberto Cipriano Korovsky <carlos.korovsky@uktech.com.br>
  */
-public class Job {
+public class Job implements Serializable {
     
     private int id;
     private String name;

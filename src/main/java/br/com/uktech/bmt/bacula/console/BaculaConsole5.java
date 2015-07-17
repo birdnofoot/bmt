@@ -16,7 +16,7 @@
  */
 package br.com.uktech.bmt.bacula.console;
 
-import br.com.uktech.bmt.bacula.Connection;
+import br.com.uktech.bmt.bacula.lib.Connection;
 import br.com.uktech.bmt.bacula.BaculaConsole;
 import br.com.uktech.bmt.bacula.bean.Client;
 import br.com.uktech.bmt.bacula.bean.StatusClient;
