@@ -16,6 +16,7 @@
  */
 package br.com.uktech.bmt.configuration;
 
+import br.com.uktech.bmt.dozer.BaculaDirectorMapper;
 import br.com.uktech.bmt.dozer.SystemModuleMapper;
 import br.com.uktech.bmt.dozer.SystemUserMapper;
 import br.com.uktech.bmt.dozer.SystemUserPermissionIdMapper;
@@ -46,6 +47,7 @@ public class MapperConfig {
         mappers.add(new SystemUserMapper());
         mappers.add(new SystemUserPermissionMapper());
         mappers.add(new SystemUserPermissionIdMapper());
+        mappers.add(new BaculaDirectorMapper());
         return mappers;
     }
     

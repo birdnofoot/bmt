@@ -1,0 +1,2 @@
+INSERT INTO public.bacula_director(id_bacula_director, enabled, hostname, name, password, port) VALUES (nextval('seq_bacula_director'), true, '192.168.103.1', 'backup-00-dir', 'H6K-Ofy8725jCAoc7S0HmrYypiPHJSJxw', 9101);
+INSERT INTO public.bacula_director(id_bacula_director, enabled, hostname, name, password, port) VALUES (nextval('seq_bacula_director'), true, '127.0.0.1', 'localhost-dir', 'BWy4h3EcfCZ9fJJj1Qcgd3sS2GAt7CW30', 9101);

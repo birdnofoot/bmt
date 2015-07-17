@@ -90,6 +90,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/system/user/edit/*").hasRole("SYSTEM_MODULE_EDIT")
             .antMatchers("/system/user/update").hasRole("SYSTEM_MODULE_EDIT")
             .antMatchers("/system/user/delete/*").hasRole("SYSTEM_USER_DELETE")
+            .antMatchers("/bacula/director").hasRole("BACULA_DIRECTOR_READ")
+            .antMatchers("/bacula/director/status/*").hasRole("BACULA_DIRECTOR_READ")
+            .antMatchers("/bacula/director/add").hasRole("BACULA_DIRECTOR_ADD")
+            .antMatchers("/bacula/director/save").hasRole("BACULA_DIRECTOR_ADD")
+            .antMatchers("/bacula/director/edit/*").hasRole("BACULA_DIRECTOR_EDIT")
+            .antMatchers("/bacula/director/update").hasRole("BACULA_DIRECTOR_EDIT")
+            .antMatchers("/bacula/director/delete/*").hasRole("BACULA_DIRECTOR_DELETE")
             .antMatchers("/").authenticated()
             .anyRequest().authenticated();
 

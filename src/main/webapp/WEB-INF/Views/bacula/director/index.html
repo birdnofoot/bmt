@@ -30,28 +30,29 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <body>
         <div th:replace="fragments/navbar :: navbar">&nbsp;</div>
         <div>
-            <a href="#" th:href="@{/system/user/add}" sec:authorize="hasAnyRole('ROLE_SYSTEM_USER_ADD')">Add new user</a>
+            <a href="#" th:href="@{/bacula/director/add}" sec:authorize="hasAnyRole('ROLE_BACULA_DIRECTOR_ADD')">Add new director</a>
         </div> 
         <table id="tbbaculadirectors" border="1" style="width:100%">
             <thead>
-                <th th:text="#{view.system.user[lastName]} + ', ' + #{view.system.user[firstName]}">Last name, First name</th>
-                <th th:text="#{view.system.user[email]}">E-Mail</th>
-                <th th:text="#{view.system.user[enabled]}">Enabled</th>
+                <th th:text="#{view.bacula.director[name]}">Name</th>
+                <th th:text="#{view.bacula.director[hostname]}">Hostname</th>
+                <th th:text="#{view.bacula.director[enabled]}">Enabled</th>
                 <th th:text="#{view.default[action]}">Action</th>
             </thead>
             <tbody>
                 <tr th:if="${page == null}">
-                    <td colspan="4">No users found</td>
+                    <td colspan="4">No bacula directors configured!</td>
                 </tr>
-                <tr th:if="${page != null}" th:each="user : ${page}">
+                <tr th:if="${page != null}" th:each="director : ${page}">
                    
-                    <td th:text="${user.lastName} + ', ' + ${user.firstName}">firstName</td>
-                    <td th:text="${user.email}">E-Mail</td>
-                    <td th:text="${user.enabled}? 'active' : 'inactive'">active</td>
+                    <td th:text="${director.name}">firstName</td>
+                    <td th:text="${director.hostname}">E-Mail</td>
+                    <td th:text="${director.enabled}? 'active' : 'inactive'">active</td>
                     <td>
                         <div class="pull-right action-buttons">
-                            <a href="#" th:href="@{'/system/user/edit/'+${user.id}}" sec:authorize="hasAnyRole('ROLE_SYSTEM_USER_EDIT')">Edit</a>
-                            <a href="#" th:href="@{'/system/user/delete/'+${user.id}}" sec:authorize="hasAnyRole('ROLE_SYSTEM_USER_DELETE')">Delete</a>
+                            <a href="#" th:href="@{'/bacula/director/edit/'+${director.id}}" sec:authorize="hasAnyRole('ROLE_BACULA_DIRECTOR_EDIT')">Edit</a>
+                            <a href="#" th:href="@{'/bacula/director/delete/'+${director.id}}" sec:authorize="hasAnyRole('ROLE_BACULA_DIRECTOR_DELETE')">Delete</a>
+                            <a href="#" th:href="@{'/bacula/director/status/'+${director.id}}" sec:authorize="hasAnyRole('ROLE_BACULA_DIRECTOR_READ')">Status</a>
                         </div>
                     </td>
                 </tr>

@@ -16,10 +16,22 @@
  */
 package br.com.uktech.bmt.bacula;
 
+import br.com.uktech.bmt.bacula.bean.Client;
+import br.com.uktech.bmt.bacula.bean.StatusClient;
+import br.com.uktech.bmt.bacula.bean.StatusDirector;
+import java.util.List;
+
 /**
  *
  * @author Carlos Alberto Cipriano Korovsky <carlos.korovsky@uktech.com.br>
  */
 public interface BaculaConsole {
     
+    public String getDirectorName();
+    
+    public StatusDirector getStatusDirector();
+    
+    public List<Client> getClients();
+    
+    public StatusClient getStatusClient(String clientName);
 }

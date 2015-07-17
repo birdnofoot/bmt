@@ -67,7 +67,8 @@ public class PersistenceConfig {
         properties.setProperty("hibernate.hbm2ddl.import_files", 
                           "/META-INF/sql/system_module_data.sql,"
                         + "/META-INF/sql/system_user_data.sql,"
-                        + "/META-INF/sql/system_user_permission.sql");
+                        + "/META-INF/sql/system_user_permission.sql,"
+                        + "/META-INF/sql/bacula_director.sql");
         
         LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
         factory.setJpaVendorAdapter(vendorAdapter);

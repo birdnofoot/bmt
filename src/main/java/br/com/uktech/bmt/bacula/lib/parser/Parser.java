@@ -14,32 +14,36 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package br.com.uktech.bmt.bacula;
-
-import br.com.uktech.bmt.bacula.lib.DataPackage;
-import br.com.uktech.bmt.bacula.exceptions.BaculaAuthenticationException;
-import br.com.uktech.bmt.bacula.exceptions.BaculaInvalidDataSize;
-import br.com.uktech.bmt.bacula.exceptions.BaculaNoInteger;
-import java.io.IOException;
+package br.com.uktech.bmt.bacula.lib.parser;
 
 /**
  *
  * @author Carlos Alberto Cipriano Korovsky <carlos.korovsky@uktech.com.br>
  */
-public interface Connection {
-    
-    public static int MAX_PACKET_SIZE = 1000000;
-    
-    public Boolean isConnected();
-    
-    public Boolean connect() throws IOException, BaculaAuthenticationException;
-    
-    public void disconnect();
-    
-    public DataPackage sendAndReceive(DataPackage data, Boolean handleSignals) throws IOException, BaculaInvalidDataSize, BaculaNoInteger;
-    
-    public String getHostname();
-    
-    public byte[] getDirectorVersion();
-    
+public class Parser {
+
+    private int position;
+    private String input;
+
+    public Parser(String input) {
+        this.input = input;
+        position = 0;
+    }
+
+    public String getToken(String delimiter) {
+        if (position >= input.length()) {
+            return null;
+        }
+        int p = input.indexOf(delimiter, position);
+        String r;
+        if (p == -1) {
+            r = input.substring(position);
+            position = input.length();
+        } else {
+            p++;
+            r = input.substring(position, p);
+            position = p;
+        }
+        return r;
+    }
 }

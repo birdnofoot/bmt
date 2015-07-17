@@ -14,32 +14,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package br.com.uktech.bmt.bacula;
+package br.com.uktech.bmt.service;
 
-import br.com.uktech.bmt.bacula.lib.DataPackage;
-import br.com.uktech.bmt.bacula.exceptions.BaculaAuthenticationException;
-import br.com.uktech.bmt.bacula.exceptions.BaculaInvalidDataSize;
-import br.com.uktech.bmt.bacula.exceptions.BaculaNoInteger;
-import java.io.IOException;
+import br.com.uktech.bmt.bacula.bean.StatusDirector;
+import br.com.uktech.bmt.dto.bacula.director.BaculaDirectorDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 /**
  *
  * @author Carlos Alberto Cipriano Korovsky <carlos.korovsky@uktech.com.br>
  */
-public interface Connection {
+public interface BaculaDirectorService {
     
-    public static int MAX_PACKET_SIZE = 1000000;
-    
-    public Boolean isConnected();
-    
-    public Boolean connect() throws IOException, BaculaAuthenticationException;
-    
-    public void disconnect();
-    
-    public DataPackage sendAndReceive(DataPackage data, Boolean handleSignals) throws IOException, BaculaInvalidDataSize, BaculaNoInteger;
-    
-    public String getHostname();
-    
-    public byte[] getDirectorVersion();
+    public BaculaDirectorDto newBaculaDirector();
+    public BaculaDirectorDto save(BaculaDirectorDto baculadirdto);
+    public Page<BaculaDirectorDto> searchAllBaculaDirectors(Pageable p);
+    public BaculaDirectorDto getBaculaDirectorById(Long id);
+    public StatusDirector getStatusDirector(BaculaDirectorDto baculadirdto);
     
 }

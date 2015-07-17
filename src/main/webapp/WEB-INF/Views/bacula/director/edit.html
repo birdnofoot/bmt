@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <html>
-    <head>
+    <head th:replace="fragments/header :: head">
         <title th:text="#{system.name}">Bacula Manager Tool</title>
 
         <meta charset="utf-8"/>
@@ -25,16 +25,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <meta name="description" content=""/>
         <meta name="author" content="Uhlig &amp; Korovsky Tecnologia Ltda - ME"/>
 
-        <link rel="icon" href="../../../images/favicon.gif" th:href="@{/images/favicon.gif}"/>
+        <link rel="icon" href="../../../../images/favicon.gif" th:href="@{/images/favicon.gif}"/>
     </head>
     <body>
-        <nav role="navigation" th:fragment="navbar">
-            <form accept-charset="UTF-8" role="form" th:action="@{/logout}" method="post">
-                <button id="logoutbutton" name="logoutbutton" type="submit">Logout</button>
-            </form>
-            <a href="#" th:href="@{/}">Home</a>
-            <a href="#" th:href="@{/system/user}" sec:authorize="hasAnyRole('ROLE_SYSTEM_USER_READ')">System/User</a>
-            <a href="#" th:href="@{/bacula/director}" sec:authorize="hasAnyRole('ROLE_BACULA_DIRECTOR_READ')">Bacula/Director</a>
-        </nav>
+        <div th:replace="fragments/navbar :: navbar">&nbsp;</div>
+        
+        <div th:replace="fragments/footer :: footer">&nbsp;</div>
     </body>
 </html>

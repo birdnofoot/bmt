@@ -18,9 +18,22 @@ package br.com.uktech.bmt.bacula.console;
 
 import br.com.uktech.bmt.bacula.Connection;
 import br.com.uktech.bmt.bacula.BaculaConsole;
+import br.com.uktech.bmt.bacula.bean.Client;
+import br.com.uktech.bmt.bacula.bean.StatusClient;
+import br.com.uktech.bmt.bacula.bean.StatusDirector;
+import br.com.uktech.bmt.bacula.exceptions.BaculaInvalidDataSize;
+import br.com.uktech.bmt.bacula.exceptions.BaculaNoInteger;
+import br.com.uktech.bmt.bacula.lib.Constants;
+import br.com.uktech.bmt.bacula.lib.DataPackage;
+import br.com.uktech.bmt.bacula.lib.parser.ParseStatusDirector;
+import java.io.IOException;
+import java.util.List;
+import org.slf4j.LoggerFactory;
 
 
 public class BaculaConsole5 implements BaculaConsole {
+    
+    private final org.slf4j.Logger logger = LoggerFactory.getLogger(BaculaConsole5.class);
     
     private final String directorName;
     private final Connection connection;
@@ -28,5 +41,35 @@ public class BaculaConsole5 implements BaculaConsole {
     public BaculaConsole5(String directorName, Connection connection) {
         this.directorName = directorName;
         this.connection = connection;
+    }
+
+    @Override
+    public String getDirectorName() {
+        return this.directorName;
+    }
+    
+    @Override
+    public StatusDirector getStatusDirector() {
+        StatusDirector sd;
+        DataPackage data = new DataPackage(Constants.Connection.Commands.STATUS_DIRECTOR);
+        try {
+            DataPackage receivedData = this.connection.sendAndReceive(data, true);
+            sd = new ParseStatusDirector().parse(receivedData.getData());
+        }
+        catch (IOException | BaculaInvalidDataSize | BaculaNoInteger ex) {
+            this.logger.error(ex.getLocalizedMessage());
+            return null;
+        }
+        return sd;
+    }
+
+    @Override
+    public List<Client> getClients() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public StatusClient getStatusClient(String clientName) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

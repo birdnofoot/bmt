@@ -38,6 +38,10 @@ public interface Constants {
         public static String EMAIL_AUTHOR = "contato@uktech.com.br";
     }
     
+    interface Bacula {
+        public static String DATE_FORMAT = "dd-MMM-yy HH:mm";
+    }
+    
     interface Connection {
         interface Tokens {
             public static String AUTH = "auth";

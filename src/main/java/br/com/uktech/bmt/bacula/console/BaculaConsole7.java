@@ -18,19 +18,18 @@ package br.com.uktech.bmt.bacula.console;
 
 import br.com.uktech.bmt.bacula.Connection;
 import br.com.uktech.bmt.bacula.BaculaConsole;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Carlos Alberto Cipriano Korovsky <carlos.korovsky@uktech.com.br>
  */
-public class BaculaConsole7 implements BaculaConsole {
-    
-    private final String directorName;
-    private final Connection connection;
+public class BaculaConsole7 extends BaculaConsole5 implements BaculaConsole {
+
+    private final org.slf4j.Logger logger = LoggerFactory.getLogger(BaculaConsole7.class);
     
     public BaculaConsole7(String directorName, Connection connection) {
-        this.directorName = directorName;
-        this.connection = connection;
+        super(directorName, connection);
     }
     
 }
