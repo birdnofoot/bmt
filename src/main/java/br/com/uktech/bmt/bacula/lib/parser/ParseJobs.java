@@ -16,7 +16,7 @@
  */
 package br.com.uktech.bmt.bacula.lib.parser;
 
-import br.com.uktech.bmt.bacula.bean.Job;
+import br.com.uktech.bmt.bacula.bean.BaculaJob;
 import br.com.uktech.bmt.bacula.lib.Constants;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -30,8 +30,8 @@ import java.util.regex.Pattern;
  */
 public class ParseJobs {
     
-    public Job parseRunningJob(String linha) {
-        Job job = new Job();
+    public BaculaJob parseRunningJob(String linha) {
+        BaculaJob job = new BaculaJob();
         Pattern p = Pattern.compile("^( *(\\d+) +(Full|Incr) +(.[^ ]+) (.+))");
         Matcher m = p.matcher(linha);
         while(m.find()) {
@@ -43,8 +43,8 @@ public class ParseJobs {
         return job;
     }
     
-    public Job parseTerminadedJob(String linha) {
-        Job job = new Job();
+    public BaculaJob parseTerminadedJob(String linha) {
+        BaculaJob job = new BaculaJob();
         Pattern p = Pattern.compile("^( *(\\d+) +(Full|Incr) +([^ ]+) +((\\d+(\\.\\d{1,3})?|0) *((G|M|K)*+)) +(Error|OK) +(\\d{2}-[a-zA-Z]{3}-\\d{2} \\d{2}:\\d{2}) (.+))");
         Matcher m = p.matcher(linha);
         while(m.find()) {
@@ -59,8 +59,8 @@ public class ParseJobs {
         return job;
     }
     
-    public Job parseScheduledJob(String linha) {
-        Job job = new Job();
+    public BaculaJob parseScheduledJob(String linha) {
+        BaculaJob job = new BaculaJob();
         Pattern p = Pattern.compile("^( *(Full|Incremental|Differential) +(\\w+) +(\\d+) +(\\d{2}-[a-zA-Z]{3}-\\d{2} \\d{2}:\\d{2}) +(.+[^ ]) +(.+))");
         Matcher m = p.matcher(linha);
         while(m.find()) {

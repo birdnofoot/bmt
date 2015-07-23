@@ -79,10 +79,13 @@ public interface Constants {
 
         interface Commands {
             public static String STATUS_DIRECTOR = "status dir";
+            public static String STATUS_CLIENT = "status client=";
+            public static String LLIST_CLIENTS = "llist clients";
             public static String EXIT = "exit";
             public static String QUIT = "quit";
             public static String VERSION = "version";
             public static String HELP = "help";
+            
         }
         
         interface ReturnCodes {

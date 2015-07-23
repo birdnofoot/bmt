@@ -18,15 +18,18 @@ package br.com.uktech.bmt.bacula.console;
 
 import br.com.uktech.bmt.bacula.lib.Connection;
 import br.com.uktech.bmt.bacula.BaculaConsole;
-import br.com.uktech.bmt.bacula.bean.Client;
-import br.com.uktech.bmt.bacula.bean.StatusClient;
-import br.com.uktech.bmt.bacula.bean.StatusDirector;
+import br.com.uktech.bmt.bacula.bean.BaculaClient;
+import br.com.uktech.bmt.bacula.bean.BaculaStatusClient;
+import br.com.uktech.bmt.bacula.bean.BaculaStatusDirector;
 import br.com.uktech.bmt.bacula.exceptions.BaculaInvalidDataSize;
 import br.com.uktech.bmt.bacula.exceptions.BaculaNoInteger;
 import br.com.uktech.bmt.bacula.lib.Constants;
 import br.com.uktech.bmt.bacula.lib.DataPackage;
+import br.com.uktech.bmt.bacula.lib.parser.ParseListClient;
+import br.com.uktech.bmt.bacula.lib.parser.ParseStatusClient;
 import br.com.uktech.bmt.bacula.lib.parser.ParseStatusDirector;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.LoggerFactory;
 
@@ -49,8 +52,8 @@ public class BaculaConsole5 implements BaculaConsole {
     }
     
     @Override
-    public StatusDirector getStatusDirector() {
-        StatusDirector sd;
+    public BaculaStatusDirector getStatusDirector() {
+        BaculaStatusDirector sd;
         DataPackage data = new DataPackage(Constants.Connection.Commands.STATUS_DIRECTOR);
         try {
             DataPackage receivedData = this.connection.sendAndReceive(data, true);
@@ -64,12 +67,34 @@ public class BaculaConsole5 implements BaculaConsole {
     }
 
     @Override
-    public List<Client> getClients() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public List<BaculaClient> getClients() {
+        List<BaculaClient> clients = new ArrayList<>();
+        DataPackage data = new DataPackage(Constants.Connection.Commands.LLIST_CLIENTS);
+        try {
+            DataPackage receivedData = this.connection.sendAndReceive(data, true);
+            //Aqui está o Bug
+            clients = new ParseListClient().parse(receivedData.getData());
+        }
+        catch (IOException | BaculaInvalidDataSize | BaculaNoInteger ex) {
+            this.logger.error(ex.getLocalizedMessage());
+            return null;
+        }
+        return clients;
     }
 
     @Override
-    public StatusClient getStatusClient(String clientName) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public BaculaStatusClient getStatusClient(String clientName) {
+        BaculaStatusClient statusClient = null;
+        DataPackage data = new DataPackage(Constants.Connection.Commands.STATUS_CLIENT+clientName);
+        try {
+            DataPackage receivedData = this.connection.sendAndReceive(data, true);
+            
+            statusClient = new ParseStatusClient().parse(receivedData.getData());
+        }
+        catch (IOException | BaculaInvalidDataSize | BaculaNoInteger ex) {
+            this.logger.error(ex.getLocalizedMessage());
+            return null;
+        }
+        return statusClient;
     }
 }

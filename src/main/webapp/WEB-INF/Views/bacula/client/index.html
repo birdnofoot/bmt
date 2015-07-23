@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<!--
+Copyright (C) 2015 Uhlig e Korovsky Tecnologia Ltda - ME
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<html>
+    <head th:replace="fragments/header :: head">
+        <title th:text="#{system.name}">Bacula Manager Tool</title>
+
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <meta name="description" content=""/>
+        <meta name="author" content="Uhlig &amp; Korovsky Tecnologia Ltda - ME"/>
+
+        <link rel="icon" href="../../../images/favicon.gif" th:href="@{/images/favicon.gif}"/>
+    </head>
+    <body>
+        <div th:replace="fragments/navbar :: navbar">&nbsp;</div>
+        <div>
+            <a href="#" th:href="@{/bacula/client/add}">Add new client</a>
+        </div> 
+        <div>
+            <table id="tbbaculaclients" border="1" style="width:100%">
+                <thead>
+                    <th th:text="#{view.bacula.client[id]}">Id</th>
+                    <th th:text="#{view.bacula.client[name]}">Name</th>
+                    <th th:text="#{view.bacula.client[fileretention]}">File Retention</th>
+                    <th th:text="#{view.bacula.client[jobretention]}">Job Retention</th>
+                    <th th:text="#{view.bacula.client[uname]}">Uname</th>
+                    <th th:text="#{view.default[action]}">Action</th>
+                </thead>
+                <tbody>
+                    <tr th:if="${clients == null}">
+                        <td colspan="4">No bacula clients configured!</td>
+                    </tr>
+                    <tr th:if="${clients != null}" th:each="client : ${clients}">
+
+                        <td th:text="${client.id}">Id</td>
+                        <td th:text="${client.name}">Name</td>
+                        <td th:text="${client.fileretention}">File Retention</td>
+                        <td th:text="${client.jobretention}">Job Retention</td>
+                        <td th:text="${client.uname}">Uname</td>
+                        <td>
+                            <div class="pull-right action-buttons">
+                                <a href="#" th:href="@{'/bacula/client/status/'+${directorId}+'/'+${client.name}}">Status</a>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div th:replace="fragments/footer :: footer">&nbsp;</div>
+    </body>
+</html>

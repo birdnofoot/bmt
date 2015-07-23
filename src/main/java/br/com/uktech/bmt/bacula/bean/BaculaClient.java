@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package br.com.uktech.bmt.dto.bacula.director;
+package br.com.uktech.bmt.bacula.bean;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -23,25 +23,20 @@ import java.util.Objects;
  *
  * @author Carlos Alberto Cipriano Korovsky <carlos.korovsky@uktech.com.br>
  */
-public class BaculaDirectorDto implements Serializable {
-
-    private Long id;
+public class BaculaClient implements Serializable {
     
+    private int id;
     private String name;
-    
-    private String hostname;
-    
-    private Integer port;
-    
-    private String password;
-    
-    private Boolean enabled;
+    private String uname;
+    private boolean autoprune;
+    private int fileretention;
+    private int jobretention;
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -53,47 +48,47 @@ public class BaculaDirectorDto implements Serializable {
         this.name = name;
     }
 
-    public String getHostname() {
-        return hostname;
+    public String getUname() {
+        return uname;
     }
 
-    public void setHostname(String hostname) {
-        this.hostname = hostname;
+    public void setUname(String uname) {
+        this.uname = uname;
     }
 
-    public Integer getPort() {
-        return port;
+    public boolean isAutoprune() {
+        return autoprune;
     }
 
-    public void setPort(Integer port) {
-        this.port = port;
+    public void setAutoprune(boolean autoprune) {
+        this.autoprune = autoprune;
     }
 
-    public String getPassword() {
-        return password;
+    public int getFileretention() {
+        return fileretention;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setFileretention(int fileretention) {
+        this.fileretention = fileretention;
     }
 
-    public Boolean getEnabled() {
-        return enabled;
+    public int getJobretention() {
+        return jobretention;
     }
 
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
+    public void setJobretention(int jobretention) {
+        this.jobretention = jobretention;
     }
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 11 * hash + Objects.hashCode(this.id);
-        hash = 11 * hash + Objects.hashCode(this.name);
-        hash = 11 * hash + Objects.hashCode(this.hostname);
-        hash = 11 * hash + Objects.hashCode(this.port);
-        hash = 11 * hash + Objects.hashCode(this.password);
-        hash = 11 * hash + Objects.hashCode(this.enabled);
+        int hash = 5;
+        hash = 59 * hash + this.id;
+        hash = 59 * hash + Objects.hashCode(this.name);
+        hash = 59 * hash + Objects.hashCode(this.uname);
+        hash = 59 * hash + (this.autoprune ? 1 : 0);
+        hash = 59 * hash + this.fileretention;
+        hash = 59 * hash + this.jobretention;
         return hash;
     }
 
@@ -105,23 +100,23 @@ public class BaculaDirectorDto implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final BaculaDirectorDto other = (BaculaDirectorDto) obj;
-        if (!Objects.equals(this.id, other.id)) {
+        final BaculaClient other = (BaculaClient) obj;
+        if (this.id != other.id) {
             return false;
         }
         if (!Objects.equals(this.name, other.name)) {
             return false;
         }
-        if (!Objects.equals(this.hostname, other.hostname)) {
+        if (!Objects.equals(this.uname, other.uname)) {
             return false;
         }
-        if (!Objects.equals(this.port, other.port)) {
+        if (this.autoprune != other.autoprune) {
             return false;
         }
-        if (!Objects.equals(this.password, other.password)) {
+        if (this.fileretention != other.fileretention) {
             return false;
         }
-        if (!Objects.equals(this.enabled, other.enabled)) {
+        if (this.jobretention != other.jobretention) {
             return false;
         }
         return true;
@@ -129,7 +124,7 @@ public class BaculaDirectorDto implements Serializable {
 
     @Override
     public String toString() {
-        return "BaculaDirectorDto{" + "id=" + id + ", name=" + name + ", hostname=" + hostname + ", port=" + port + ", password=" + password + ", enabled=" + enabled + '}';
+        return "id:\t\t" + id + "\nname:\t\t" + name + "\nuname:\t\t" + uname + "\nautoprune:\t" + autoprune + "\nfileretention:\t" + fileretention + "\njobretention:\t" + jobretention;
     }
     
 }

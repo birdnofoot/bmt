@@ -16,12 +16,12 @@
  */
 package br.com.uktech.bmt.model.repository;
 
-import br.com.uktech.bmt.model.BaculaDirector;
+import br.com.uktech.bmt.model.Director;
 
 /**
  *
  * @author Carlos Alberto Cipriano Korovsky <carlos.korovsky@uktech.com.br>
  */
-public interface BaculaDirectorRepository extends PagingAndSortingRepository<BaculaDirector, Long> {
+public interface BaculaDirectorRepository extends PagingAndSortingRepository<Director, Long> {
     
 }

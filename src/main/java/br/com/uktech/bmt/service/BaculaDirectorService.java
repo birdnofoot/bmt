@@ -16,8 +16,8 @@
  */
 package br.com.uktech.bmt.service;
 
-import br.com.uktech.bmt.bacula.bean.StatusDirector;
-import br.com.uktech.bmt.dto.bacula.director.BaculaDirectorDto;
+import br.com.uktech.bmt.bacula.bean.BaculaStatusDirector;
+import br.com.uktech.bmt.dto.model.director.DirectorDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -27,10 +27,11 @@ import org.springframework.data.domain.Pageable;
  */
 public interface BaculaDirectorService {
     
-    public BaculaDirectorDto newBaculaDirector();
-    public BaculaDirectorDto save(BaculaDirectorDto baculadirdto);
-    public Page<BaculaDirectorDto> searchAllBaculaDirectors(Pageable p);
-    public BaculaDirectorDto getBaculaDirectorById(Long id);
-    public StatusDirector getStatusDirector(BaculaDirectorDto baculadirdto);
+    public DirectorDto newBaculaDirector();
+    public DirectorDto save(DirectorDto baculadirdto);
+    public Page<DirectorDto> searchAllBaculaDirectors(Pageable p);
+    public DirectorDto getBaculaDirectorById(Long id);
+    //Adicionar Dto do baculaSD
+    public BaculaStatusDirector getStatusDirector(DirectorDto baculadirdto);
     
 }

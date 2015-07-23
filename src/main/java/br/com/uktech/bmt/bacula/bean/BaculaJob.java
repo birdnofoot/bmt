@@ -27,7 +27,7 @@ import java.util.Objects;
  *
  * @author Carlos Alberto Cipriano Korovsky <carlos.korovsky@uktech.com.br>
  */
-public class Job implements Serializable {
+public class BaculaJob implements Serializable {
     
     private int id;
     private String name;
@@ -220,7 +220,7 @@ public class Job implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final Job other = (Job) obj;
+        final BaculaJob other = (BaculaJob) obj;
         if (this.id != other.id) {
             return false;
         }

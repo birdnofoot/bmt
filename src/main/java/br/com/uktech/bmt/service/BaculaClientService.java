@@ -14,21 +14,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package br.com.uktech.bmt.dozer;
+package br.com.uktech.bmt.service;
 
+import br.com.uktech.bmt.dto.bacula.client.BaculaClientDto;
+import br.com.uktech.bmt.dto.bacula.client.BaculaStatusClientDto;
 import br.com.uktech.bmt.dto.model.director.DirectorDto;
-import br.com.uktech.bmt.model.Director;
-import org.dozer.loader.api.BeanMappingBuilder;
+import java.util.List;
 
 /**
  *
- * @author Carlos Alberto Cipriano Korovsky <carlos.korovsky@uktech.com.br>
+ * @author João Paulo Siqueira <joao.siqueira@uktech.com.br>
  */
-public class BaculaDirectorMapper extends BeanMappingBuilder {
-
-    @Override
-    protected void configure() {
-        this.mapping(Director.class, DirectorDto.class);
-    }
+public interface BaculaClientService {
     
+    public BaculaClientDto newClient();
+    //Retornar um Dto
+    public List<BaculaClientDto> getListClients(DirectorDto baculadirdto);
+    public BaculaStatusClientDto getStatusClient(DirectorDto baculadirdto, String clientName);
 }

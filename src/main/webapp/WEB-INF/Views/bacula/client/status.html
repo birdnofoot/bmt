@@ -25,32 +25,28 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <meta name="description" content=""/>
         <meta name="author" content="Uhlig &amp; Korovsky Tecnologia Ltda - ME"/>
 
-        <link rel="icon" href="../../../../images/favicon.gif" th:href="@{/images/favicon.gif}"/>
+        <link rel="icon" href="../../../images/favicon.gif" th:href="@{/images/favicon.gif}"/>
     </head>
     <body>
         <div th:replace="fragments/navbar :: navbar">&nbsp;</div>
         <div>
-            <a href="#" th:href="@{/bacula/director}" sec:authorize="hasAnyRole('ROLE_BACULA_DIRECTOR_READ')">Return to director's page</a>
-        </div> 
-        <div th:if="${statusdir == null}">
-            <span>Error getting the status dir!</span>
+            <a href="#" th:href="@{'/bacula/client/'+${directorId}}">Return to Client</a>
         </div>
-        <div th:if="${statusdir != null}">
+        <div th:if="${status == null}">
+            <span>Error getting the status client!</span>
+        </div>
+        <div th:if="${status != null}">
             <div style="color: red">
-                <span th:text="${statusdir.banner}">banner</span><br/>
-                <span th:text="${statusdir.upSince}">upsince</span><br/>
-                <span th:text="${statusdir.jobsRunned}">jobsRunned</span><br/>
-            </div>
-            <div style="color: gold">
-                <span th:text="${statusdir.scheduledJobs}">banner</span>
+                <span th:text="${status.header}">banner</span>
             </div>
             <div style="color: blue">
-                <span th:text="${statusdir.runningJobs}">upsince</span>
+                <span th:text="${status.runningJobs}">upsince</span>
             </div>
             <div style="color: violet">
-                <span th:text="${statusdir.terminatedJobs}">jobsRunned</span>
+                <span th:text="${status.terminatedJobs}">jobsRunned</span>
             </div>
         </div>
+        
         <div th:replace="fragments/footer :: footer">&nbsp;</div>
     </body>
 </html>

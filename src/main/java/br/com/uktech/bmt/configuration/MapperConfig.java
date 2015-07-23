@@ -48,6 +48,9 @@ public class MapperConfig {
         mappers.add(new SystemUserPermissionMapper());
         mappers.add(new SystemUserPermissionIdMapper());
         mappers.add(new BaculaDirectorMapper());
+        mappers.add(new br.com.uktech.bmt.dozer.bacula.BaculaClientMapper());
+        mappers.add(new br.com.uktech.bmt.dozer.bacula.BaculaJobMapper());
+        mappers.add(new br.com.uktech.bmt.dozer.bacula.BaculaStatusDirectorMapper());
         return mappers;
     }
     

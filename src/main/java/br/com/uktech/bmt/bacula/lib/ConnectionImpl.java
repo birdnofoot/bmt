@@ -16,7 +16,7 @@
  */
 package br.com.uktech.bmt.bacula.lib;
 
-import br.com.uktech.bmt.bacula.bean.Version;
+import br.com.uktech.bmt.bacula.bean.BaculaVersion;
 import br.com.uktech.bmt.bacula.exceptions.BaculaAuthenticationException;
 import br.com.uktech.bmt.bacula.exceptions.BaculaInvalidDataSize;
 import br.com.uktech.bmt.bacula.exceptions.BaculaNoInteger;
@@ -24,6 +24,8 @@ import br.com.uktech.bmt.bacula.lib.parser.ParseVersion;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import org.slf4j.LoggerFactory;
@@ -40,8 +42,8 @@ public class ConnectionImpl implements Connection {
     private final Authentication auth;
     
     private Socket socket;
-    public BufferedOutputStream out;
-    public BufferedInputStream in;
+    public OutputStream out;
+    public InputStream in;
     
     public ConnectionImpl(InetAddress address, Integer port, String password) {
         this.address = address;
@@ -153,7 +155,7 @@ public class ConnectionImpl implements Connection {
             byte buffer[] = new byte[Connection.MAX_PACKET_SIZE];
             int available, i;
             byte dataSize[] = convertToByteArray(data.getData().length());
-            
+            this.logger.debug("Send: " + data.getData());
             out.write(dataSize);
             out.write(data.getData().getBytes());
             out.flush();
@@ -164,6 +166,7 @@ public class ConnectionImpl implements Connection {
                     throw new BaculaInvalidDataSize();
                 }
                 available = convertToInteger(dataSize);
+                logger.debug("Int read" + available);
                 if (available < 0) { //Received a signal
                     receivedData.setSignal(available);
                     break;
@@ -181,6 +184,7 @@ public class ConnectionImpl implements Connection {
                 }
             }
             receivedData.setData(serverData.toString());
+            this.logger.debug("Received: " + receivedData.getData());
         }
         return receivedData;
     }
@@ -191,11 +195,11 @@ public class ConnectionImpl implements Connection {
     }
     
     @Override
-    public Version getDirectorVersion() {
+    public BaculaVersion getDirectorVersion() {
         DataPackage data = new DataPackage(Constants.Connection.Commands.VERSION);
-        Version version = null;
+        BaculaVersion version = null;
         try {
-            DataPackage returnedData = this.sendAndReceive(data, false);
+            DataPackage returnedData = this.sendAndReceive(data, true);
             version = ParseVersion.parse(returnedData.getData());
         }
         catch (IOException | BaculaInvalidDataSize | BaculaNoInteger ex) {

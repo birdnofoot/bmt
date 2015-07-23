@@ -16,29 +16,32 @@
  */
 package br.com.uktech.bmt.bacula.lib.parser;
 
-import br.com.uktech.bmt.bacula.bean.Job;
-import br.com.uktech.bmt.bacula.bean.Version;
-import br.com.uktech.bmt.bacula.lib.Constants;
+import br.com.uktech.bmt.bacula.bean.BaculaVersion;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Carlos Alberto Cipriano Korovsky <carlos.korovsky@uktech.com.br>
  */
 public class ParseVersion {
-    //backup-00-dir Version: 5.2.6 (21 February 2012) i686-pc-linux-gnu ubuntu 14.04
-    public static Version parse(String input) {
-        Version version = new Version();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM YYYY");
+    
+    private static Logger logger = LoggerFactory.getLogger(ParseVersion.class);
+
+    public static BaculaVersion parse(String input) {
+        BaculaVersion version = null;
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy", Locale.US);
         Pattern p = Pattern.compile(".+ Version\\: ((\\d)\\.(\\d)\\.(\\d)) \\((.+)\\) (.+)");
         Matcher m = p.matcher(input);
-        while(m.find()) {
+
+        if (m.find()) {
+            version = new BaculaVersion();
             version.setMajor(Integer.parseInt(m.group(2)));
             version.setMinor(Integer.parseInt(m.group(3)));
             version.setRevision(Integer.parseInt(m.group(4)));
@@ -46,10 +49,12 @@ public class ParseVersion {
                 version.setRelease(sdf.parse(m.group(5)));
             }
             catch (ParseException ex) {
+                ParseVersion.logger.error(ex.getLocalizedMessage());
                 version.setRelease(Calendar.getInstance().getTime());
             }
             version.setUname(m.group(6));
         }
+        
         return version;
     }
 }

@@ -16,7 +16,7 @@
  */
 package br.com.uktech.bmt.bacula.lib;
 
-import br.com.uktech.bmt.bacula.bean.Version;
+import br.com.uktech.bmt.bacula.bean.BaculaVersion;
 import br.com.uktech.bmt.bacula.exceptions.BaculaAuthenticationException;
 import br.com.uktech.bmt.bacula.exceptions.BaculaInvalidDataSize;
 import br.com.uktech.bmt.bacula.exceptions.BaculaNoInteger;
@@ -40,6 +40,6 @@ public interface Connection {
     
     public String getHostname();
     
-    public Version getDirectorVersion();
+    public BaculaVersion getDirectorVersion();
     
 }

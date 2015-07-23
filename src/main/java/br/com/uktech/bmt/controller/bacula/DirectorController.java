@@ -17,8 +17,8 @@
 package br.com.uktech.bmt.controller.bacula;
 
 
-import br.com.uktech.bmt.bacula.bean.StatusDirector;
-import br.com.uktech.bmt.dto.bacula.director.BaculaDirectorDto;
+import br.com.uktech.bmt.bacula.bean.BaculaStatusDirector;
+import br.com.uktech.bmt.dto.model.director.DirectorDto;
 import br.com.uktech.bmt.service.BaculaDirectorService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -58,7 +58,7 @@ public class DirectorController extends BasicBaculaController {
         logger.debug("Show Bacula Director Home");
         ModelAndView mav;
         mav = new ModelAndView("bacula/director/index");
-        Page<BaculaDirectorDto> page = baculaDirectorService.searchAllBaculaDirectors(p);
+        Page<DirectorDto> page = baculaDirectorService.searchAllBaculaDirectors(p);
         mav.addObject("page", page);
         return mav;
     }
@@ -67,7 +67,7 @@ public class DirectorController extends BasicBaculaController {
     public ModelAndView add(HttpServletRequest request, HttpServletResponse response) {
         logger.debug("Adding a new Bacula Director ");
         ModelAndView mav;
-        BaculaDirectorDto baculadir;
+        DirectorDto baculadir;
         mav = new ModelAndView("bacula/director/add");
         baculadir = baculaDirectorService.newBaculaDirector();
         mav.addObject("baculadir", baculadir);
@@ -75,7 +75,7 @@ public class DirectorController extends BasicBaculaController {
     }
     
     @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public ModelAndView save(@Valid BaculaDirectorDto baculadir, BindingResult result, HttpServletRequest request, HttpServletResponse response) {
+    public ModelAndView save(@Valid DirectorDto baculadir, BindingResult result, HttpServletRequest request, HttpServletResponse response) {
         logger.debug("Saving a new Bacula Director ");
         ModelAndView mav;
         if (result.hasErrors()) {
@@ -83,7 +83,7 @@ public class DirectorController extends BasicBaculaController {
             mav.addObject("org.springframework.validation.BindingResult.baculadir", result);
             mav.addObject("baculadir", baculadir);
         } else {
-            BaculaDirectorDto baculadirdto = baculaDirectorService.save(baculadir);
+            DirectorDto baculadirdto = baculaDirectorService.save(baculadir);
             mav = new ModelAndView("redirect:/bacula/director");
             mav.addObject("save", baculadirdto);
         }
@@ -100,7 +100,7 @@ public class DirectorController extends BasicBaculaController {
     }
     
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public ModelAndView update(@Valid BaculaDirectorDto baculadir, BindingResult result, HttpServletRequest request, HttpServletResponse response) {
+    public ModelAndView update(@Valid DirectorDto baculadir, BindingResult result, HttpServletRequest request, HttpServletResponse response) {
         logger.debug("Update a Bacula Director ");
         ModelAndView mav;
         mav = new ModelAndView("bacula/director/edit");
@@ -120,11 +120,11 @@ public class DirectorController extends BasicBaculaController {
     @RequestMapping(value = "/status/{id}", method = RequestMethod.GET)
     public ModelAndView status(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
         logger.debug("Getting status of a Bacula Director ");
-        StatusDirector statusdir = null;
+        BaculaStatusDirector statusdir = null;
         ModelAndView mav;
         mav = new ModelAndView("bacula/director/status");
         
-        BaculaDirectorDto directorDto = baculaDirectorService.getBaculaDirectorById(id);
+        DirectorDto directorDto = baculaDirectorService.getBaculaDirectorById(id);
         if (directorDto != null) {
             statusdir = baculaDirectorService.getStatusDirector(directorDto);
         }

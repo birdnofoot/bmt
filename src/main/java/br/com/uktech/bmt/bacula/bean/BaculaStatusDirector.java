@@ -26,14 +26,14 @@ import java.util.Objects;
  *
  * @author Carlos Alberto Cipriano Korovsky <carlos.korovsky@uktech.com.br>
  */
-public class StatusDirector implements Serializable {
+public class BaculaStatusDirector implements Serializable {
     
     private String banner;
     private Calendar upSince;
     private int jobsRunned;
-    private final List<Job> scheduledJobs = new ArrayList<>();
-    private final List<Job> runningJobs = new ArrayList<>();
-    private final List<Job> terminatedJobs = new ArrayList<>();
+    private List<BaculaJob> scheduledJobs = new ArrayList<>();
+    private List<BaculaJob> runningJobs = new ArrayList<>();
+    private List<BaculaJob> terminatedJobs = new ArrayList<>();
 
     /**
      * @return the banner
@@ -78,23 +78,35 @@ public class StatusDirector implements Serializable {
     }
 
     /**
-     * @return the scheduledJobs
+     * @param scheduledJobs the scheduledJobs to set
      */
-    public List<Job> getScheduledJobs() {
-        return scheduledJobs;
+    public void setScheduledJobs(List<BaculaJob> scheduledJobs) {
+        this.scheduledJobs = scheduledJobs;
     }
 
+    public List<BaculaJob> getScheduledJobs() {
+        return scheduledJobs;
+    }
+    
     /**
-     * @return the runningJobs
+     * @param runningJobs the runningJobs to set
      */
-    public List<Job> getRunningJobs() {
+    public void setRunningJobs(List<BaculaJob> runningJobs) {
+        this.runningJobs = runningJobs;
+    }
+
+    public List<BaculaJob> getRunningJobs() {
         return runningJobs;
     }
 
     /**
-     * @return the terminatedJobs
+     * @param terminatedJobs the terminatedJobs to set
      */
-    public List<Job> getTerminatedJobs() {
+    public void setTerminatedJobs(List<BaculaJob> terminatedJobs) {
+        this.terminatedJobs = terminatedJobs;
+    }
+    
+    public List<BaculaJob> getTerminatedJobs() {
         return terminatedJobs;
     }
 
@@ -118,7 +130,7 @@ public class StatusDirector implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final StatusDirector other = (StatusDirector) obj;
+        final BaculaStatusDirector other = (BaculaStatusDirector) obj;
         if (!Objects.equals(this.banner, other.banner)) {
             return false;
         }

@@ -25,7 +25,7 @@ import java.util.Objects;
  * @author Carlos Alberto Cipriano Korovsky <carlos.korovsky@uktech.com.br>
  */
 // 
-public class Version implements Serializable {
+public class BaculaVersion implements Serializable {
     
     private Integer major;
     private Integer minor;
@@ -92,7 +92,7 @@ public class Version implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final Version other = (Version) obj;
+        final BaculaVersion other = (BaculaVersion) obj;
         if (!Objects.equals(this.major, other.major)) {
             return false;
         }

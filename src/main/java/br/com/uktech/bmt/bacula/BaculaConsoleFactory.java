@@ -16,7 +16,7 @@
  */
 package br.com.uktech.bmt.bacula;
 
-import br.com.uktech.bmt.bacula.bean.Version;
+import br.com.uktech.bmt.bacula.bean.BaculaVersion;
 import br.com.uktech.bmt.bacula.lib.Connection;
 import br.com.uktech.bmt.bacula.lib.ConnectionFactory;
 import br.com.uktech.bmt.bacula.console.BaculaConsole5;
@@ -54,18 +54,23 @@ public class BaculaConsoleFactory {
         if (console == null) {
             Connection connection = ConnectionFactory.getFactory().getConnection(address, port, password);
             connection.connect();
-            Version version = connection.getDirectorVersion();
-            switch (version.getMajor()) {
-                case 5: 
-                    console = new BaculaConsole5(directorName, connection);
-                    break;
-                case 7: 
-                    console = new BaculaConsole7(directorName, connection);
-                    break;
-                default:
-                    throw new BaculaDirectorNotSupported();
+            BaculaVersion version = connection.getDirectorVersion();
+            Integer major = version.getMajor();
+            if (major != null) {
+                switch (major) {
+                    case 5: 
+                        console = new BaculaConsole5(directorName, connection);
+                        break;
+                    case 7: 
+                        console = new BaculaConsole7(directorName, connection);
+                        break;
+                    default:
+                        throw new BaculaDirectorNotSupported();
+                }
+                this.consoles.put(directorName.toLowerCase(), console);
+            } else {
+                throw new BaculaDirectorNotSupported();
             }
-            this.consoles.put(directorName.toLowerCase(), console);
         }
         return console;
     }

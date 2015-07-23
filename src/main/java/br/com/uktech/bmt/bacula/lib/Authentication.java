@@ -37,6 +37,9 @@ import org.slf4j.LoggerFactory;
  */
 public class Authentication {
     
+    //TODO: Criar método para retornar o nome do director
+    //TODO: Criar método para retornar a versão do director
+    
     private final org.slf4j.Logger logger = LoggerFactory.getLogger(Authentication.class);
     
     private final Connection connection;
@@ -118,6 +121,9 @@ public class Authentication {
             
             if (receivedData.getReturnCode() != Constants.Connection.ReturnCodes.SUCCESS) {
                 throw new BaculaAuthenticationFailed();
+            } else {
+                logger.debug("Auth received: " + receivedData.getData());
+                //TODO: Parse nome e versão do director
             }
             this.authenticated = true;
         }

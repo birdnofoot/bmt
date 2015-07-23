@@ -16,7 +16,7 @@
  */
 package br.com.uktech.bmt.bacula.lib.parser;
 
-import br.com.uktech.bmt.bacula.bean.StatusDirector;
+import br.com.uktech.bmt.bacula.bean.BaculaStatusDirector;
 import br.com.uktech.bmt.bacula.lib.Constants;
 
 /**
@@ -24,8 +24,8 @@ import br.com.uktech.bmt.bacula.lib.Constants;
  * @author Carlos Alberto Cipriano Korovsky <carlos.korovsky@uktech.com.br>
  */
 public class ParseStatusDirector {
-    public StatusDirector parse(String input) {
-        StatusDirector statusDirector = new StatusDirector();
+    public BaculaStatusDirector parse(String input) {
+        BaculaStatusDirector statusDirector = new BaculaStatusDirector();
         ParseJobs parse = new ParseJobs();
         StringBuffer sbTemp = new StringBuffer();
         String temp;

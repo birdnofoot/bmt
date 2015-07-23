@@ -18,11 +18,11 @@ package br.com.uktech.bmt.service;
 
 import br.com.uktech.bmt.bacula.BaculaConsole;
 import br.com.uktech.bmt.bacula.BaculaConsoleFactory;
-import br.com.uktech.bmt.bacula.bean.StatusDirector;
+import br.com.uktech.bmt.bacula.bean.BaculaStatusDirector;
 import br.com.uktech.bmt.bacula.exceptions.BaculaAuthenticationException;
 import br.com.uktech.bmt.bacula.exceptions.BaculaDirectorNotSupported;
-import br.com.uktech.bmt.dto.bacula.director.BaculaDirectorDto;
-import br.com.uktech.bmt.model.BaculaDirector;
+import br.com.uktech.bmt.dto.model.director.DirectorDto;
+import br.com.uktech.bmt.model.Director;
 import br.com.uktech.bmt.model.repository.BaculaDirectorRepository;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -52,13 +52,13 @@ public class BaculaDirectorServiceImpl implements BaculaDirectorService {
     private Mapper mapper;
     
     @Override
-    public BaculaDirectorDto newBaculaDirector() {
-        return new BaculaDirectorDto();
+    public DirectorDto newBaculaDirector() {
+        return new DirectorDto();
     }
 
     @Override
-    public BaculaDirectorDto save(BaculaDirectorDto baculadirdto) {
-        BaculaDirector baculadir = new BaculaDirector();
+    public DirectorDto save(DirectorDto baculadirdto) {
+        Director baculadir = new Director();
         mapper.map(baculadirdto, baculadir);
         baculadir = repository.save(baculadir);
         mapper.map(baculadirdto, baculadir);
@@ -67,17 +67,17 @@ public class BaculaDirectorServiceImpl implements BaculaDirectorService {
 
     @Transactional(readOnly = true)
     @Override
-    public Page<BaculaDirectorDto> searchAllBaculaDirectors(Pageable p) {
-        List <BaculaDirectorDto> directors = new ArrayList<>();
-        Page<BaculaDirector> baculaDirectors = repository.findAll(p);
-        BaculaDirectorDto directorDto;
-        Iterator<BaculaDirector> itr = baculaDirectors.getContent().iterator();
+    public Page<DirectorDto> searchAllBaculaDirectors(Pageable p) {
+        List <DirectorDto> directors = new ArrayList<>();
+        Page<Director> baculaDirectors = repository.findAll(p);
+        DirectorDto directorDto;
+        Iterator<Director> itr = baculaDirectors.getContent().iterator();
         while(itr.hasNext()) {
-            directorDto = new BaculaDirectorDto();
+            directorDto = new DirectorDto();
             mapper.map(itr.next(), directorDto);
             directors.add(directorDto);
         }
-        Page<BaculaDirectorDto> page = null;
+        Page<DirectorDto> page = null;
         if (!directors.isEmpty()) {
             page = new PageImpl<>(directors, p, baculaDirectors.getTotalElements());
         }        
@@ -86,11 +86,11 @@ public class BaculaDirectorServiceImpl implements BaculaDirectorService {
     
     @Transactional(readOnly = true)
     @Override
-    public BaculaDirectorDto getBaculaDirectorById(Long id) {
-        BaculaDirectorDto baculadirdto = null;
-        BaculaDirector baculadir = repository.findOne(id);
+    public DirectorDto getBaculaDirectorById(Long id) {
+        DirectorDto baculadirdto = null;
+        Director baculadir = repository.findOne(id);
         if (baculadir != null) {
-            baculadirdto = new BaculaDirectorDto();
+            baculadirdto = new DirectorDto();
             mapper.map(baculadir, baculadirdto);
         }
         return baculadirdto;
@@ -98,8 +98,8 @@ public class BaculaDirectorServiceImpl implements BaculaDirectorService {
 
     @Transactional(readOnly = true)
     @Override
-    public StatusDirector getStatusDirector(BaculaDirectorDto baculadirdto) {
-        StatusDirector statusDir = null;
+    public BaculaStatusDirector getStatusDirector(DirectorDto baculadirdto) {
+        BaculaStatusDirector statusDir = null;
         try {
             BaculaConsole console = consoleFactory.getConsole(baculadirdto.getName(), baculadirdto.getHostname(), baculadirdto.getPort(), baculadirdto.getPassword());
             if (console != null) {

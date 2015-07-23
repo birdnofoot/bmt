@@ -14,14 +14,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package br.com.uktech.bmt.bacula.bean;
+package br.com.uktech.bmt.dozer.bacula;
 
-import java.io.Serializable;
+import br.com.uktech.bmt.bacula.bean.BaculaJob;
+import br.com.uktech.bmt.dto.bacula.director.BaculaJobDto;
+import org.dozer.loader.api.BeanMappingBuilder;
 
 /**
  *
- * @author Carlos Alberto Cipriano Korovsky <carlos.korovsky@uktech.com.br>
+ * @author João Paulo Siqueira <joao.siqueira@uktech.com.br>
  */
-public class Client implements Serializable {
+public class BaculaJobMapper extends BeanMappingBuilder {
+
+    @Override
+    protected void configure() {
+        this.mapping(BaculaJob.class, BaculaJobDto.class);
+    }
+    
     
 }
