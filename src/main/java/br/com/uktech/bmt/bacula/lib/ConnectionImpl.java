@@ -20,7 +20,6 @@ import br.com.uktech.bmt.bacula.bean.BaculaVersion;
 import br.com.uktech.bmt.bacula.exceptions.BaculaAuthenticationException;
 import br.com.uktech.bmt.bacula.exceptions.BaculaInvalidDataSize;
 import br.com.uktech.bmt.bacula.exceptions.BaculaNoInteger;
-import br.com.uktech.bmt.bacula.lib.parser.ParseVersion;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -28,86 +27,91 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.concurrent.Semaphore;
 import org.slf4j.LoggerFactory;
 
 
-public class ConnectionImpl implements Connection {
+public class ConnectionImpl extends Authentication implements Connection {
     
     private final org.slf4j.Logger logger = LoggerFactory.getLogger(ConnectionImpl.class);
-    
+
     private final InetAddress address;
     private final Integer port;
     private final String password;
-    
-    private final Authentication auth;
-    
+    private final Semaphore semaphore;
+    private final SocketReader reader;
     private Socket socket;
-    public OutputStream out;
-    public InputStream in;
+    private OutputStream out;
+    private InputStream in;
+    private Thread thReader;
     
     public ConnectionImpl(InetAddress address, Integer port, String password) {
         this.address = address;
         this.port = port;
         this.password = password;
+        this.semaphore = new Semaphore(1, true);
+        this.reader = new SocketReader();
         this.socket = null;
         this.in = null;
         this.out = null;
-        this.auth = new Authentication(this);
-    }
-
-    /**
-     * @return the address
-     */
-    public InetAddress getAddress() {
-        return address;
-    }
-
-    /**
-     * @return the port
-     */
-    public Integer getPort() {
-        return port;
-    }
-
-    /**
-     * @return the password
-     */
-    public String getPassword() {
-        return password;
+        this.thReader = null;
     }
     
-    private byte[] convertToByteArray(int value) {
-        byte[] byteArray = new byte[4];
-        byteArray[0] = (byte) ((value >> 24) & 0xFF);
-        byteArray[1] = (byte) ((value >> 16) & 0xFF);
-        byteArray[2] = (byte) ((value >> 8) & 0xFF);
-        byteArray[3] = (byte) (value & 0xFF);
-        return byteArray;
+    private void setAPIMode() throws IOException, InterruptedException, BaculaInvalidDataSize, BaculaNoInteger {
+        sendAndReceive(".api 1");       
     }
     
-    private Integer convertToInteger(byte byteArray[]) throws BaculaNoInteger {
-        if (byteArray.length != 4) {
-            throw new BaculaNoInteger();
-        }
-        short b;
-        int result = 0;
+    @Override
+    public String getHostname() {
+        return this.getAddress().getHostName();
+    }
 
-        for (int i=0; i<4; i++) {
-            b = (short)byteArray[i];
-            b &= 0x00FF;
-            result <<= 8;
-            result |= (int)b;
+    @Override
+    protected AuthPackage authenticationProcess(AuthPackage data) throws IOException, BaculaInvalidDataSize, BaculaNoInteger {
+        AuthPackage receivedData = new AuthPackage();
+        if (this.isConnected()) {
+            try {
+                this.semaphore.acquire();
+                StringBuffer serverData = new StringBuffer();
+                byte buffer[] = new byte[1024];
+                int available, i;
+                byte dataSize[] = Utils.convertToByteArray(data.getData().length());
+                this.logger.debug("Send: " + data.getData());
+                out.write(dataSize);
+                out.write(data.getData().getBytes());
+                out.flush();
+                while (true) {
+                    i = in.read(dataSize, 0, 4); // Reading a int
+                    if (i < 4) {
+                        this.logger.error("Invalid data size.");
+                        throw new BaculaInvalidDataSize();
+                    }
+                    available = Utils.convertToInteger(dataSize);
+                    this.logger.debug("Int read: " + available + " bytes");
+                    if (available < 0) { //Received a signal
+                        receivedData.setSignal(available);
+                        break;
+                    } else if (available > buffer.length) {
+                        this.logger.error("Invalid data size.");
+                        throw new BaculaInvalidDataSize();
+                    }
+                    while (available > 0) {
+                        i = in.read(buffer, 0, available);
+                        serverData.append(new String(buffer, 0, i));
+                        available -= i;
+                    }
+                    break;
+                }
+                receivedData.setData(serverData.toString());
+                this.logger.debug("Received: " + receivedData.getData());
+                this.semaphore.release();
+            } catch (InterruptedException ex) {
+                this.logger.error(ex.getLocalizedMessage());
+            }
         }
-        return result;
+        return receivedData;
     }
-       
-    private void authenticate(String password) throws BaculaAuthenticationException {
-        this.logger.debug("Start authentication process.");
-        if (!this.auth.autenticate(password)) {
-            throw new BaculaAuthenticationException();
-        }
-    }
-    
+
     @Override
     public Boolean isConnected() {
         if (this.socket != null) {
@@ -115,21 +119,25 @@ public class ConnectionImpl implements Connection {
         }
         return false;
     }
-    
+
     @Override
-    public Boolean connect() throws IOException, BaculaAuthenticationException {
+    public Boolean connect() throws IOException, InterruptedException, BaculaInvalidDataSize, BaculaNoInteger, BaculaAuthenticationException {
         if (this.socket == null) {
             this.socket = new Socket(this.getAddress(), this.getPort());
             this.socket.setKeepAlive(true);
             this.out = new BufferedOutputStream(this.socket.getOutputStream());
             this.in = new BufferedInputStream(this.socket.getInputStream());
-            if (this.socket.isConnected()) {
+            if (isConnected()) {
                 this.authenticate(this.getPassword());
+                this.reader.setInputStream(this.in);
+                this.thReader = new Thread(this.reader, "Thread: " + this.getDirectorName() + " - " + this.getDirectorVersion());
+                this.thReader.start();
+                this.setAPIMode();
             }
         }
-        return this.socket.isConnected();
+        return isConnected();
     }
-    
+
     @Override
     public void disconnect() {
         if (this.socket != null) {
@@ -139,73 +147,75 @@ public class ConnectionImpl implements Connection {
                 this.socket.close();
             }
             catch (IOException ex) {
-                this.logger.error("Error disconnecting", ex);
+                this.logger.error("Error disconnecting: " +ex.getLocalizedMessage());
             }
             this.in = null;
             this.out = null;
             this.socket = null;
+            if (this.thReader != null) {
+                try {
+                    this.thReader.join(1000);
+                } catch (InterruptedException ex) {
+                    this.logger.error("Error finishing the thread: " + ex.getLocalizedMessage());
+                }
+            }
         }
     }
 
     @Override
-    public DataPackage sendAndReceive(DataPackage data, Boolean handleSignals) throws IOException, BaculaInvalidDataSize, BaculaNoInteger {
-        DataPackage receivedData = new DataPackage();
-        if (this.isConnected()) {
-            StringBuffer serverData = new StringBuffer();
-            byte buffer[] = new byte[Connection.MAX_PACKET_SIZE];
-            int available, i;
-            byte dataSize[] = convertToByteArray(data.getData().length());
-            this.logger.debug("Send: " + data.getData());
-            out.write(dataSize);
-            out.write(data.getData().getBytes());
-            out.flush();
-            while (true) {
-                i = in.read(dataSize, 0, 4); // Reading a int
-                if (i < 4) {
-                    this.logger.error("Invalid data size.");
-                    throw new BaculaInvalidDataSize();
-                }
-                available = convertToInteger(dataSize);
-                logger.debug("Int read" + available);
-                if (available < 0) { //Received a signal
-                    receivedData.setSignal(available);
-                    break;
-                } else if (available > buffer.length) {
-                    this.logger.error("Invalid data size.");
-                    throw new BaculaInvalidDataSize();
-                }
-                while (available > 0) {
-                    i = in.read(buffer, 0, available);
-                    serverData.append(new String(buffer, 0, i));
-                    available -= i;
-                }
-                if (!handleSignals) {
-                    break;
-                }
-            }
-            receivedData.setData(serverData.toString());
-            this.logger.debug("Received: " + receivedData.getData());
-        }
-        return receivedData;
+    public InetAddress getAddress() {
+        return this.address;
     }
-    
+
     @Override
-    public String getHostname() {
-        return this.address.getHostName();
+    public Integer getPort() {
+        return this.port;
     }
-    
+
+    @Override
+    public String getPassword() {
+        return this.password;
+    }
+
     @Override
     public BaculaVersion getDirectorVersion() {
-        DataPackage data = new DataPackage(Constants.Connection.Commands.VERSION);
-        BaculaVersion version = null;
-        try {
-            DataPackage returnedData = this.sendAndReceive(data, true);
-            version = ParseVersion.parse(returnedData.getData());
-        }
-        catch (IOException | BaculaInvalidDataSize | BaculaNoInteger ex) {
-            this.logger.error(ex.getLocalizedMessage());
-        }
-        
+        BaculaVersion version = new BaculaVersion();
+        version.setMajor(this.getDirectorMajorVersion());
+        version.setMinor(this.getDirectorMinorVersion());
+        version.setRevision(this.getDirectorRevisionVersion());
+        version.setRelease(this.getDirectorRelease());
         return version;
     }
+
+    @Override
+    public String sendAndReceive(String command) throws IOException, InterruptedException, BaculaInvalidDataSize, BaculaNoInteger {
+        String returnMessage = null;
+        try {
+            this.semaphore.acquire();
+            if (this.isConnected()) {
+                byte dataSize[] = Utils.convertToByteArray(command.length());
+                this.logger.debug("Send: " + command);
+                this.reader.sendingNewCommand();
+                out.write(dataSize);
+                out.write(command.getBytes());
+                out.flush();
+                this.logger.debug("waitForCommandExecution");
+                if (!this.reader.executionSuccessfuly()) {
+                    this.logger.error("Errors on the execution of the command: " + command);
+                }
+                this.logger.debug("waitForServerReady");
+                this.reader.waitForServerReady();
+                this.logger.debug("ServerReady");
+                returnMessage = this.reader.getReturnMessage();
+                if (returnMessage.isEmpty()) {
+                    returnMessage = null;
+                }
+            }
+        } finally {
+            this.semaphore.release();
+        }
+        return returnMessage;        
+    }
+    
+
 }

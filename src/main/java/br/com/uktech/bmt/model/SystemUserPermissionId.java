@@ -17,6 +17,7 @@
 package br.com.uktech.bmt.model;
 
 import java.io.Serializable;
+import java.util.Objects;
 import javax.persistence.Embeddable;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
@@ -48,6 +49,32 @@ public class SystemUserPermissionId implements Serializable {
 
     public void setSystemModule(SystemModule systemModule) {
         this.systemModule = systemModule;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 89 * hash + Objects.hashCode(this.systemUser);
+        hash = 89 * hash + Objects.hashCode(this.systemModule);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final SystemUserPermissionId other = (SystemUserPermissionId) obj;
+        if (!Objects.equals(this.systemUser, other.systemUser)) {
+            return false;
+        }
+        if (!Objects.equals(this.systemModule, other.systemModule)) {
+            return false;
+        }
+        return true;
     }
 
 }

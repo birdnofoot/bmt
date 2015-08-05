@@ -22,9 +22,11 @@ import br.com.uktech.bmt.bacula.lib.ConnectionFactory;
 import br.com.uktech.bmt.bacula.console.BaculaConsole5;
 import br.com.uktech.bmt.bacula.console.BaculaConsole7;
 import br.com.uktech.bmt.bacula.exceptions.BaculaAuthenticationException;
+import br.com.uktech.bmt.bacula.exceptions.BaculaCommunicationException;
 import br.com.uktech.bmt.bacula.exceptions.BaculaDirectorNotSupported;
+import br.com.uktech.bmt.bacula.exceptions.BaculaInvalidDataSize;
+import br.com.uktech.bmt.bacula.exceptions.BaculaNoInteger;
 import java.io.IOException;
-import java.net.UnknownHostException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -49,27 +51,32 @@ public class BaculaConsoleFactory {
         return BaculaConsoleFactory.factory;
     }
     
-    public BaculaConsole getConsole(String directorName, String address, Integer port, String password) throws UnknownHostException, IOException, BaculaAuthenticationException, BaculaDirectorNotSupported {
+    public BaculaConsole getConsole(String directorName, String address, Integer port, String password) throws IOException, BaculaAuthenticationException, BaculaDirectorNotSupported, BaculaCommunicationException {
         BaculaConsole console = this.consoles.get(directorName.toLowerCase());
         if (console == null) {
-            Connection connection = ConnectionFactory.getFactory().getConnection(address, port, password);
-            connection.connect();
-            BaculaVersion version = connection.getDirectorVersion();
-            Integer major = version.getMajor();
-            if (major != null) {
-                switch (major) {
-                    case 5: 
-                        console = new BaculaConsole5(directorName, connection);
-                        break;
-                    case 7: 
-                        console = new BaculaConsole7(directorName, connection);
-                        break;
-                    default:
-                        throw new BaculaDirectorNotSupported();
+            try {
+                Connection connection = ConnectionFactory.getFactory().getConnection(address, port, password);
+                connection.connect();
+                BaculaVersion version = connection.getDirectorVersion();
+                Integer major = version.getMajor();
+                if (major != null) {
+                    switch (major) {
+                        case 5:
+                            console = new BaculaConsole5(directorName, connection);
+                            break;
+                        case 7:
+                            console = new BaculaConsole7(directorName, connection);
+                            break;
+                        default:
+                            throw new BaculaDirectorNotSupported();
+                    }
+                    this.consoles.put(directorName.toLowerCase(), console);
+                } else {
+                    throw new BaculaDirectorNotSupported();
                 }
-                this.consoles.put(directorName.toLowerCase(), console);
-            } else {
-                throw new BaculaDirectorNotSupported();
+            }
+            catch (InterruptedException | BaculaInvalidDataSize | BaculaNoInteger ex) {
+                throw new BaculaCommunicationException();
             }
         }
         return console;

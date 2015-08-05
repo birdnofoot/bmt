@@ -24,7 +24,13 @@ import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.crypto.Mac;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
@@ -35,34 +41,68 @@ import org.slf4j.LoggerFactory;
  *
  * @author Carlos Alberto Cipriano Korovsky <carlos.korovsky@uktech.com.br>
  */
-public class Authentication {
+public abstract class Authentication {
     
     //TODO: Criar método para retornar o nome do director
     //TODO: Criar método para retornar a versão do director
     
     private final org.slf4j.Logger logger = LoggerFactory.getLogger(Authentication.class);
     
-    private final Connection connection;
-    private Boolean authenticated;
+    private String directorName;
+    private Integer directorMajorVersion;
+    private Integer directorMinorVersion;
+    private Integer directorRevisionVersion;
+    private Date directorRelease;
     
-    public Authentication(Connection connection) {
-        this.connection = connection;
-        this.authenticated = false;
+    public abstract String getHostname();
+    
+    protected abstract AuthPackage authenticationProcess(AuthPackage data) throws IOException, BaculaInvalidDataSize, BaculaNoInteger;
+
+    public String getDirectorName() {
+        return directorName;
     }
- 
-    private String convertToHexString(byte[] b) {
-        StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < b.length; ++i) {
-            sb.append(Integer.toHexString((b[i] & 0xFF) | 0x100).substring(1, 3));
-        }
-        return sb.toString();
+
+    public void setDirectorName(String directorName) {
+        this.directorName = directorName;
+    }
+
+    protected Integer getDirectorMajorVersion() {
+        return directorMajorVersion;
+    }
+
+    protected void setDirectorMajorVersion(Integer directorMajorVersion) {
+        this.directorMajorVersion = directorMajorVersion;
+    }
+
+    protected Integer getDirectorMinorVersion() {
+        return directorMinorVersion;
+    }
+
+    protected void setDirectorMinorVersion(Integer directorMinorVersion) {
+        this.directorMinorVersion = directorMinorVersion;
+    }
+
+    protected Integer getDirectorRevisionVersion() {
+        return directorRevisionVersion;
+    }
+
+    protected void setDirectorRevisionVersion(Integer directorRevisionVersion) {
+        this.directorRevisionVersion = directorRevisionVersion;
+    }
+
+    protected Date getDirectorRelease() {
+        return directorRelease;
+    }
+
+    protected void setDirectorRelease(Date directorRelease) {
+        this.directorRelease = directorRelease;
     }
     
     private String generateHash(String key, String challenger) throws NoSuchAlgorithmException, InvalidKeyException {
         MessageDigest md = MessageDigest.getInstance(Constants.Connection.Auth.MD5);
         md.update(key.getBytes());
         byte[] raw = md.digest();
-        String s = convertToHexString(raw);
+        String s = Utils.convertToHexString(raw);
         SecretKey skey = new SecretKeySpec(s.getBytes(), Constants.Connection.Auth.HMACMD5);
         Mac mac = Mac.getInstance(skey.getAlgorithm());
         mac.init(skey);
@@ -71,12 +111,11 @@ public class Authentication {
         return digestB64.substring(0, digestB64.length());
     }
     
-    public boolean autenticate(String password) {
-        this.authenticated = false;
+    protected void authenticate(String password) {
         try {
             //Sending hello and authenticating with the server
-            DataPackage data = new DataPackage(Constants.Connection.Messages.HELLO);
-            DataPackage receivedData = this.connection.sendAndReceive(data, false);
+            AuthPackage data = new AuthPackage(Constants.Connection.Messages.HELLO);
+            AuthPackage receivedData = this.authenticationProcess(data);
             String tokens[] = receivedData.getData().split(Constants.SPACE);
             if (!tokens[0].equalsIgnoreCase(Constants.Connection.Tokens.AUTH)) {
                 this.logger.error("Error authentication client");
@@ -88,9 +127,9 @@ public class Authentication {
             }
             String challenger = tokens[2];
             
-            data = new DataPackage(generateHash(password, challenger));
+            data = new AuthPackage(generateHash(password, challenger));
             
-            receivedData = this.connection.sendAndReceive(data, false);
+            receivedData = this.authenticationProcess(data);
             if (receivedData.getReturnCode() != Constants.Connection.ReturnCodes.SUCCESS) {
                 this.logger.error("AUTHENTICATION_FAILED - " + receivedData.getMessage());
                 throw new BaculaAuthenticationFailed();
@@ -98,17 +137,28 @@ public class Authentication {
             
             //Sending to server authenticate
             Random random = new Random();
-            StringBuffer auth = new StringBuffer(Constants.Connection.Tokens.AUTH).append(Constants.SPACE);
-            auth.append(Constants.Connection.Tokens.CRAM_MD5).append(Constants.SPACE);
+            challenger = new StringBuffer(Constants.LESS_THAN)
+                    .append(Math.abs(random.nextInt()))
+                    .append(Constants.DOT)
+                    .append(Math.abs(random.nextInt()))
+                    .append(Constants.AT)
+                    .append(this.getHostname())
+                    .append(Constants.GREATHER_THAN).toString();
             
-            challenger = new StringBuffer(Constants.LESS_THAN).append(Math.abs(random.nextInt())).append(Constants.DOT).append(Math.abs(random.nextInt())).append(Constants.AT).append(this.connection.getHostname()).append(Constants.GREATHER_THAN).toString();
+            StringBuffer auth = new StringBuffer(Constants.Connection.Tokens.AUTH)
+                    .append(Constants.SPACE)
+                    .append(Constants.Connection.Tokens.CRAM_MD5)
+                    .append(Constants.SPACE)
+                    .append(challenger)
+                    .append(Constants.SPACE)
+                    .append(Constants.Connection.Tokens.SSL)
+                    .append(Constants.EQUAL)
+                    .append(Constants.ZERO)
+                    .append(Constants.CR);
             
-            auth.append(challenger).append(Constants.SPACE);
-            auth.append(Constants.Connection.Tokens.SSL).append(Constants.EQUAL).append(Constants.ZERO).append(Constants.CR);
+            data = new AuthPackage(auth.toString());
             
-            data = new DataPackage(auth.toString());
-            
-            receivedData = this.connection.sendAndReceive(data, false);
+            receivedData = this.authenticationProcess(data);
             
             challenger = generateHash(password, challenger);
             if (!receivedData.getData().equals(challenger)) {
@@ -116,22 +166,37 @@ public class Authentication {
                 throw new BaculaAuthenticationFailed();
             }
             
-            data = new DataPackage(Constants.Connection.Messages.AUTH_OK);
-            receivedData = this.connection.sendAndReceive(data, false);
+            data = new AuthPackage(Constants.Connection.Messages.AUTH_OK);
+            receivedData = this.authenticationProcess(data);
             
             if (receivedData.getReturnCode() != Constants.Connection.ReturnCodes.SUCCESS) {
                 throw new BaculaAuthenticationFailed();
             } else {
-                logger.debug("Auth received: " + receivedData.getData());
-                //TODO: Parse nome e versão do director
+                this.logger.debug("Auth received: " + receivedData.getData());
+                extractVersion(receivedData.getData());
             }
-            this.authenticated = true;
         }
         catch (IOException | BaculaInvalidDataSize | BaculaNoInteger | BaculaAuthenticationException | BaculaAuthenticationFailed | NoSuchAlgorithmException | InvalidKeyException ex) {
             this.logger.error(ex.getLocalizedMessage());
         }
-        
-        return this.authenticated;
     }
     
+    private void extractVersion(String linha) {
+        Pattern p = Pattern.compile("(1000 OK:) +(.*) (Version:) +((\\d+)\\.(\\d+)\\.(\\d+)) +\\((.+)\\)");
+        Matcher m = p.matcher(linha);
+        if (m.find()) {
+            this.setDirectorName(m.group(2));
+            this.setDirectorMajorVersion(Integer.parseInt(m.group(5)));
+            this.setDirectorMinorVersion(Integer.parseInt(m.group(6)));
+            this.setDirectorRevisionVersion(Integer.parseInt(m.group(7)));
+            SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy", Locale.US);
+            try {
+                this.setDirectorRelease(sdf.parse(m.group(8)));
+            }
+            catch (ParseException ex) {
+                this.logger.error(ex.getLocalizedMessage());
+                this.setDirectorRelease(new Date());
+            }
+        }
+    }
 }

@@ -1,18 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Context reloadable="true" antiResourceLocking="true" path="/bmt">
-    <Parameter name="companyName" value="Uhlig e Korovsky Tecnologia Ltda" override="false"/>
-  
-    <Resource name="jdbc/bmtdb" auth="Container" type="javax.sql.DataSource" 
-        driverClassName="org.postgresql.Driver" 
-        maxActive="20" 
-        maxIdle="10" 
-        maxWait="10000" 
-        username="bmt"
-        password="bmt123" 
-        url="jdbc:postgresql://localhost:5432/bmtdb" 
-        removeAbandoned="true"
-        removeAbandonedTimeout="60"
-        logAbandoned="true"
-        validationQuery="select 1"
-        description="BMT Database"/>
+<Context antiResourceLocking="true" path="/bmt" reloadable="true">
+  <Parameter name="companyName" override="false" value="Uhlig e Korovsky Tecnologia Ltda"/>
+  <ResourceLink global="jdbc/bmtdb" name="jdbc/bmtdb" type="javax.sql.DataSource"/>
 </Context>

@@ -21,6 +21,7 @@ import br.com.uktech.bmt.bacula.BaculaConsoleFactory;
 import br.com.uktech.bmt.bacula.bean.BaculaClient;
 import br.com.uktech.bmt.bacula.bean.BaculaStatusClient;
 import br.com.uktech.bmt.bacula.exceptions.BaculaAuthenticationException;
+import br.com.uktech.bmt.bacula.exceptions.BaculaCommunicationException;
 import br.com.uktech.bmt.bacula.exceptions.BaculaDirectorNotSupported;
 import br.com.uktech.bmt.dto.bacula.client.BaculaClientDto;
 import br.com.uktech.bmt.dto.bacula.client.BaculaStatusClientDto;
@@ -29,6 +30,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.dozer.Mapper;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,7 +76,7 @@ public class BaculaClientServiceImpl implements BaculaClientService{
                     }
                 }
             }
-        } catch (IOException | BaculaAuthenticationException | BaculaDirectorNotSupported ex) {
+        } catch (IOException | BaculaCommunicationException | BaculaAuthenticationException | BaculaDirectorNotSupported ex) {
             this.logger.error(ex.getLocalizedMessage());
             return null;
         }
@@ -94,7 +97,7 @@ public class BaculaClientServiceImpl implements BaculaClientService{
                     mapper.map(statusClient,statusClientDto);
                 }
             }
-        } catch (IOException | BaculaAuthenticationException | BaculaDirectorNotSupported ex) {
+        } catch (IOException | BaculaCommunicationException | BaculaAuthenticationException | BaculaDirectorNotSupported ex) {
             this.logger.error(ex.getLocalizedMessage());
         }
         return statusClientDto;

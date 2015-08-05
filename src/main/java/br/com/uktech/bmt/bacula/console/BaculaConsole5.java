@@ -24,12 +24,10 @@ import br.com.uktech.bmt.bacula.bean.BaculaStatusDirector;
 import br.com.uktech.bmt.bacula.exceptions.BaculaInvalidDataSize;
 import br.com.uktech.bmt.bacula.exceptions.BaculaNoInteger;
 import br.com.uktech.bmt.bacula.lib.Constants;
-import br.com.uktech.bmt.bacula.lib.DataPackage;
 import br.com.uktech.bmt.bacula.lib.parser.ParseListClient;
 import br.com.uktech.bmt.bacula.lib.parser.ParseStatusClient;
 import br.com.uktech.bmt.bacula.lib.parser.ParseStatusDirector;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.LoggerFactory;
 
@@ -44,6 +42,7 @@ public class BaculaConsole5 implements BaculaConsole {
     public BaculaConsole5(String directorName, Connection connection) {
         this.directorName = directorName;
         this.connection = connection;
+        this.logger.info("Created a new Bacula " + this.connection.getDirectorVersion().toString() + " console connected on " + this.directorName + " at " + this.connection.getHostname());
     }
 
     @Override
@@ -53,31 +52,26 @@ public class BaculaConsole5 implements BaculaConsole {
     
     @Override
     public BaculaStatusDirector getStatusDirector() {
-        BaculaStatusDirector sd;
-        DataPackage data = new DataPackage(Constants.Connection.Commands.STATUS_DIRECTOR);
+        BaculaStatusDirector sd = null;
         try {
-            DataPackage receivedData = this.connection.sendAndReceive(data, true);
-            sd = new ParseStatusDirector().parse(receivedData.getData());
+            String receivedData = this.connection.sendAndReceive(Constants.Connection.Commands.STATUS_DIRECTOR);
+            sd = new ParseStatusDirector().parse(receivedData);
         }
-        catch (IOException | BaculaInvalidDataSize | BaculaNoInteger ex) {
+        catch (IOException | InterruptedException | BaculaInvalidDataSize | BaculaNoInteger ex) {
             this.logger.error(ex.getLocalizedMessage());
-            return null;
         }
         return sd;
     }
 
     @Override
     public List<BaculaClient> getClients() {
-        List<BaculaClient> clients = new ArrayList<>();
-        DataPackage data = new DataPackage(Constants.Connection.Commands.LLIST_CLIENTS);
+        List<BaculaClient> clients = null;
         try {
-            DataPackage receivedData = this.connection.sendAndReceive(data, true);
-            //Aqui está o Bug
-            clients = new ParseListClient().parse(receivedData.getData());
+            String receivedData = this.connection.sendAndReceive(Constants.Connection.Commands.LLIST_CLIENTS);
+            clients = new ParseListClient().parse(receivedData);
         }
-        catch (IOException | BaculaInvalidDataSize | BaculaNoInteger ex) {
+        catch (IOException | InterruptedException | BaculaInvalidDataSize | BaculaNoInteger ex) {
             this.logger.error(ex.getLocalizedMessage());
-            return null;
         }
         return clients;
     }
@@ -85,15 +79,12 @@ public class BaculaConsole5 implements BaculaConsole {
     @Override
     public BaculaStatusClient getStatusClient(String clientName) {
         BaculaStatusClient statusClient = null;
-        DataPackage data = new DataPackage(Constants.Connection.Commands.STATUS_CLIENT+clientName);
         try {
-            DataPackage receivedData = this.connection.sendAndReceive(data, true);
-            
-            statusClient = new ParseStatusClient().parse(receivedData.getData());
+            String receivedData = this.connection.sendAndReceive(Constants.Connection.Commands.STATUS_CLIENT+clientName);
+            statusClient = new ParseStatusClient().parse(receivedData);
         }
-        catch (IOException | BaculaInvalidDataSize | BaculaNoInteger ex) {
+        catch (IOException | InterruptedException | BaculaInvalidDataSize | BaculaNoInteger ex) {
             this.logger.error(ex.getLocalizedMessage());
-            return null;
         }
         return statusClient;
     }

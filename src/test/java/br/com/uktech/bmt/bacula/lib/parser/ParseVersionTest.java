@@ -16,6 +16,7 @@
  */
 package br.com.uktech.bmt.bacula.lib.parser;
 
+import br.com.uktech.bmt.bacula.lib.parser.ParseVersion;
 import br.com.uktech.bmt.bacula.bean.BaculaVersion;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

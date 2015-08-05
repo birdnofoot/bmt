@@ -17,7 +17,6 @@
 package br.com.uktech.bmt.configuration;
 
 import java.util.Properties;
-import javax.annotation.Resource;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import org.springframework.context.annotation.Bean;
@@ -39,15 +38,15 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages = "br.com.uktech.bmt.model.repository")
 public class PersistenceConfig {
-    
+
     @Bean
-    @Resource(name="jdbc/bmtdb")
     public DataSource dataSource()
     {
         final JndiDataSourceLookup dsLookup = new JndiDataSourceLookup();
         dsLookup.setResourceRef(true);
-        DataSource dataSource = dsLookup.getDataSource("java:/comp/env/jdbc/bmtdb");
+        DataSource dataSource = dsLookup.getDataSource("jdbc/bmtdb");
         return dataSource;
+
     }
     
     @Bean
@@ -55,15 +54,18 @@ public class PersistenceConfig {
     {
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         vendorAdapter.setGenerateDdl(true);
-        vendorAdapter.setShowSql(false);
-        vendorAdapter.setDatabase(Database.POSTGRESQL);
-        vendorAdapter.setDatabasePlatform("org.hibernate.dialect.PostgreSQL9Dialect");
+        vendorAdapter.setShowSql(true);
+        //vendorAdapter.setDatabase(Database.POSTGRESQL);
+        //vendorAdapter.setDatabasePlatform("org.hibernate.dialect.PostgreSQL9Dialect");
 
         Properties properties = new Properties();
-        properties.setProperty("hibernate.hbm2ddl.auto", "create-drop");
+        //properties.setProperty("hibernate.show_sql", "true");
+        //properties.setProperty("hibernate.format_sql", "true"); 
+        //properties.setProperty("hibernate.use_sql_comments", "true");
+        properties.setProperty("hibernate.generate_statistics", "true");
         properties.setProperty("hibernate.bytecode.use_reflection_optimizer", "true");
-        properties.setProperty("hibernate.format_sql", "true"); 
         properties.setProperty("hibernate.id.new_generator_mappings", "true");
+        properties.setProperty("hibernate.hbm2ddl.auto", "create-drop");
         properties.setProperty("hibernate.hbm2ddl.import_files", 
                           "/META-INF/sql/system_module_data.sql,"
                         + "/META-INF/sql/system_user_data.sql,"

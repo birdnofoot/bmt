@@ -21,6 +21,7 @@ import br.com.uktech.bmt.bacula.exceptions.BaculaAuthenticationException;
 import br.com.uktech.bmt.bacula.exceptions.BaculaInvalidDataSize;
 import br.com.uktech.bmt.bacula.exceptions.BaculaNoInteger;
 import java.io.IOException;
+import java.net.InetAddress;
 
 /**
  *
@@ -32,14 +33,22 @@ public interface Connection {
     
     public Boolean isConnected();
     
-    public Boolean connect() throws IOException, BaculaAuthenticationException;
+    public Boolean connect() throws IOException, InterruptedException, BaculaInvalidDataSize, BaculaNoInteger, BaculaAuthenticationException;
     
     public void disconnect();
+      
+    public InetAddress getAddress();
     
-    public DataPackage sendAndReceive(DataPackage data, Boolean handleSignals) throws IOException, BaculaInvalidDataSize, BaculaNoInteger;
+    public Integer getPort();
+    
+    public String getPassword();
     
     public String getHostname();
     
+    public String getDirectorName();
+    
     public BaculaVersion getDirectorVersion();
+    
+    public String sendAndReceive(String command) throws IOException, InterruptedException, BaculaInvalidDataSize, BaculaNoInteger;
     
 }
