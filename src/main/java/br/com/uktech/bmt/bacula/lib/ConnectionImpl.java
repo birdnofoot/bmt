@@ -216,6 +216,4 @@ public class ConnectionImpl extends Authentication implements Connection {
         }
         return returnMessage;        
     }
-    
-
 }

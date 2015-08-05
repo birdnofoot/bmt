@@ -46,6 +46,14 @@ public class BaculaConsole5 implements BaculaConsole {
     }
 
     @Override
+    protected void finalize() throws Throwable {
+        if (this.connection.isConnected()) {
+            this.connection.disconnect();
+        }
+        super.finalize();
+    }
+    
+    @Override
     public String getDirectorName() {
         return this.directorName;
     }
