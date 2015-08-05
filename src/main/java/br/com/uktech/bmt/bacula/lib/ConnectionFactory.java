@@ -55,12 +55,4 @@ public class ConnectionFactory {
         return aux;
     }
     
-    @Override
-    protected void finalize() throws Throwable {
-        for (Iterator<Connection> baculaConnectionIter = this.connections.values().iterator(); baculaConnectionIter.hasNext();){
-            baculaConnectionIter.next().disconnect();
-        }
-        this.connections.clear();
-        super.finalize();
-    }
 }

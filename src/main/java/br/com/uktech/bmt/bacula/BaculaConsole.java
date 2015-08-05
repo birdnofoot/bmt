@@ -34,4 +34,6 @@ public interface BaculaConsole {
     public List<BaculaClient> getClients();
     
     public BaculaStatusClient getStatusClient(String clientName);
+    
+    public void disconnect();
 }

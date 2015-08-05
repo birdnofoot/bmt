@@ -44,14 +44,6 @@ public class BaculaConsole5 implements BaculaConsole {
         this.connection = connection;
         this.logger.info("Created a new Bacula " + this.connection.getDirectorVersion().toString() + " console connected on " + this.directorName + " at " + this.connection.getHostname());
     }
-
-    @Override
-    protected void finalize() throws Throwable {
-        if (this.connection.isConnected()) {
-            this.connection.disconnect();
-        }
-        super.finalize();
-    }
     
     @Override
     public String getDirectorName() {
@@ -95,5 +87,12 @@ public class BaculaConsole5 implements BaculaConsole {
             this.logger.error(ex.getLocalizedMessage());
         }
         return statusClient;
+    }
+
+    @Override
+    public void disconnect() {
+        if (this.connection.isConnected()) {
+            this.connection.disconnect();
+        }
     }
 }
