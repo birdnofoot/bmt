@@ -18,6 +18,9 @@ public class ParseListClient {
             temp = p.getToken(Constants.CR);
             if(temp!=null) {
                 temp = temp.trim();
+                //if(temp.matches("Error: Client resource")) {
+                    
+                //}
                 if(temp.matches(" *(clientid:) *(.+)")) {
                     BaculaClient c = new BaculaClient();
                     c.setId(new ParseClients().parseNumber(temp));
@@ -31,7 +34,9 @@ public class ParseListClient {
                     c.setFileretention(new ParseClients().parseNumber(temp.replace(",", "")));
                     temp = p.getToken(Constants.CR);
                     c.setJobretention(new ParseClients().parseNumber(temp.replace(",", "")));
-                    clients.add(c);
+                    if(c.getId()!=0 && c.getName()!=null && c.getUname() != null && c.getFileretention() != 0 && c.getJobretention() != 0) {
+                        clients.add(c);
+                    }
                 }
             }
             

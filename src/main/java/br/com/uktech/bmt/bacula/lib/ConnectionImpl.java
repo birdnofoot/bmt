@@ -196,16 +196,11 @@ public class ConnectionImpl implements Connection {
     
     @Override
     public BaculaVersion getDirectorVersion() {
-        DataPackage data = new DataPackage(Constants.Connection.Commands.VERSION);
-        BaculaVersion version = null;
-        try {
-            DataPackage returnedData = this.sendAndReceive(data, true);
-            version = ParseVersion.parse(returnedData.getData());
-        }
-        catch (IOException | BaculaInvalidDataSize | BaculaNoInteger ex) {
-            this.logger.error(ex.getLocalizedMessage());
-        }
-        
+        BaculaVersion version = new BaculaVersion();
+        version.setMajor(auth.getMajor());
+        version.setMinor(auth.getMinor());
+        version.setRevision(auth.getRevision());
+        version.setRelease(auth.getRelease());
         return version;
     }
 }

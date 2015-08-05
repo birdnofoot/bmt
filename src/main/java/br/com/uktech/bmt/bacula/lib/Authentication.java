@@ -24,7 +24,15 @@ import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.crypto.Mac;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
@@ -44,6 +52,12 @@ public class Authentication {
     
     private final Connection connection;
     private Boolean authenticated;
+    
+    private String nameDirector;
+    private Integer major;
+    private Integer minor;
+    private Integer revision;
+    private Date release;
     
     public Authentication(Connection connection) {
         this.connection = connection;
@@ -122,7 +136,8 @@ public class Authentication {
             if (receivedData.getReturnCode() != Constants.Connection.ReturnCodes.SUCCESS) {
                 throw new BaculaAuthenticationFailed();
             } else {
-                logger.debug("Auth received: " + receivedData.getData());
+                logger.debug("Fazer Regex:" + receivedData.getData());
+                parse(receivedData.getData());
                 //TODO: Parse nome e versão do director
             }
             this.authenticated = true;
@@ -132,6 +147,47 @@ public class Authentication {
         }
         
         return this.authenticated;
+    }
+    
+    private void parse(String linha) {
+        Pattern p = Pattern.compile("(1000 OK:) +(.*) (Version:) +((\\d+)\\.(\\d+)\\.(\\d+)) +\\((.+)\\)");
+        Matcher m = p.matcher(linha);
+        if (m.find()) {
+            nameDirector = m.group(2);
+            major = Integer.parseInt(m.group(5));
+            minor = Integer.parseInt(m.group(6));
+            revision = Integer.parseInt(m.group(7));
+            SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy", Locale.US);
+            try {
+                release = sdf.parse(m.group(8));
+            }
+            catch (ParseException ex) {
+                this.logger.error(ex.getLocalizedMessage());
+            }
+        }
+    }
+    
+    public String getNameDirector() {
+        return nameDirector;
+    }
+    
+    public String getVersionDirector() {
+        return getMajor()+"."+getMinor()+"."+getRevision();
+    }
+    
+    public Integer getMajor() {
+        return major;
+    }
+    
+    public Integer getMinor() {
+        return minor;
+    }
+    public Integer getRevision() {
+        return revision;
+    }
+    
+    public Date getRelease() {
+        return release;
     }
     
 }
