@@ -53,7 +53,7 @@ public class BaculaConsoleFactoryTest {
      */
     @Test
     public void testGetConsole() throws Exception {
-        System.out.println("getConsole");
+        /*System.out.println("getConsole");
         String directorName = "backup-00-dir";
         String address = "192.168.103.1";
         Integer port = 9101;
@@ -61,7 +61,7 @@ public class BaculaConsoleFactoryTest {
         BaculaConsoleFactory instance = BaculaConsoleFactory.getFactory();
         BaculaConsole result = instance.getConsole(directorName, address, port, password);
         assertNotNull(result);
-        System.out.println(result.getClass());
+        System.out.println(result.getClass());*/
     }
     
 }
