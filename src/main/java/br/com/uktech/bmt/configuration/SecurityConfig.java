@@ -56,8 +56,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       web.ignoring()
            .antMatchers("/fonts/**")
            .antMatchers("/images/**")
-           .antMatchers("/scripts/**")
-           .antMatchers("/styles/**");
+           .antMatchers("/js/**")
+           .antMatchers("/css/**");
     }
     
     @Override
@@ -111,7 +111,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.logout()
             .logoutUrl("/logout")
-            .logoutSuccessUrl("/")
+            .logoutSuccessUrl("/logout")
             .invalidateHttpSession(true)
             .deleteCookies("JSESSIONID");
 

@@ -25,76 +25,87 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <meta name="description" content=""/>
         <meta name="author" content="Uhlig &amp; Korovsky Tecnologia Ltda - ME"/>
 
-        <link rel="icon" href="../../../../images/favicon.gif" th:href="@{/images/favicon.gif}"/>
+        <link rel="icon" href="../../../images/favicon.gif" th:href="@{/images/favicon.gif}"/>
+        <link rel="stylesheet" href="../../../css/bootstrap.css" th:href="@{/css/bootstrap.min.css}"/>
+        <link rel="stylesheet" href="../../../css/bmt.css" th:href="@{/css/bmt.css}"/>
     </head>
     <body>
-        <div th:replace="fragments/navbar :: navbar">&nbsp;</div>
-            <form action="#" th:action="@{/system/user/save}" th:object="${sysuser}" method="post">
-                <fieldset>
-                    <input type="text" hidden="hidden" th:value="*{id}" th:field="*{id}" />
-                    <div>
-                        <label th:text="#{view.system.user[firstName]}">firstName</label>
+        <div id="container">
+            <nav th:replace="fragments/navbar :: navbar">&nbsp;</nav>
+            <div class="container-fluid">
+                <form action="#" th:action="@{/system/user/save}" th:object="${sysuser}" method="post">
+                    <fieldset>
+                        <input type="text" hidden="hidden" th:value="*{id}" th:field="*{id}" />
                         <div>
-                            <input type="text" th:value="*{firstName}" th:field="*{firstName}" />
-                            <p th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">firstName error</p> 
+                            <label th:text="#{view.system.user[firstName]}">firstName</label>
+                            <div>
+                                <input type="text" th:value="*{firstName}" th:field="*{firstName}" />
+                                <p th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">firstName error</p> 
+                            </div>
+                        </div>
+                        <div>
+                            <label th:text="#{view.system.user[middleName]}">middleName</label>
+                            <div>
+                                <input type="text" th:value="*{middleName}" th:field="*{middleName}" />
+                                <p th:if="${#fields.hasErrors('middleName')}" th:errors="*{middleName}">middleName error</p> 
+                            </div>
+                        </div>
+                        <div>
+                            <label th:text="#{view.system.user[lastName]}">lastName</label>
+                            <div>
+                                <input type="text" th:value="*{lastName}" th:field="*{lastName}" />
+                                <p th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">lastName error</p> 
+                            </div>
+                        </div>
+                        <div>
+                            <label th:text="#{view.system.user[email]}">email</label>
+                            <div>
+                                <input type="text" th:value="*{email}" th:field="*{email}" />
+                                <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}">email error</p> 
+                            </div>
+                        </div>
+                        <div>
+                            <label th:text="#{view.system.user[confirmEmail]}">confirmEmail</label>
+                            <div>
+                                <input type="text" th:value="*{confirmEmail}" th:field="*{confirmEmail}" />
+                                <p th:if="${#fields.hasErrors('confirmEmail')}" th:errors="*{confirmEmail}">confirmEmail error</p> 
+                            </div>
+                        </div>
+                        <div>
+                            <label th:text="#{view.system.user[password]}">password</label>
+                            <div>
+                                <input type="password" th:value="*{password}" th:field="*{password}" />
+                                <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}">password error</p> 
+                            </div>
+                        </div>
+                        <div>
+                            <label th:text="#{view.system.user[confirmPassword]}">confirmPassword</label>
+                            <div>
+                                <input type="password" th:value="*{confirmPassword}" th:field="*{confirmPassword}" />
+                                <p th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}">confirmPassword error</p> 
+                            </div>
+                        </div>
+                        <div>
+                            <label th:text="#{view.system.user[enabled]}">enabled</label>
+                            <div>
+                                <input type="checkbox" th:checked="*{enabled}" th:field="*{enabled}" />
+                                <p th:if="${#fields.hasErrors('enabled')}" th:errors="*{enabled}">enabled error</p> 
+                            </div>
+                        </div>
+                    </fieldset>
+                    <div>
+                        <div>
+                            <button type="submit" name="action" value="submit">Save</button>
                         </div>
                     </div>
-                    <div>
-                        <label th:text="#{view.system.user[middleName]}">middleName</label>
-                        <div>
-                            <input type="text" th:value="*{middleName}" th:field="*{middleName}" />
-                            <p th:if="${#fields.hasErrors('middleName')}" th:errors="*{middleName}">middleName error</p> 
-                        </div>
-                    </div>
-                    <div>
-                        <label th:text="#{view.system.user[lastName]}">lastName</label>
-                        <div>
-                            <input type="text" th:value="*{lastName}" th:field="*{lastName}" />
-                            <p th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">lastName error</p> 
-                        </div>
-                    </div>
-                    <div>
-                        <label th:text="#{view.system.user[email]}">email</label>
-                        <div>
-                            <input type="text" th:value="*{email}" th:field="*{email}" />
-                            <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}">email error</p> 
-                        </div>
-                    </div>
-                    <div>
-                        <label th:text="#{view.system.user[confirmEmail]}">confirmEmail</label>
-                        <div>
-                            <input type="text" th:value="*{confirmEmail}" th:field="*{confirmEmail}" />
-                            <p th:if="${#fields.hasErrors('confirmEmail')}" th:errors="*{confirmEmail}">confirmEmail error</p> 
-                        </div>
-                    </div>
-                    <div>
-                        <label th:text="#{view.system.user[password]}">password</label>
-                        <div>
-                            <input type="password" th:value="*{password}" th:field="*{password}" />
-                            <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}">password error</p> 
-                        </div>
-                    </div>
-                    <div>
-                        <label th:text="#{view.system.user[confirmPassword]}">confirmPassword</label>
-                        <div>
-                            <input type="password" th:value="*{confirmPassword}" th:field="*{confirmPassword}" />
-                            <p th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}">confirmPassword error</p> 
-                        </div>
-                    </div>
-                    <div>
-                        <label th:text="#{view.system.user[enabled]}">enabled</label>
-                        <div>
-                            <input type="checkbox" th:checked="*{enabled}" th:field="*{enabled}" />
-                            <p th:if="${#fields.hasErrors('enabled')}" th:errors="*{enabled}">enabled error</p> 
-                        </div>
-                    </div>
-                </fieldset>
-                <div>
-                    <div>
-                        <button type="submit" name="action" value="submit">Save</button>
-                    </div>
-                </div>
-            </form>
-        <div th:replace="fragments/footer :: footer">&nbsp;</div>
+                </form>
+            </div>
+        </div>
+        <footer th:replace="fragments/footer :: footer">
+            <script src="../../../js/jquery-2.1.4.js" th:src="@{/js/jquery-2.1.4.min.js}"></script>
+            <script src="../../../js/bootstrap.js" th:src="@{/js/bootstrap.min.js}"></script>
+            <script src="../../../js/bmt.js" th:src="@{/js/bmt.js}"></script>
+            <p>Footer</p>
+        </footer>
     </body>
 </html>

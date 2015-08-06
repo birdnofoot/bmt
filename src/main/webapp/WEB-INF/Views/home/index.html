@@ -26,15 +26,34 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <meta name="author" content="Uhlig &amp; Korovsky Tecnologia Ltda - ME"/>
 
         <link rel="icon" href="../../../images/favicon.gif" th:href="@{/images/favicon.gif}"/>
+        <link rel="icon" href="../../../images/favicon.gif" th:href="@{/images/favicon.gif}"/>
+        <link rel="stylesheet" href="../../../css/bootstrap.css" th:href="@{/css/bootstrap.min.css}"/>
+        <link rel="stylesheet" href="../../../css/bmt.css" th:href="@{/css/bmt.css}"/>
     </head>
     <body>
-        <div th:replace="fragments/navbar :: navbar">&nbsp;</div>
-        <sec:authorize access="isAuthenticated()">
-            <div>
-                User: <span sec:authentication="name">miquel</span><br/>
-                Auth: <span sec:authentication="authorities">Auth</span>
+        <div id="container">
+            <nav th:replace="fragments/navbar :: navbar">&nbsp;</nav>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-2">
+                        <div th:replace="fragments/navbar :: navbar-dashboard(directors=${directors})">&nbsp;</div>
+                    </div>
+                    <div class="col-md-10">
+                        <sec:authorize access="isAuthenticated()">
+                            <div>
+                                User: <span sec:authentication="name">miquel</span><br/>
+                                Auth: <span sec:authentication="authorities">Auth</span>
+                            </div>
+                        </sec:authorize>
+                    </div>
+                </div>
             </div>
-        </sec:authorize>
-        <div th:replace="fragments/footer :: footer">&nbsp;</div>
+        </div>
+        <footer th:replace="fragments/footer :: footer">
+            <script src="../../../js/jquery-2.1.4.js" th:src="@{/js/jquery-2.1.4.min.js}"></script>
+            <script src="../../../js/bootstrap.js" th:src="@{/js/bootstrap.min.js}"></script>
+            <script src="../../../js/bmt.js" th:src="@{/js/bmt.js}"></script>
+            <p>Footer</p>
+        </footer>
     </body>
 </html>

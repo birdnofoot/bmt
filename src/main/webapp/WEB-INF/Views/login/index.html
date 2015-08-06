@@ -26,33 +26,55 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <meta name="author" content="Uhlig &amp; Korovsky Tecnologia Ltda - ME"/>
 
         <link rel="icon" href="../../../images/favicon.gif" th:href="@{/images/favicon.gif}"/>
+        <link rel="stylesheet" href="../../../css/bootstrap.css" th:href="@{/css/bootstrap.min.css}"/>
+        <link rel="stylesheet" href="../../../css/bmt.css" th:href="@{/css/bmt.css}"/>
     </head>
     <body>
-        <div><h1>LOGIN</h1></div>
-        <div role="main">
-            <th:block th:if="${error != null}">
-                <div th:replace="fragments/alerts :: alert (type='danger', title=#{error.title}, message=${session['SPRING_SECURITY_LAST_EXCEPTION'].message})"  th:remove="tag">&nbsp;</div>
-            </th:block>
-            <th:block th:if="${logout != null}">
-                <div th:replace="fragments/alerts :: alert (type='success', title='', message=#{login.logout})"  th:remove="tag">&nbsp;</div>
-            </th:block>
-            <div>
-                <form role="form" accept-charset="UTF-8" method="post" th:action="@{/login/check}">
-                    <fieldset>
-                        <div class="form-group">
-                            <input id="username" name="username" type="text" placeholder="Username" required="true"/>
-                        </div>
-                        <div class="form-group">
-                            <input id="password" name="password" type="password" placeholder="Password" value=""/>
-                        </div>
-                        <div class="control-group">
-                            <div class="controls">
-                                <button id="submitbutton" name="submitbutton" type="submit">Access</button>
+        <div id="container">
+            <div class="container">
+                <div class="page-alerts">
+                    <th:block th:if="${error != null}">
+                        <div th:replace="fragments/alerts :: alert (type='danger', title=#{alert.error}, message=${session['SPRING_SECURITY_LAST_EXCEPTION'].message})"  th:remove="tag">&nbsp;</div>
+                    </th:block>
+                    <th:block th:if="${logout != null}">
+                        <div th:replace="fragments/alerts :: alert (type='success', title=#{alert.success}, message=#{alert.success[logout]})"  th:remove="tag">&nbsp;</div>
+                    </th:block>
+                </div>
+                <div class="row vertical-offset-100">
+                    <div class="col-md-4 col-md-offset-4">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">                                
+                                <div class="row-fluid user-row">
+                                    <img src="http://s11.postimg.org/7kzgji28v/logo_sm_2_mr_1.png" class="img-responsive" alt="Conxole Admin"/>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <form role="form" class="form-signin" accept-charset="UTF-8" method="post" th:action="@{/login/check}">
+                                    <fieldset>
+                                        <div class="input-group input-group-lg">
+                                            <span id="username-glyphicon-addon" class="input-group-addon glyphicon glyphicon-user"></span>
+                                            <input id="username" class="form-control" name="username" type="text" placeholder="E-Mail" required="" autofocus="" aria-describedby="username-glyphicon-addon"/>
+                                        </div>
+                                        <div class="input-group input-group-lg">
+                                            <span id="password-glyphicon-addon" class="input-group-addon glyphicon glyphicon-star"></span>
+                                            <input id="password" class="form-control" name="password" type="password" placeholder="Password" value=""  aria-describedby="password-glyphicon-addon"/>
+                                        </div>
+                                        <!--input id="username" class="form-control" name="username" type="text" placeholder="Username" required="" autofocus=""/-->
+                                        <!--input id="password" class="form-control" name="password" type="password" placeholder="Password" value=""/-->
+                                    </fieldset>
+                                    <button class="btn btn-lg btn-success btn-block" type="submit" th:text="#{login.form[access]}">Access</button>
+                                </form>
                             </div>
                         </div>
-                    </fieldset>
-                </form>
+                    </div>
+                </div>
             </div>
         </div>
+        <footer th:replace="fragments/footer :: footer">
+            <script src="../../../js/jquery-2.1.4.js" th:src="@{/js/jquery-2.1.4.min.js}"></script>
+            <script src="../../../js/bootstrap.js" th:src="@{/js/bootstrap.min.js}"></script>
+            <script src="../../../js/bmt.js" th:src="@{/js/bmt.js}"></script>
+            <p>Footer</p>
+        </footer>
     </body>
 </html>

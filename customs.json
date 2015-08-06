@@ -1,22 +1,46 @@
 {
-    "elements": {},
+    "elements": {
+        "sec:authorize": {}
+    },
     "attributes": {
+        "th:classappend": {},
         "th:text": {
             "context": "title"
         },
-        "th:if": {},
-        "th:checked": {
-            "context": "input"
+        "aria-expanded": {
+            "context": "a"
         },
         "th:action": {
             "context": "form"
         },
+        "th:fragment": {
+            "context": "div"
+        },
+        "th:if": {},
+        "sec:authentication": {
+            "context": "span"
+        },
+        "th:id": {},
+        "th:checked": {
+            "context": "input"
+        },
+        "th:src": {
+            "context": "script"
+        },
+        "sec:authorize": {},
         "th:replace": {},
+        "th:switch": {
+            "context": "div"
+        },
         "th:href": {
             "context": "link"
         },
+        "th:case": {
+            "context": "span"
+        },
         "th:value": {
             "context": "input"
-        }
+        },
+        "th:attr": {}
     }
 }

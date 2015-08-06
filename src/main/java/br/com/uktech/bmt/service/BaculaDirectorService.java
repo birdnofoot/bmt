@@ -18,6 +18,7 @@ package br.com.uktech.bmt.service;
 
 import br.com.uktech.bmt.bacula.bean.BaculaStatusDirector;
 import br.com.uktech.bmt.dto.model.director.DirectorDto;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -31,6 +32,7 @@ public interface BaculaDirectorService {
     public DirectorDto save(DirectorDto baculadirdto);
     public Page<DirectorDto> searchAllBaculaDirectors(Pageable p);
     public DirectorDto getBaculaDirectorById(Long id);
+    public List<DirectorDto> searchAllBaculaDirectors();
     //Adicionar Dto do baculaSD
     public BaculaStatusDirector getStatusDirector(DirectorDto baculadirdto);
     
