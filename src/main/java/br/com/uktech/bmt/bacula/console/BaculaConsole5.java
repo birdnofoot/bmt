@@ -21,6 +21,7 @@ import br.com.uktech.bmt.bacula.BaculaConsole;
 import br.com.uktech.bmt.bacula.bean.BaculaClient;
 import br.com.uktech.bmt.bacula.bean.BaculaStatusClient;
 import br.com.uktech.bmt.bacula.bean.BaculaStatusDirector;
+import br.com.uktech.bmt.bacula.exceptions.BaculaCommandException;
 import br.com.uktech.bmt.bacula.exceptions.BaculaInvalidDataSize;
 import br.com.uktech.bmt.bacula.exceptions.BaculaNoInteger;
 import br.com.uktech.bmt.bacula.lib.Constants;
@@ -32,17 +33,17 @@ import java.util.List;
 import org.slf4j.LoggerFactory;
 
 
-public class BaculaConsole5 implements BaculaConsole {
+public class BaculaConsole5 extends AbstractBaculaConsole implements BaculaConsole {
     
     private final org.slf4j.Logger logger = LoggerFactory.getLogger(BaculaConsole5.class);
     
     private final String directorName;
-    private final Connection connection;
+    
     
     public BaculaConsole5(String directorName, Connection connection) {
+        super(connection);
         this.directorName = directorName;
-        this.connection = connection;
-        this.logger.info("Created a new Bacula " + this.connection.getDirectorVersion().toString() + " console connected on " + this.directorName + " at " + this.connection.getHostname());
+        this.logger.info("Created a new Bacula " + this.getConnection().getDirectorVersion().toString() + " console connected on " + this.directorName + " at " + this.getConnection().getHostname());
     }
     
     @Override
@@ -54,10 +55,10 @@ public class BaculaConsole5 implements BaculaConsole {
     public BaculaStatusDirector getStatusDirector() {
         BaculaStatusDirector sd = null;
         try {
-            String receivedData = this.connection.sendAndReceive(Constants.Connection.Commands.STATUS_DIRECTOR);
+            String receivedData = this.getConnection().sendAndReceive(Constants.Connection.Commands.STATUS_DIRECTOR);
             sd = new ParseStatusDirector().parse(receivedData);
         }
-        catch (IOException | InterruptedException | BaculaInvalidDataSize | BaculaNoInteger ex) {
+        catch (IOException | InterruptedException | BaculaInvalidDataSize | BaculaNoInteger | BaculaCommandException ex) {
             this.logger.error(ex.getLocalizedMessage());
         }
         return sd;
@@ -67,10 +68,10 @@ public class BaculaConsole5 implements BaculaConsole {
     public List<BaculaClient> getClients() {
         List<BaculaClient> clients = null;
         try {
-            String receivedData = this.connection.sendAndReceive(Constants.Connection.Commands.LLIST_CLIENTS);
+            String receivedData = this.getConnection().sendAndReceive(Constants.Connection.Commands.LLIST_CLIENTS);
             clients = new ParseListClient().parse(receivedData);
         }
-        catch (IOException | InterruptedException | BaculaInvalidDataSize | BaculaNoInteger ex) {
+        catch (IOException | InterruptedException | BaculaInvalidDataSize | BaculaNoInteger | BaculaCommandException ex) {
             this.logger.error(ex.getLocalizedMessage());
         }
         return clients;
@@ -80,19 +81,12 @@ public class BaculaConsole5 implements BaculaConsole {
     public BaculaStatusClient getStatusClient(String clientName) {
         BaculaStatusClient statusClient = null;
         try {
-            String receivedData = this.connection.sendAndReceive(Constants.Connection.Commands.STATUS_CLIENT+clientName);
+            String receivedData = this.getConnection().sendAndReceive(Constants.Connection.Commands.STATUS_CLIENT+clientName);
             statusClient = new ParseStatusClient().parse(receivedData);
         }
-        catch (IOException | InterruptedException | BaculaInvalidDataSize | BaculaNoInteger ex) {
+        catch (IOException | InterruptedException | BaculaInvalidDataSize | BaculaNoInteger | BaculaCommandException ex) {
             this.logger.error(ex.getLocalizedMessage());
         }
         return statusClient;
-    }
-
-    @Override
-    public void disconnect() {
-        if (this.connection.isConnected()) {
-            this.connection.disconnect();
-        }
     }
 }

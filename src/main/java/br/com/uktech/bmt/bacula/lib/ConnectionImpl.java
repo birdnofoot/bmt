@@ -18,6 +18,7 @@ package br.com.uktech.bmt.bacula.lib;
 
 import br.com.uktech.bmt.bacula.bean.BaculaVersion;
 import br.com.uktech.bmt.bacula.exceptions.BaculaAuthenticationException;
+import br.com.uktech.bmt.bacula.exceptions.BaculaCommandException;
 import br.com.uktech.bmt.bacula.exceptions.BaculaInvalidDataSize;
 import br.com.uktech.bmt.bacula.exceptions.BaculaNoInteger;
 import java.io.BufferedInputStream;
@@ -57,7 +58,7 @@ public class ConnectionImpl extends Authentication implements Connection {
         this.thReader = null;
     }
     
-    private void setAPIMode() throws IOException, InterruptedException, BaculaInvalidDataSize, BaculaNoInteger {
+    private void setAPIMode() throws IOException, InterruptedException, BaculaInvalidDataSize, BaculaNoInteger, BaculaCommandException {
         sendAndReceive(".api 1");       
     }
     
@@ -121,7 +122,7 @@ public class ConnectionImpl extends Authentication implements Connection {
     }
 
     @Override
-    public Boolean connect() throws IOException, InterruptedException, BaculaInvalidDataSize, BaculaNoInteger, BaculaAuthenticationException {
+    public Boolean connect() throws IOException, InterruptedException, BaculaInvalidDataSize, BaculaNoInteger, BaculaAuthenticationException, BaculaCommandException {
         if (this.socket == null) {
             this.socket = new Socket(this.getAddress(), this.getPort());
             this.socket.setKeepAlive(true);
@@ -154,7 +155,7 @@ public class ConnectionImpl extends Authentication implements Connection {
             this.socket = null;
             if (this.thReader != null) {
                 try {
-                    this.thReader.join(1000);
+                    this.thReader.join(5000);
                 } catch (InterruptedException ex) {
                     this.logger.error("Error finishing the thread: " + ex.getLocalizedMessage());
                 }
@@ -188,7 +189,7 @@ public class ConnectionImpl extends Authentication implements Connection {
     }
 
     @Override
-    public String sendAndReceive(String command) throws IOException, InterruptedException, BaculaInvalidDataSize, BaculaNoInteger {
+    public String sendAndReceive(String command) throws IOException, InterruptedException, BaculaInvalidDataSize, BaculaNoInteger, BaculaCommandException {
         String returnMessage = null;
         try {
             this.semaphore.acquire();
@@ -206,6 +207,16 @@ public class ConnectionImpl extends Authentication implements Connection {
                 this.logger.debug("waitForServerReady");
                 this.reader.waitForServerReady();
                 this.logger.debug("ServerReady");
+                if (this.reader.isHasErrors()) {
+                    Exception ex = this.reader.getLastException();
+                    if (ex instanceof BaculaNoInteger) {
+                        throw (BaculaNoInteger)ex;
+                    } else if (ex instanceof BaculaCommandException) {
+                        throw (BaculaCommandException)ex;
+                    } else if (ex instanceof BaculaInvalidDataSize) {
+                        throw (BaculaInvalidDataSize)ex;
+                    }
+                }
                 returnMessage = this.reader.getReturnMessage();
                 if (returnMessage.isEmpty()) {
                     returnMessage = null;

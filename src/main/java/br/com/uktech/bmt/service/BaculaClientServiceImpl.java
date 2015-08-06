@@ -76,7 +76,7 @@ public class BaculaClientServiceImpl implements BaculaClientService{
                     }
                 }
             }
-        } catch (IOException | BaculaCommunicationException | BaculaAuthenticationException | BaculaDirectorNotSupported ex) {
+        } catch (BaculaCommunicationException | BaculaAuthenticationException | BaculaDirectorNotSupported ex) {
             this.logger.error(ex.getLocalizedMessage());
             return null;
         }
@@ -97,7 +97,7 @@ public class BaculaClientServiceImpl implements BaculaClientService{
                     mapper.map(statusClient,statusClientDto);
                 }
             }
-        } catch (IOException | BaculaCommunicationException | BaculaAuthenticationException | BaculaDirectorNotSupported ex) {
+        } catch (BaculaCommunicationException | BaculaAuthenticationException | BaculaDirectorNotSupported ex) {
             this.logger.error(ex.getLocalizedMessage());
         }
         return statusClientDto;

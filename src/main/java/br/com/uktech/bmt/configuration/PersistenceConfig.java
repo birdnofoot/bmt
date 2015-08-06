@@ -25,7 +25,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.lookup.JndiDataSourceLookup;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -53,16 +52,11 @@ public class PersistenceConfig {
     public EntityManagerFactory entityManagerFactory() 
     {
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-        vendorAdapter.setGenerateDdl(true);
-        vendorAdapter.setShowSql(true);
-        //vendorAdapter.setDatabase(Database.POSTGRESQL);
-        //vendorAdapter.setDatabasePlatform("org.hibernate.dialect.PostgreSQL9Dialect");
+        vendorAdapter.setGenerateDdl(false);
+        vendorAdapter.setShowSql(false);
 
         Properties properties = new Properties();
-        //properties.setProperty("hibernate.show_sql", "true");
-        //properties.setProperty("hibernate.format_sql", "true"); 
-        //properties.setProperty("hibernate.use_sql_comments", "true");
-        properties.setProperty("hibernate.generate_statistics", "true");
+        properties.setProperty("hibernate.generate_statistics", "false");
         properties.setProperty("hibernate.bytecode.use_reflection_optimizer", "true");
         properties.setProperty("hibernate.id.new_generator_mappings", "true");
         properties.setProperty("hibernate.hbm2ddl.auto", "create-drop");

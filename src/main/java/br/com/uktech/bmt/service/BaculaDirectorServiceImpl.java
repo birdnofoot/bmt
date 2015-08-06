@@ -22,18 +22,13 @@ import br.com.uktech.bmt.bacula.bean.BaculaStatusDirector;
 import br.com.uktech.bmt.bacula.exceptions.BaculaAuthenticationException;
 import br.com.uktech.bmt.bacula.exceptions.BaculaCommunicationException;
 import br.com.uktech.bmt.bacula.exceptions.BaculaDirectorNotSupported;
-import br.com.uktech.bmt.bacula.exceptions.BaculaInvalidDataSize;
-import br.com.uktech.bmt.bacula.exceptions.BaculaNoInteger;
 import br.com.uktech.bmt.dto.model.director.DirectorDto;
 import br.com.uktech.bmt.model.Director;
 import br.com.uktech.bmt.model.repository.BaculaDirectorRepository;
 import java.io.IOException;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.dozer.Mapper;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -112,7 +107,7 @@ public class BaculaDirectorServiceImpl implements BaculaDirectorService {
                 statusDir = console.getStatusDirector();
             }
         }
-        catch (IOException | BaculaCommunicationException | BaculaAuthenticationException | BaculaDirectorNotSupported ex) {
+        catch (BaculaCommunicationException | BaculaAuthenticationException | BaculaDirectorNotSupported ex) {
             this.logger.error(ex.getLocalizedMessage());
             return null;
         }

@@ -18,6 +18,7 @@ package br.com.uktech.bmt.bacula.lib;
 
 import br.com.uktech.bmt.bacula.bean.BaculaVersion;
 import br.com.uktech.bmt.bacula.exceptions.BaculaAuthenticationException;
+import br.com.uktech.bmt.bacula.exceptions.BaculaCommandException;
 import br.com.uktech.bmt.bacula.exceptions.BaculaInvalidDataSize;
 import br.com.uktech.bmt.bacula.exceptions.BaculaNoInteger;
 import java.io.IOException;
@@ -33,7 +34,7 @@ public interface Connection {
     
     public Boolean isConnected();
     
-    public Boolean connect() throws IOException, InterruptedException, BaculaInvalidDataSize, BaculaNoInteger, BaculaAuthenticationException;
+    public Boolean connect() throws IOException, InterruptedException, BaculaInvalidDataSize, BaculaNoInteger, BaculaAuthenticationException, BaculaCommandException;
     
     public void disconnect();
       
@@ -49,6 +50,6 @@ public interface Connection {
     
     public BaculaVersion getDirectorVersion();
     
-    public String sendAndReceive(String command) throws IOException, InterruptedException, BaculaInvalidDataSize, BaculaNoInteger;
+    public String sendAndReceive(String command) throws IOException, InterruptedException, BaculaInvalidDataSize, BaculaNoInteger, BaculaCommandException;
     
 }

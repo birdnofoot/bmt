@@ -22,11 +22,13 @@ import br.com.uktech.bmt.bacula.lib.ConnectionFactory;
 import br.com.uktech.bmt.bacula.console.BaculaConsole5;
 import br.com.uktech.bmt.bacula.console.BaculaConsole7;
 import br.com.uktech.bmt.bacula.exceptions.BaculaAuthenticationException;
+import br.com.uktech.bmt.bacula.exceptions.BaculaCommandException;
 import br.com.uktech.bmt.bacula.exceptions.BaculaCommunicationException;
 import br.com.uktech.bmt.bacula.exceptions.BaculaDirectorNotSupported;
 import br.com.uktech.bmt.bacula.exceptions.BaculaInvalidDataSize;
 import br.com.uktech.bmt.bacula.exceptions.BaculaNoInteger;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -51,7 +53,7 @@ public class BaculaConsoleFactory {
         return BaculaConsoleFactory.factory;
     }
     
-    public BaculaConsole getConsole(String directorName, String address, Integer port, String password) throws IOException, BaculaAuthenticationException, BaculaDirectorNotSupported, BaculaCommunicationException {
+    public BaculaConsole getConsole(String directorName, String address, Integer port, String password) throws BaculaAuthenticationException, BaculaDirectorNotSupported, BaculaCommunicationException {
         BaculaConsole console = this.consoles.get(directorName.toLowerCase());
         if (console == null) {
             try {
@@ -75,11 +77,27 @@ public class BaculaConsoleFactory {
                     throw new BaculaDirectorNotSupported();
                 }
             }
-            catch (InterruptedException | BaculaInvalidDataSize | BaculaNoInteger ex) {
+            catch (IOException | InterruptedException | BaculaInvalidDataSize | BaculaNoInteger | BaculaCommandException ex) {
                 throw new BaculaCommunicationException();
+            }
+        } else {
+            if (!console.isConnected()) {
+                console.reconnect();
             }
         }
         return console;
     }
+
+    @Override
+    protected void finalize() throws Throwable {
+        if (!this.consoles.isEmpty()) {
+            for (Iterator<BaculaConsole> iterator = this.consoles.values().iterator(); iterator.hasNext();) {
+                BaculaConsole next = iterator.next();
+                next.disconnect();
+            }
+        }
+        super.finalize();
+    }
+    
     
 }

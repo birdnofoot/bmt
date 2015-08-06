@@ -19,6 +19,8 @@ package br.com.uktech.bmt.bacula;
 import br.com.uktech.bmt.bacula.bean.BaculaClient;
 import br.com.uktech.bmt.bacula.bean.BaculaStatusClient;
 import br.com.uktech.bmt.bacula.bean.BaculaStatusDirector;
+import br.com.uktech.bmt.bacula.exceptions.BaculaAuthenticationException;
+import br.com.uktech.bmt.bacula.exceptions.BaculaCommunicationException;
 import java.util.List;
 
 /**
@@ -35,5 +37,9 @@ public interface BaculaConsole {
     
     public BaculaStatusClient getStatusClient(String clientName);
     
+    public void reconnect() throws BaculaAuthenticationException, BaculaCommunicationException;
+    
     public void disconnect();
+    
+    public Boolean isConnected();
 }
