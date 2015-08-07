@@ -19,17 +19,21 @@ package br.com.uktech.bmt.bacula.console;
 import br.com.uktech.bmt.bacula.lib.Connection;
 import br.com.uktech.bmt.bacula.BaculaConsole;
 import br.com.uktech.bmt.bacula.bean.BaculaClient;
+import br.com.uktech.bmt.bacula.bean.BaculaJob;
 import br.com.uktech.bmt.bacula.bean.BaculaStatusClient;
 import br.com.uktech.bmt.bacula.bean.BaculaStatusDirector;
 import br.com.uktech.bmt.bacula.exceptions.BaculaCommandException;
 import br.com.uktech.bmt.bacula.exceptions.BaculaInvalidDataSize;
 import br.com.uktech.bmt.bacula.exceptions.BaculaNoInteger;
 import br.com.uktech.bmt.bacula.lib.Constants;
+import br.com.uktech.bmt.bacula.lib.parser.ParseJobs;
 import br.com.uktech.bmt.bacula.lib.parser.ParseListClient;
 import br.com.uktech.bmt.bacula.lib.parser.ParseStatusClient;
 import br.com.uktech.bmt.bacula.lib.parser.ParseStatusDirector;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
+import javax.swing.JOptionPane;
 import org.slf4j.LoggerFactory;
 
 
@@ -38,7 +42,6 @@ public class BaculaConsole5 extends AbstractBaculaConsole implements BaculaConso
     private final org.slf4j.Logger logger = LoggerFactory.getLogger(BaculaConsole5.class);
     
     private final String directorName;
-    
     
     public BaculaConsole5(String directorName, Connection connection) {
         super(connection);
@@ -57,6 +60,14 @@ public class BaculaConsole5 extends AbstractBaculaConsole implements BaculaConso
         try {
             String receivedData = this.getConnection().sendAndReceive(Constants.Connection.Commands.STATUS_DIRECTOR);
             sd = new ParseStatusDirector().parse(receivedData);
+            for (Iterator<BaculaJob> iterator = sd.getTerminatedJobs().iterator(); iterator.hasNext();) {
+                BaculaJob job = iterator.next();
+                detailBaculaJob(job);
+            }
+            for (Iterator<BaculaJob> iterator = sd.getRunningJobs().iterator(); iterator.hasNext();) {
+                BaculaJob job = iterator.next();
+                detailBaculaJob(job);
+            }
         }
         catch (IOException | InterruptedException | BaculaInvalidDataSize | BaculaNoInteger | BaculaCommandException ex) {
             this.logger.error(ex.getLocalizedMessage());
@@ -83,10 +94,44 @@ public class BaculaConsole5 extends AbstractBaculaConsole implements BaculaConso
         try {
             String receivedData = this.getConnection().sendAndReceive(Constants.Connection.Commands.STATUS_CLIENT+clientName);
             statusClient = new ParseStatusClient().parse(receivedData);
+            for (Iterator<BaculaJob> iterator = statusClient.getTerminatedJobs().iterator(); iterator.hasNext();) {
+                BaculaJob job = iterator.next();
+                detailBaculaJob(job);
+            }
         }
         catch (IOException | InterruptedException | BaculaInvalidDataSize | BaculaNoInteger | BaculaCommandException ex) {
             this.logger.error(ex.getLocalizedMessage());
         }
         return statusClient;
+    }
+
+    @Override
+    public void detailBaculaJob(BaculaJob job) {
+        updateListJobId(job);
+        updateLlistJobId(job);
+    }
+
+    @Override
+    public void updateListJobId(BaculaJob job) {
+        try {
+            Thread.sleep(400);
+            String receivedData = this.getConnection().sendAndReceive(Constants.Connection.Commands.LIST_JOBID+job.getJobid());
+            this.logger.trace(receivedData);
+            new ParseJobs().parseListJob(receivedData, job);
+            
+        } catch (IOException | InterruptedException | BaculaInvalidDataSize | BaculaNoInteger | BaculaCommandException ex) {
+            this.logger.error(ex.getLocalizedMessage());
+        }
+    }
+
+    @Override
+    public void updateLlistJobId(BaculaJob job) {
+        try {
+            String receivedData = this.getConnection().sendAndReceive(Constants.Connection.Commands.LLIST_JOBID+job.getJobid());
+            this.logger.trace(receivedData);
+            new ParseJobs().parseLlistJob(receivedData, job);
+        } catch (IOException | InterruptedException | BaculaInvalidDataSize | BaculaNoInteger | BaculaCommandException ex) {
+            this.logger.error(ex.getLocalizedMessage());
+        }
     }
 }

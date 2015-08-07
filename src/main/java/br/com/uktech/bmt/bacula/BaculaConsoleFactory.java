@@ -33,8 +33,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- *
  * @author Carlos Alberto Cipriano Korovsky <carlos.korovsky@uktech.com.br>
+ * @author João Paulo Siqueira <joao.siqueira@uktech.com.br>
  */
 public class BaculaConsoleFactory {
     
@@ -98,6 +98,4 @@ public class BaculaConsoleFactory {
         }
         super.finalize();
     }
-    
-    
 }

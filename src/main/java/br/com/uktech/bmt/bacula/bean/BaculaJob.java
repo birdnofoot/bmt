@@ -24,191 +24,305 @@ import java.util.Date;
 import java.util.Objects;
 
 /**
- *
  * @author Carlos Alberto Cipriano Korovsky <carlos.korovsky@uktech.com.br>
+ * @author João Paulo Siqueira <joao.siqueira@uktech.com.br>
  */
 public class BaculaJob implements Serializable {
     
-    private int id;
+    private Long jobid;
+    private String job;
     private String name;
-    private String level;
+    private Integer purgedfiles;
     private String type;
-    private int priority;
-    private String volume;
-    private int files;
-    private String bytes;
-    private String status;
-    private Calendar finished;
-    private Calendar scheduled;
-
-    /**
-     * @return the id
-     */
-    public int getId() {
-        return id;
+    private String level;
+    private Long clientid;
+    private String clientname;
+    private String jobstatus;
+    private Calendar schedtime;
+    private Calendar starttime;
+    private Calendar endtime;
+    private Calendar realendtime;
+    private Long jobtdate;
+    private Long volsessionid;
+    private Long volsessiontime;
+    private Integer jobfiles;
+    private Long jobbytes;
+    private Integer joberrors;
+    private Integer jobmissingfiles;
+    private Long poolid;
+    private String poolname;
+    private Long priorjobid;
+    private Long filesetid;
+    private String fileset;
+    private String typejob;     //se é um scheduledJobs, runningJobs ou terminatedJobs
+    private String volumename;  //Necessário para os trabalhos agendados
+    private Calendar scheduled; //Necessário para os trabalhos agendados
+    private String dirstatus;   //Status do job em quando no status dir
+    
+    public Long getJobid() {
+        return jobid;
     }
 
-    /**
-     * @param id the id to set
-     */
-    public void setId(int id) {
-        this.id = id;
+    public void setJobid(Long jobid) {
+        this.jobid = jobid;
     }
 
-    /**
-     * @return the name
-     */
+    public String getJob() {
+        return job;
+    }
+
+    public void setJob(String job) {
+        this.job = job;
+    }
+
     public String getName() {
         return name;
     }
 
-    /**
-     * @param name the name to set
-     */
     public void setName(String name) {
         this.name = name;
     }
 
-    /**
-     * @return the level
-     */
-    public String getLevel() {
-        return level;
+    public Integer getPurgedfiles() {
+        return purgedfiles;
     }
 
-    /**
-     * @param level the level to set
-     */
-    public void setLevel(String level) {
-        this.level = level;
+    public void setPurgedfiles(Integer purgedfiles) {
+        this.purgedfiles = purgedfiles;
     }
 
-    /**
-     * @return the type
-     */
     public String getType() {
         return type;
     }
 
-    /**
-     * @param type the type to set
-     */
     public void setType(String type) {
         this.type = type;
     }
 
-    /**
-     * @return the priority
-     */
-    public int getPriority() {
-        return priority;
+    public String getLevel() {
+        return level;
     }
 
-    /**
-     * @param priority the priority to set
-     */
-    public void setPriority(int priority) {
-        this.priority = priority;
+    public void setLevel(String level) {
+        this.level = level;
     }
 
-    /**
-     * @return the volume
-     */
-    public String getVolume() {
-        return volume;
+    public Long getClientid() {
+        return clientid;
     }
 
-    /**
-     * @param volume the volume to set
-     */
-    public void setVolume(String volume) {
-        this.volume = volume;
+    public void setClientid(Long clientid) {
+        this.clientid = clientid;
     }
 
-    /**
-     * @return the files
-     */
-    public int getFiles() {
-        return files;
+    public String getClientname() {
+        return clientname;
     }
 
-    /**
-     * @param files the files to set
-     */
-    public void setFiles(int files) {
-        this.files = files;
+    public void setClientname(String clientname) {
+        this.clientname = clientname;
     }
 
-    /**
-     * @return the bytes
-     */
-    public String getBytes() {
-        return bytes;
+    public String getJobstatus() {
+        return jobstatus;
     }
 
-    /**
-     * @param bytes the bytes to set
-     */
-    public void setBytes(String bytes) {
-        this.bytes = bytes;
+    public void setJobstatus(String jobstatus) {
+        this.jobstatus = jobstatus;
     }
 
-    /**
-     * @return the status
-     */
-    public String getStatus() {
-        return status;
+    public Calendar getSchedtime() {
+        return schedtime;
     }
 
-    /**
-     * @param status the status to set
-     */
-    public void setStatus(String status) {
-        this.status = status;
+    public void setSchedtime(Calendar schedtime) {
+        this.schedtime = schedtime;
     }
 
-    /**
-     * @return the finished
-     */
-    public Calendar getFinished() {
-        return finished;
+    public Calendar getStarttime() {
+        return starttime;
     }
 
-    /**
-     * @param finished the finished to set
-     */
-    public void setFinished(Calendar finished) {
-        this.finished = finished;
+    public void setStarttime(Calendar starttime) {
+        this.starttime = starttime;
     }
 
-    /**
-     * @return the scheduled
-     */
+    public Calendar getEndtime() {
+        return endtime;
+    }
+
+    public void setEndtime(Calendar endtime) {
+        this.endtime = endtime;
+    }
+
+    public Calendar getRealendtime() {
+        return realendtime;
+    }
+
+    public void setRealendtime(Calendar realendtime) {
+        this.realendtime = realendtime;
+    }
+
+    public Long getJobtdate() {
+        return jobtdate;
+    }
+
+    public void setJobtdate(Long jobtdate) {
+        this.jobtdate = jobtdate;
+    }
+
+    public Long getVolsessionid() {
+        return volsessionid;
+    }
+
+    public void setVolsessionid(Long volsessionid) {
+        this.volsessionid = volsessionid;
+    }
+
+    public Long getVolsessiontime() {
+        return volsessiontime;
+    }
+
+    public void setVolsessiontime(Long volsessiontime) {
+        this.volsessiontime = volsessiontime;
+    }
+
+    public Integer getJobfiles() {
+        return jobfiles;
+    }
+
+    public void setJobfiles(Integer jobfiles) {
+        this.jobfiles = jobfiles;
+    }
+
+    public Long getJobbytes() {
+        return jobbytes;
+    }
+
+    public void setJobbytes(Long jobbytes) {
+        this.jobbytes = jobbytes;
+    }
+
+    public Integer getJoberrors() {
+        return joberrors;
+    }
+
+    public void setJoberrors(Integer joberrors) {
+        this.joberrors = joberrors;
+    }
+
+    public Integer getJobmissingfiles() {
+        return jobmissingfiles;
+    }
+
+    public void setJobmissingfiles(Integer jobmissingfiles) {
+        this.jobmissingfiles = jobmissingfiles;
+    }
+
+    public Long getPoolid() {
+        return poolid;
+    }
+
+    public void setPoolid(Long poolid) {
+        this.poolid = poolid;
+    }
+
+    public String getPoolname() {
+        return poolname;
+    }
+
+    public void setPoolname(String poolname) {
+        this.poolname = poolname;
+    }
+
+    public Long getPriorjobid() {
+        return priorjobid;
+    }
+
+    public void setPriorjobid(Long priorjobid) {
+        this.priorjobid = priorjobid;
+    }
+
+    public Long getFilesetid() {
+        return filesetid;
+    }
+
+    public void setFilesetid(Long filesetid) {
+        this.filesetid = filesetid;
+    }
+
+    public String getFileset() {
+        return fileset;
+    }
+
+    public void setFileset(String fileset) {
+        this.fileset = fileset;
+    }
+
+    public String getTypejob() {
+        return typejob;
+    }
+
+    public void setTypejob(String typejob) {
+        this.typejob = typejob;
+    }
+
+    public String getVolumename() {
+        return volumename;
+    }
+
+    public void setVolumename(String volumename) {
+        this.volumename = volumename;
+    }
+
     public Calendar getScheduled() {
         return scheduled;
     }
 
-    /**
-     * @param scheduled the scheduled to set
-     */
     public void setScheduled(Calendar scheduled) {
         this.scheduled = scheduled;
+    }
+
+    public String getDirstatus() {
+        return dirstatus;
+    }
+
+    public void setDirstatus(String dirstatus) {
+        this.dirstatus = dirstatus;
     }
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 29 * hash + this.id;
-        hash = 29 * hash + Objects.hashCode(this.name);
-        hash = 29 * hash + Objects.hashCode(this.level);
-        hash = 29 * hash + Objects.hashCode(this.type);
-        hash = 29 * hash + this.priority;
-        hash = 29 * hash + Objects.hashCode(this.volume);
-        hash = 29 * hash + this.files;
-        hash = 29 * hash + Objects.hashCode(this.bytes);
-        hash = 29 * hash + Objects.hashCode(this.status);
-        hash = 29 * hash + Objects.hashCode(this.finished);
-        hash = 29 * hash + Objects.hashCode(this.scheduled);
+        hash = 37 * hash + Objects.hashCode(this.jobid);
+        hash = 37 * hash + Objects.hashCode(this.job);
+        hash = 37 * hash + Objects.hashCode(this.name);
+        hash = 37 * hash + Objects.hashCode(this.purgedfiles);
+        hash = 37 * hash + Objects.hashCode(this.type);
+        hash = 37 * hash + Objects.hashCode(this.level);
+        hash = 37 * hash + Objects.hashCode(this.clientid);
+        hash = 37 * hash + Objects.hashCode(this.clientname);
+        hash = 37 * hash + Objects.hashCode(this.jobstatus);
+        hash = 37 * hash + Objects.hashCode(this.schedtime);
+        hash = 37 * hash + Objects.hashCode(this.starttime);
+        hash = 37 * hash + Objects.hashCode(this.endtime);
+        hash = 37 * hash + Objects.hashCode(this.realendtime);
+        hash = 37 * hash + Objects.hashCode(this.jobtdate);
+        hash = 37 * hash + Objects.hashCode(this.volsessionid);
+        hash = 37 * hash + Objects.hashCode(this.volsessiontime);
+        hash = 37 * hash + Objects.hashCode(this.jobfiles);
+        hash = 37 * hash + Objects.hashCode(this.jobbytes);
+        hash = 37 * hash + Objects.hashCode(this.joberrors);
+        hash = 37 * hash + Objects.hashCode(this.jobmissingfiles);
+        hash = 37 * hash + Objects.hashCode(this.poolid);
+        hash = 37 * hash + Objects.hashCode(this.poolname);
+        hash = 37 * hash + Objects.hashCode(this.priorjobid);
+        hash = 37 * hash + Objects.hashCode(this.filesetid);
+        hash = 37 * hash + Objects.hashCode(this.fileset);
+        hash = 37 * hash + Objects.hashCode(this.typejob);
+        hash = 37 * hash + Objects.hashCode(this.volumename);
+        hash = 37 * hash + Objects.hashCode(this.scheduled);
+        hash = 37 * hash + Objects.hashCode(this.dirstatus);
         return hash;
     }
 
@@ -221,56 +335,99 @@ public class BaculaJob implements Serializable {
             return false;
         }
         final BaculaJob other = (BaculaJob) obj;
-        if (this.id != other.id) {
+        if (!Objects.equals(this.jobid, other.jobid)) {
+            return false;
+        }
+        if (!Objects.equals(this.job, other.job)) {
             return false;
         }
         if (!Objects.equals(this.name, other.name)) {
             return false;
         }
-        if (!Objects.equals(this.level, other.level)) {
+        if (!Objects.equals(this.purgedfiles, other.purgedfiles)) {
             return false;
         }
         if (!Objects.equals(this.type, other.type)) {
             return false;
         }
-        if (this.priority != other.priority) {
+        if (!Objects.equals(this.level, other.level)) {
             return false;
         }
-        if (!Objects.equals(this.volume, other.volume)) {
+        if (!Objects.equals(this.clientid, other.clientid)) {
             return false;
         }
-        if (this.files != other.files) {
+        if (!Objects.equals(this.clientname, other.clientname)) {
             return false;
         }
-        if (!Objects.equals(this.bytes, other.bytes)) {
+        if (!Objects.equals(this.jobstatus, other.jobstatus)) {
             return false;
         }
-        if (!Objects.equals(this.status, other.status)) {
+        if (!Objects.equals(this.schedtime, other.schedtime)) {
             return false;
         }
-        if (!Objects.equals(this.finished, other.finished)) {
+        if (!Objects.equals(this.starttime, other.starttime)) {
+            return false;
+        }
+        if (!Objects.equals(this.endtime, other.endtime)) {
+            return false;
+        }
+        if (!Objects.equals(this.realendtime, other.realendtime)) {
+            return false;
+        }
+        if (!Objects.equals(this.jobtdate, other.jobtdate)) {
+            return false;
+        }
+        if (!Objects.equals(this.volsessionid, other.volsessionid)) {
+            return false;
+        }
+        if (!Objects.equals(this.volsessiontime, other.volsessiontime)) {
+            return false;
+        }
+        if (!Objects.equals(this.jobfiles, other.jobfiles)) {
+            return false;
+        }
+        if (!Objects.equals(this.jobbytes, other.jobbytes)) {
+            return false;
+        }
+        if (!Objects.equals(this.joberrors, other.joberrors)) {
+            return false;
+        }
+        if (!Objects.equals(this.jobmissingfiles, other.jobmissingfiles)) {
+            return false;
+        }
+        if (!Objects.equals(this.poolid, other.poolid)) {
+            return false;
+        }
+        if (!Objects.equals(this.poolname, other.poolname)) {
+            return false;
+        }
+        if (!Objects.equals(this.priorjobid, other.priorjobid)) {
+            return false;
+        }
+        if (!Objects.equals(this.filesetid, other.filesetid)) {
+            return false;
+        }
+        if (!Objects.equals(this.fileset, other.fileset)) {
+            return false;
+        }
+        if (!Objects.equals(this.typejob, other.typejob)) {
+            return false;
+        }
+        if (!Objects.equals(this.volumename, other.volumename)) {
             return false;
         }
         if (!Objects.equals(this.scheduled, other.scheduled)) {
             return false;
         }
+        if (!Objects.equals(this.dirstatus, other.dirstatus)) {
+            return false;
+        }
         return true;
     }
-    
+
+    @Override
     public String toString() {
-        StringBuffer s = new StringBuffer();
-        s.append("id: [").append(id).append("]\n")
-        .append("name: [").append(name).append("]\n")
-        .append("level: [").append(level).append("]\n")
-        .append("type: [").append(type).append("]\n")
-        .append("priority: [").append(priority).append("]\n")
-        .append("volume: [").append(volume).append("]\n")
-        .append("files: [").append(files).append("]\n")
-        .append("bytes: [").append(bytes).append("]\n")
-        .append("status: [").append(status).append("]\n")
-        .append("finished: [").append(calendarToString(finished)).append("]\n")
-        .append("scheduled: [").append(calendarToString(scheduled)).append("]\n");
-        return s.toString();
+        return "jobid=" + jobid + "\njob=" + job + "\nname=" + name + "\npurgedfiles=" + purgedfiles + "\ntype=" + type + "\nlevel=" + level + "\nclientid=" + clientid + "\nclientname=" + clientname + "\njobstatus=" + jobstatus + "\nschedtime=" + calendarToString(schedtime) + "\nstarttime=" + calendarToString(starttime) + "\nendtime=" + calendarToString(endtime) + "\nrealendtime=" + calendarToString(realendtime) + "\njobtdate=" + jobtdate + "\nvolsessionid=" + volsessionid + "\nvolsessiontime=" + volsessiontime + "\njobfiles=" + jobfiles + "\njobbytes=" + jobbytes + "\njoberrors=" + joberrors + "\njobmissingfiles=" + jobmissingfiles + "\npoolid=" + poolid + "\npoolname=" + poolname + "\npriorjobid=" + priorjobid + "\nfilesetid=" + filesetid + "\nfileset=" + fileset + "\ntypejob=" + typejob + "\nvolumename=" + volumename + "\nscheduled=" + calendarToString(scheduled)+"\ndirstatus=" + dirstatus + "\n";
     }
     
     public String calendarToString(Calendar calendar) {
@@ -284,19 +441,19 @@ public class BaculaJob implements Serializable {
     
     public String lineScheduledJobs() {
         String s = new String();
-        s = level+"\t"+type+"\t"+priority+"\t"+calendarToString(scheduled)+"\t"+name+"\t"+volume;
+        s = level+"\t"+type+"\t"+priorjobid+"\t"+calendarToString(scheduled)+"\t"+name+"\t"+volumename;
         return s;
     }
     
     public String lineRunningJobs() {
         String s = new String();
-        s = id+"\t"+level+"\t"+name+"\t"+status;
+        s = jobid+"\t"+level+"\t"+name+"\t"+jobstatus;
         return s;
     }
     
     public String lineTerminatedJobs() {
         String s = new String();
-        s = id+"\t"+level+"\t"+files+"\t"+bytes+"\t"+status+"\t"+calendarToString(finished)+"\t"+name;
+        s = jobid+"\t"+level+"\t"+jobfiles+"\t"+jobbytes+"\t"+dirstatus+"\t"+calendarToString(realendtime)+"\t"+name;
         return s;
     }
 }

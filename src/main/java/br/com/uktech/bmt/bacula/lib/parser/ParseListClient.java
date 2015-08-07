@@ -18,9 +18,6 @@ public class ParseListClient {
             temp = p.getToken(Constants.CR);
             if(temp!=null) {
                 temp = temp.trim();
-                //if(temp.matches("Error: Client resource")) {
-                    
-                //}
                 if(temp.matches(" *(clientid:) *(.+)")) {
                     BaculaClient c = new BaculaClient();
                     c.setId(new ParseClients().parseNumber(temp));
@@ -39,7 +36,6 @@ public class ParseListClient {
                     }
                 }
             }
-            
         } while(temp != null);
         
         return clients;

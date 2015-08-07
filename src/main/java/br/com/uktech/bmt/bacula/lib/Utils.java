@@ -17,6 +17,10 @@
 package br.com.uktech.bmt.bacula.lib;
 
 import br.com.uktech.bmt.bacula.exceptions.BaculaNoInteger;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 
 /**
  *
@@ -55,5 +59,31 @@ public class Utils {
             result |= (int)b;
         }
         return result;
+    }
+    
+    public static Calendar toCalendar(String linha) {
+        Calendar calendar = null;
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat(Constants.Bacula.DATE_FORMAT, Locale.US);
+            calendar = Calendar.getInstance();
+            calendar.setTime(sdf.parse(linha));
+        } catch (ParseException e) {
+            System.err.println(e.getMessage());
+        }
+        return calendar;
+    }
+    
+    public static Calendar toAnotherCalendar(String linha) {
+        Calendar calendar = null;
+        try {
+            if(linha!=null) {
+                SimpleDateFormat sdf = new SimpleDateFormat(Constants.Bacula.ANOTHER_DATE_FORMAT, Locale.US);
+                calendar = Calendar.getInstance();
+                calendar.setTime(sdf.parse(linha));
+            }
+        } catch (ParseException e) {
+            System.err.println(e.getMessage());
+        }
+        return calendar;
     }
 }

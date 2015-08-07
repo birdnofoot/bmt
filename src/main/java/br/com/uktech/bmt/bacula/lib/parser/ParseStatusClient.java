@@ -3,9 +3,7 @@ package br.com.uktech.bmt.bacula.lib.parser;
 import br.com.uktech.bmt.bacula.lib.Constants;
 import br.com.uktech.bmt.bacula.bean.BaculaJobRunning;
 import br.com.uktech.bmt.bacula.bean.BaculaStatusClient;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import br.com.uktech.bmt.bacula.lib.Utils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -52,7 +50,7 @@ public class ParseStatusClient {
                                 while(m.find()) {
                                     jobRunning.setLevel(m.group(1));
                                     jobRunning.setType(m.group(2));
-                                    jobRunning.setStarted(toCalendar(m.group(3)));
+                                    jobRunning.setStarted(Utils.toCalendar(m.group(3)));
                                 }
                             } else if(temp.matches(" *Files=(.*) +Bytes=(.*) +Bytes/sec=(.*) Errors=(.*)")) {
                                 pa = Pattern.compile(" *Files=(.*) +Bytes=(.*) +Bytes/sec=(.*) Errors=(.*)");
@@ -91,17 +89,5 @@ public class ParseStatusClient {
         } while(temp != null);
         
         return statusClient;
-    }
-    
-    private Calendar toCalendar(String linha) {
-        Calendar calendar = null;
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat(Constants.Bacula.DATE_FORMAT);
-            calendar = Calendar.getInstance();
-            calendar.setTime(sdf.parse(linha));
-        } catch (ParseException e) {
-            System.err.println(e.getMessage());
-        }
-        return calendar;
     }
 }

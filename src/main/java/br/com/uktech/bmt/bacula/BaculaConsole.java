@@ -17,6 +17,7 @@
 package br.com.uktech.bmt.bacula;
 
 import br.com.uktech.bmt.bacula.bean.BaculaClient;
+import br.com.uktech.bmt.bacula.bean.BaculaJob;
 import br.com.uktech.bmt.bacula.bean.BaculaStatusClient;
 import br.com.uktech.bmt.bacula.bean.BaculaStatusDirector;
 import br.com.uktech.bmt.bacula.exceptions.BaculaAuthenticationException;
@@ -24,8 +25,8 @@ import br.com.uktech.bmt.bacula.exceptions.BaculaCommunicationException;
 import java.util.List;
 
 /**
- *
  * @author Carlos Alberto Cipriano Korovsky <carlos.korovsky@uktech.com.br>
+ * @author João Paulo Siqueira <joao.siqueira@uktech.com.br>
  */
 public interface BaculaConsole {
     
@@ -42,4 +43,11 @@ public interface BaculaConsole {
     public void disconnect();
     
     public Boolean isConnected();
+    
+    public void detailBaculaJob(BaculaJob job);
+    
+    public void updateListJobId(BaculaJob job);
+    
+    public void updateLlistJobId(BaculaJob job);
+    
 }

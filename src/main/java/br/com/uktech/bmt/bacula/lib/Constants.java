@@ -40,6 +40,7 @@ public interface Constants {
     
     interface Bacula {
         public static String DATE_FORMAT = "dd-MMM-yy HH:mm";
+        public static String ANOTHER_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
     }
     
     interface Connection {
@@ -81,11 +82,13 @@ public interface Constants {
             public static String STATUS_DIRECTOR = "status dir";
             public static String STATUS_CLIENT = "status client=";
             public static String LLIST_CLIENTS = "llist clients";
+            public static String LIST_JOBID = "list jobid=";
+            public static String LLIST_JOBID = "llist jobid=";
             public static String EXIT = "exit";
             public static String QUIT = "quit";
             public static String VERSION = "version";
             public static String HELP = "help";
-            
+            public static String CANCEL = ".";
         }
         
         interface ReturnCodes {

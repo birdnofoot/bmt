@@ -30,7 +30,7 @@ public class BaculaStatusDirector implements Serializable {
     
     private String banner;
     private Calendar upSince;
-    private int jobsRunned;
+    private Integer jobsRunned;
     private List<BaculaJob> scheduledJobs = new ArrayList<>();
     private List<BaculaJob> runningJobs = new ArrayList<>();
     private List<BaculaJob> terminatedJobs = new ArrayList<>();
@@ -66,14 +66,14 @@ public class BaculaStatusDirector implements Serializable {
     /**
      * @return the jobsRunned
      */
-    public int getJobsRunned() {
+    public Integer getJobsRunned() {
         return jobsRunned;
     }
 
     /**
      * @param jobsRunned the jobsRunned to set
      */
-    public void setJobsRunned(int jobsRunned) {
+    public void setJobsRunned(Integer jobsRunned) {
         this.jobsRunned = jobsRunned;
     }
 
@@ -115,7 +115,7 @@ public class BaculaStatusDirector implements Serializable {
         int hash = 7;
         hash = 43 * hash + Objects.hashCode(this.banner);
         hash = 43 * hash + Objects.hashCode(this.upSince);
-        hash = 43 * hash + this.jobsRunned;
+        hash = 43 * hash + Objects.hashCode(this.jobsRunned);
         hash = 43 * hash + Objects.hashCode(this.scheduledJobs);
         hash = 43 * hash + Objects.hashCode(this.runningJobs);
         hash = 43 * hash + Objects.hashCode(this.terminatedJobs);
@@ -137,7 +137,7 @@ public class BaculaStatusDirector implements Serializable {
         if (!Objects.equals(this.upSince, other.upSince)) {
             return false;
         }
-        if (this.jobsRunned != other.jobsRunned) {
+        if (!Objects.equals(this.jobsRunned, other.jobsRunned)) {
             return false;
         }
         if (!Objects.equals(this.scheduledJobs, other.scheduledJobs)) {

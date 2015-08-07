@@ -18,9 +18,7 @@ package br.com.uktech.bmt.bacula.lib.parser;
 
 import br.com.uktech.bmt.bacula.bean.BaculaJob;
 import br.com.uktech.bmt.bacula.lib.Constants;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import br.com.uktech.bmt.bacula.lib.Utils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -30,59 +28,166 @@ import java.util.regex.Pattern;
  */
 public class ParseJobs {
     
-    public BaculaJob parseRunningJob(String linha) {
+    public BaculaJob parseScheduledJob(String linha) {
         BaculaJob job = new BaculaJob();
-        Pattern p = Pattern.compile("^( *(\\d+) +(Full|Incr) +(.[^ ]+) (.+))");
+        Pattern p = Pattern.compile("(Incremental|Diferencial|Full)[\\s*|\\t*]*(\\w+)[\\s*|\\t*]*(\\d+)[\\s*|\\t*]*(\\d{2}-[a-zA-Z]{3}-\\d{2} \\d{2}:\\d{2})[\\s*|\\t*]*([\\w*|-]*)[\\s{0,}|\\t{0,}]*([\\w+|\\*]+)");
         Matcher m = p.matcher(linha);
         while(m.find()) {
-            job.setId(Integer.parseInt(m.group(2)));
-            job.setLevel(m.group(3));
-            job.setName(m.group(4));
-            job.setStatus(m.group(5));
+            job.setLevel(m.group(1));
+            job.setType(m.group(2));
+            job.setPriorjobid(Long.parseLong(m.group(3)));
+            job.setScheduled(Utils.toCalendar(m.group(4)));
+            job.setName(m.group(5));
+            job.setVolumename(m.group(6));
+            job.setTypejob("scheduled job");
+        }
+        return job;
+    }
+    
+    public BaculaJob parseRunningJob(String linha) {
+        BaculaJob job = new BaculaJob();
+        Pattern p = Pattern.compile("(\\d+)[\\s*|\\t*]*(Differe|Increme|Full)[\\s*|\\t*]*([\\w+|-]*.\\d{4}-\\d{2}-\\d{2}_\\d{2}.\\d{2}.\\d{2}_\\d{2})[\\s*|\\t*]*(is waiting execution|is running|is waiting for Client [\\w*|-]* to connect to Storage [\\w*|-]*)");
+        Matcher m = p.matcher(linha);
+        while(m.find()) {
+            job.setJobid(Long.parseLong(m.group(1)));
+            job.setLevel(m.group(2));
+            job.setJob(m.group(3));
+            job.setDirstatus(m.group(4));
+            job.setTypejob("running job");
         }
         return job;
     }
     
     public BaculaJob parseTerminadedJob(String linha) {
         BaculaJob job = new BaculaJob();
-        Pattern p = Pattern.compile("^( *(\\d+) +(Full|Incr) +([^ ]+) +((\\d+(\\.\\d{1,3})?|0) *((G|M|K)*+)) +(Error|OK) +(\\d{2}-[a-zA-Z]{3}-\\d{2} \\d{2}:\\d{2}) (.+))");
+        Pattern p = Pattern.compile("(\\d+)[\\s*|\\t*]*(Full|Incr|Diff)[\\s*|\\t*]*([\\d+|,*]*)[\\s*|\\t*]*([\\d+|\\.*]* [K|M|G|T]*)[\\s*|\\t*]*(OK|Error)[\\s*|\\t*]*(\\d{2}-[a-zA-Z]{3}-\\d{2} \\d{2}:\\d{2})[\\s*|\\t*]*(.+)");
         Matcher m = p.matcher(linha);
-        while(m.find()) {
-            job.setId(Integer.parseInt(m.group(2)));
-            job.setLevel(m.group(3));
-            job.setFiles(Integer.parseInt(m.group(4).replace(",", "")));
-            job.setBytes(m.group(5));
-            job.setStatus(m.group(10));
-            job.setFinished(convertToCalendar(m.group(11)));
-            job.setName(m.group(12));
-        }
-        return job;
-    }
-    
-    public BaculaJob parseScheduledJob(String linha) {
-        BaculaJob job = new BaculaJob();
-        Pattern p = Pattern.compile("^( *(Full|Incremental|Differential) +(\\w+) +(\\d+) +(\\d{2}-[a-zA-Z]{3}-\\d{2} \\d{2}:\\d{2}) +(.+[^ ]) +(.+))");
-        Matcher m = p.matcher(linha);
-        while(m.find()) {
+        if(m.find()) {
+            job.setJobid(Long.parseLong(m.group(1)));
             job.setLevel(m.group(2));
-            job.setType(m.group(3));
-            job.setPriority(Integer.parseInt(m.group(4)));
-            job.setScheduled(convertToCalendar(m.group(5)));
-            job.setName(m.group(6));
-            job.setVolume(m.group(7));
+            job.setJobfiles(Integer.parseInt(m.group(3).replace(",", "")));
+            //job.setBytes(m.group(4));
+            job.setDirstatus(m.group(5));
+            job.setRealendtime(Utils.toCalendar(m.group(6)));
+            job.setName(m.group(7));
+            job.setTypejob("finished job");
         }
         return job;
     }
+
+    public void parseListJob(String receivedData, BaculaJob job) {
+        String temp;
+        Parser p = new Parser(receivedData);
+        
+        do {
+            temp = p.getToken(Constants.CR);
+            if(temp!=null) {
+                temp = temp.trim();
+                if(temp.matches("(\\| *[\\d+|,]* *\\|.*\\|.*\\|.*\\|.*\\|.*\\| *([\\d+|,]*) *\\|.*\\|)")) {
+                    job.setJobbytes(parseJobbytes(temp));
+                }
+            }
+        } while(temp != null);
+    }
+
+    public void parseLlistJob(String receivedData, BaculaJob job) {
+        String temp;
+        Parser p = new Parser(receivedData);
+        
+        do {
+            temp = p.getToken(Constants.CR);
+            if(temp!=null) {
+                temp = temp.trim();
+                if(temp.matches("(^jobid:) *(.+)")) {
+                    job.setJobid(parseNumber(temp));
+                    temp = p.getToken(Constants.CR);
+                    job.setJob(parseWord(temp));
+                    temp = p.getToken(Constants.CR);
+                    job.setName(parseWord(temp));
+                    temp = p.getToken(Constants.CR);
+                    job.setPurgedfiles(Integer.parseInt(""+parseNumber(temp)));
+                    temp = p.getToken(Constants.CR);
+                    job.setType(parseWord(temp));
+                    temp = p.getToken(Constants.CR);
+                    job.setLevel(parseWord(temp));
+                    temp = p.getToken(Constants.CR);
+                    job.setClientid(parseNumber(temp));
+                    temp = p.getToken(Constants.CR);
+                    job.setClientname(parseWord(temp));
+                    temp = p.getToken(Constants.CR);
+                    job.setJobstatus(parseWord(temp));
+                    temp = p.getToken(Constants.CR);
+                    job.setSchedtime(Utils.toAnotherCalendar(parseWord(temp)));
+                    temp = p.getToken(Constants.CR);
+                    job.setStarttime(Utils.toAnotherCalendar(parseWord(temp)));
+                    temp = p.getToken(Constants.CR);
+                    job.setEndtime(Utils.toAnotherCalendar(parseWord(temp)));
+                    temp = p.getToken(Constants.CR);
+                    job.setRealendtime(Utils.toAnotherCalendar(parseWord(temp)));
+                    temp = p.getToken(Constants.CR);
+                    job.setJobtdate(parseNumber(temp));
+                    temp = p.getToken(Constants.CR);
+                    job.setVolsessionid(parseNumber(temp));
+                    temp = p.getToken(Constants.CR);
+                    job.setVolsessiontime(parseNumber(temp));
+                    temp = p.getToken(Constants.CR);
+                    job.setJobfiles(Integer.parseInt(""+parseNumber(temp)));
+                    temp = p.getToken(Constants.CR);
+                    job.setJoberrors(Integer.parseInt(""+parseNumber(temp)));
+                    temp = p.getToken(Constants.CR);
+                    job.setJobmissingfiles(Integer.parseInt(""+parseNumber(temp)));
+                    temp = p.getToken(Constants.CR);
+                    job.setPoolid(parseNumber(temp));
+                    temp = p.getToken(Constants.CR);
+                    job.setPoolname(parseWord(temp));
+                    temp = p.getToken(Constants.CR);
+                    job.setPriorjobid(parseNumber(temp));
+                    temp = p.getToken(Constants.CR);
+                    job.setFilesetid(parseNumber(temp));
+                    temp = p.getToken(Constants.CR);
+                    job.setFileset(parseWord(temp));
+                    temp = p.getToken(Constants.CR);
+                }
+            }
+        } while(temp != null);
+    }
     
-    private Calendar convertToCalendar(String linha) {
-        Calendar calendar = null;
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat(Constants.Bacula.DATE_FORMAT);
-            calendar = Calendar.getInstance();
-            calendar.setTime(sdf.parse(linha));
-        } catch (ParseException e) {
-            System.err.println(e.getMessage());
+    public Long parseJobbytes(String linha) {
+        Long number = null;
+        if(linha!=null) {
+            Pattern p = Pattern.compile("(\\| *[\\d+|,]* *\\|.*\\|.*\\|.*\\|.*\\|.*\\| *([\\d+|,]*) *\\|.*\\|)");
+            Matcher m = p.matcher(linha);
+            if(m.find()) {
+                number = Long.parseLong((m.group(2).replace(",", "")).replace(" ", ""));
+            }
         }
-        return calendar;
+        return number;
+    }
+    
+    public Long parseNumber(String linha) {
+        Long number = null;
+        if(linha!=null) {
+            Pattern p = Pattern.compile(" *(jobid:|clientid:|purgedfiles:|jobtdate:|volsessionid:|volsessiontime:|jobfiles:|joberrors:|jobmissingfiles:|poolid:|priorjobid:|filesetid:) *(.+)");
+            Matcher m = p.matcher(linha);
+            while(m.find()) {
+                number = Long.parseLong(m.group(2).replace(",", ""));
+            }
+        }
+        return number;
+    }
+    
+    public String parseWord(String linha) {
+        String word = null;
+        if(linha!=null) {
+            Pattern p = Pattern.compile(" *(job:|name:|type:|level:|jobstatus:|[dt]time:|fileset:) +(.*)");
+            Matcher m = p.matcher(linha);
+            while(m.find()) {
+                word = m.group(2);
+            }
+            if(word.equals("")) {
+                return null;
+            }
+        }
+        return word;
     }
 }

@@ -24,6 +24,7 @@ import br.com.uktech.bmt.bacula.lib.Constants;
  * @author Carlos Alberto Cipriano Korovsky <carlos.korovsky@uktech.com.br>
  */
 public class ParseStatusDirector {
+    
     public BaculaStatusDirector parse(String input) {
         BaculaStatusDirector statusDirector = new BaculaStatusDirector();
         ParseJobs parse = new ParseJobs();
@@ -31,27 +32,26 @@ public class ParseStatusDirector {
         String temp;
         Parser p = new Parser(input);
         
-        //Banner
+        //Criar um Regex e um parse para o Banner
         sbTemp.append(p.getToken(Constants.CR));
         sbTemp.append(p.getToken(Constants.CR));
         sbTemp.append(p.getToken(Constants.CR)).append(Constants.CR);
         statusDirector.setBanner(sbTemp.toString());
-        //System.err.println("antes do do while");
+        //Jobs
         do{
             temp = p.getToken(Constants.CR);
             if (temp != null)
             {
                 temp = temp.trim();
-                if(temp.matches("^( *(Full|Incremental|Differential) +(\\w+) +(\\d+) +(\\d{2}-[a-zA-Z]{3}-\\d{2} \\d{2}:\\d{2}) +(.+[^ ]) +(.+))")) {
+                if(temp.matches("(Incremental|Diferencial|Full)[\\s*|\\t*]*(\\w+)[\\s*|\\t*]*(\\d+)[\\s*|\\t*]*(\\d{2}-[a-zA-Z]{3}-\\d{2} \\d{2}:\\d{2})[\\s*|\\t*]*([\\w*|-]*)[\\s{0,}|\\t{0,}]*([\\w+|\\*]+)")) {
                     statusDirector.getScheduledJobs().add(parse.parseScheduledJob(temp));
-                } else if(temp.matches("^( *(\\d+) +(Full|Incr) +([^ ]+) +((\\d+(\\.\\d{1,3})?|0) *((G|M|K)*+)) +(Error|OK) +(\\d{2}-[a-zA-Z]{3}-\\d{2} \\d{2}:\\d{2}) (.+))")) {
-                    statusDirector.getTerminatedJobs().add(parse.parseTerminadedJob(temp));
-                } else if(temp.matches("^( *(\\d+) +(Full|Incr) +(.[^ ]+) (.+))")) {
+                } else if(temp.matches("(\\d+)[\\s*|\\t*]*(Differe|Increme|Full)[\\s*|\\t*]*([\\w+|-]*.\\d{4}-\\d{2}-\\d{2}_\\d{2}.\\d{2}.\\d{2}_\\d{2})[\\s*|\\t*]*(is waiting execution|is running|is waiting for Client [\\w*|-]* to connect to Storage [\\w*|-]*)")) {
                     statusDirector.getRunningJobs().add(parse.parseRunningJob(temp));
+                } else if(temp.matches("(\\d+)[\\s*|\\t*]*(Full|Incr|Diff)[\\s*|\\t*]*([\\d+|,*]*)[\\s*|\\t*]*([\\d+|\\.*]* [K|M|G|T]*)[\\s*|\\t*]*(OK|Error)[\\s*|\\t*]*(\\d{2}-[a-zA-Z]{3}-\\d{2} \\d{2}:\\d{2})[\\s*|\\t*]*(.+)")) {
+                    statusDirector.getTerminatedJobs().add(parse.parseTerminadedJob(temp));
                 }
             }
         } while(temp!=null);
-        //System.err.println("fim do parse");
         return statusDirector;
     }
 }

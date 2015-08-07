@@ -20,8 +20,8 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- *
  * @author Carlos Alberto Cipriano Korovsky <carlos.korovsky@uktech.com.br>
+ * @author João Paulo Siqueira <joao.siqueira@uktech.com.br>
  */
 public class BaculaClient implements Serializable {
     
