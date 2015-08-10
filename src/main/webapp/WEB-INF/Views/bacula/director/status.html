@@ -38,17 +38,87 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <div th:if="${statusdir != null}">
             <div style="color: red">
                 <span th:text="${statusdir.banner}">banner</span><br/>
-                <span th:text="${statusdir.upSince}">upsince</span><br/>
-                <span th:text="${statusdir.jobsRunned}">jobsRunned</span><br/>
+                <!--<span th:text="${statusdir.upSince}">upsince</span><br/>
+                <span th:text="${statusdir.jobsRunned}">jobsRunned</span><br/>-->
             </div>
-            <div style="color: gold">
-                <span th:text="${statusdir.scheduledJobs}">banner</span>
+            <br/>
+            <div>
+                <table id="tbscheduledjobs" border="1" style="width:100%">
+                    <thead>
+                        <th th:text="#{view.bacula.job[level]}">Level</th>
+                        <th th:text="#{view.bacula.job[type]}">Type</th>
+                        <th th:text="#{view.bacula.job[priorjobid]}">Pri</th>
+                        <th th:text="#{view.bacula.job[scheduled]}">Scheduled</th>
+                        <th th:text="#{view.bacula.job[name]}">Name</th>
+                        <th th:text="#{view.bacula.job[volumename]}">Volume</th>
+                    </thead>
+                    <tbody>
+                        <tr th:if="${statusdir.scheduledJobs == null}">
+                            <td colspan="4">No Scheduled Jobs!</td>
+                        </tr>
+                        <tr th:if="${statusdir.scheduledJobs != null}" th:each="scheduledJob : ${statusdir.scheduledJobs}">
+                            <td th:text="${scheduledJob.level}">Level</td>
+                            <td th:text="${scheduledJob.type}">Type</td>
+                            <td th:text="${scheduledJob.priorjobid}">Pri</td>
+                            <td th:text="${scheduledJob.scheduled}">Scheduled</td>
+                            <td th:text="${scheduledJob.name}">Name</td>
+                            <td th:text="${scheduledJob.volumename}">Volume</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!--<span th:text="${statusdir.scheduledJobs}">scheduledJobs</span>-->
             </div>
-            <div style="color: blue">
-                <span th:text="${statusdir.runningJobs}">upsince</span>
+            <br/>
+            <div>
+                <table id="tbrunningJobs" border="1" style="width:100%">
+                    <thead>
+                        <th th:text="#{view.bacula.job[jobid]}">JobId</th>
+                        <th th:text="#{view.bacula.job[level]}">Level</th>
+                        <th th:text="#{view.bacula.job[name]}">Name</th>
+                        <th th:text="#{view.bacula.job[dirstatus]}">Status</th>
+                    </thead>
+                    <tbody>
+                        <tr th:if="${statusdir.runningJobs == null}">
+                            <td colspan="4">No Running Jobs!</td>
+                        </tr>
+                        <tr th:if="${statusdir.runningJobs != null}" th:each="job : ${statusdir.runningJobs}">
+                            <td th:text="${job.jobid}">JobId</td>
+                            <td th:text="${job.level}">Level</td>
+                            <td th:text="${job.job}">Job</td>
+                            <td th:text="${job.dirstatus}">Status</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!--<span th:text="${statusdir.runningJobs}">runningJobs</span>-->
             </div>
-            <div style="color: violet">
-                <span th:text="${statusdir.terminatedJobs}">jobsRunned</span>
+            <br/>
+            <div>
+                <table id="tbterminatedjobs" border="1" style="width:100%">
+                    <thead>
+                        <th th:text="#{view.bacula.job[jobid]}">JobId</th>
+                        <th th:text="#{view.bacula.job[level]}">Level</th>
+                        <th th:text="#{view.bacula.job[jobfiles]}">Files</th>
+                        <th th:text="#{view.bacula.job[jobbytes]}">Bytes</th>
+                        <th th:text="#{view.bacula.job[dirstatus]}">Status</th>
+                        <!--<th th:text="#{view.bacula.job[realendtime]}">Finished</th>-->
+                        <th th:text="#{view.bacula.job[name]}">Name</th>
+                    </thead>
+                    <tbody>
+                        <tr th:if="${statusdir.terminatedJobs == null}">
+                            <td colspan="4">No Terminated Jobs!</td>
+                        </tr>
+                        <tr th:if="${statusdir.terminatedJobs != null}" th:each="terminatedJob : ${statusdir.terminatedJobs}">
+                            <td th:text="${terminatedJob.jobid}">JobId</td>
+                            <td th:text="${terminatedJob.level}">Level</td>
+                            <td th:text="${terminatedJob.jobfiles}">Files</td>
+                            <td th:text="${terminatedJob.jobbytes}">Bytes</td>
+                            <td th:text="${terminatedJob.dirstatus}">Status</td>
+                            <!--<td th:text="${terminatedJob.realendtime}">Finished</td>-->
+                            <td th:text="${terminatedJob.name}">Name</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!--<span th:text="${statusdir.terminatedJobs}">terminatedJobs</span>-->
             </div>
         </div>
         <div th:replace="fragments/footer :: footer">&nbsp;</div>
