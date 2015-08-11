@@ -20,6 +20,7 @@ import br.com.uktech.bmt.bacula.exceptions.BaculaNoInteger;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 /**
@@ -85,5 +86,14 @@ public class Utils {
             System.err.println(e.getMessage());
         }
         return calendar;
+    }
+    
+    public static String calendarToString(Calendar calendar) {
+        if(calendar!=null) {
+            Date date = calendar.getTime();
+            SimpleDateFormat format = new SimpleDateFormat(Constants.Bacula.DATE_FORMAT);
+            return format.format(date);
+        }
+        return null;
     }
 }

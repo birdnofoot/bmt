@@ -28,9 +28,17 @@ import java.util.regex.Pattern;
  */
 public class ParseJobs {
     
+    public static final String REGEX_SCHEDULED_JOB = "(Incremental|Diferencial|Full)[\\s*|\\t*]*(\\w+)[\\s*|\\t*]*(\\d+)[\\s*|\\t*]*(\\d{2}-[a-zA-Z]{3}-\\d{2} \\d{2}:\\d{2})[\\s*|\\t*]*([\\w*|-]*)[\\s{0,}|\\t{0,}]*([\\w+|\\*]+)";
+    public static final String REGEX_RUNNING_JOB = "(\\d+)[\\s*|\\t*]*(Differe|Increme|Full)[\\s*|\\t*]*([\\w+|-]*.\\d{4}-\\d{2}-\\d{2}_\\d{2}.\\d{2}.\\d{2}_\\d{2})[\\s*|\\t*]*(is waiting execution\\.*|is running\\.*|is waiting for Client [\\w*|-]* to connect to Storage [\\w*|-]*\\.*)";
+    public static final String REGEX_TERMINATED_JOB = "(\\d+)[\\s*|\\t*]*(Full|Incr|Diff)[\\s*|\\t*]*([\\d+|,*]*)[\\s*|\\t*]*([\\d+|\\.*]* [K|M|G|T]*)[\\s*|\\t*]*(OK|Error)[\\s*|\\t*]*(\\d{2}-[a-zA-Z]{3}-\\d{2} \\d{2}:\\d{2})[\\s*|\\t*]*(.+)";
+    public static final String REGEX_PARSE_LIST_JOB = "(\\| *[\\d+|,]* *\\|.*\\|.*\\|.*\\|.*\\|.*\\| *([\\d+|,]*) *\\|.*\\|)";
+    public static final String REGEX_PARSE_LLIST_JOB = "(^jobid:) *(.+)";
+    public static final String REGEX_PARSE_NUMBER = " *(jobid:|clientid:|purgedfiles:|jobtdate:|volsessionid:|volsessiontime:|jobfiles:|joberrors:|jobmissingfiles:|poolid:|priorjobid:|filesetid:) *(.+)";
+    public static final String REGEX_PARSE_WORD = " *(job:|name:|type:|level:|jobstatus:|[dt]time:|fileset:) +(.*)";
+    
     public BaculaJob parseScheduledJob(String linha) {
         BaculaJob job = new BaculaJob();
-        Pattern p = Pattern.compile("(Incremental|Diferencial|Full)[\\s*|\\t*]*(\\w+)[\\s*|\\t*]*(\\d+)[\\s*|\\t*]*(\\d{2}-[a-zA-Z]{3}-\\d{2} \\d{2}:\\d{2})[\\s*|\\t*]*([\\w*|-]*)[\\s{0,}|\\t{0,}]*([\\w+|\\*]+)");
+        Pattern p = Pattern.compile(ParseJobs.REGEX_SCHEDULED_JOB);
         Matcher m = p.matcher(linha);
         while(m.find()) {
             job.setLevel(m.group(1));
@@ -46,7 +54,7 @@ public class ParseJobs {
     
     public BaculaJob parseRunningJob(String linha) {
         BaculaJob job = new BaculaJob();
-        Pattern p = Pattern.compile("(\\d+)[\\s*|\\t*]*(Differe|Increme|Full)[\\s*|\\t*]*([\\w+|-]*.\\d{4}-\\d{2}-\\d{2}_\\d{2}.\\d{2}.\\d{2}_\\d{2})[\\s*|\\t*]*(is waiting execution|is running|is waiting for Client [\\w*|-]* to connect to Storage [\\w*|-]*)");
+        Pattern p = Pattern.compile(ParseJobs.REGEX_RUNNING_JOB);
         Matcher m = p.matcher(linha);
         while(m.find()) {
             job.setJobid(Long.parseLong(m.group(1)));
@@ -58,9 +66,9 @@ public class ParseJobs {
         return job;
     }
     
-    public BaculaJob parseTerminadedJob(String linha) {
+    public BaculaJob parseTerminatedJob(String linha) {
         BaculaJob job = new BaculaJob();
-        Pattern p = Pattern.compile("(\\d+)[\\s*|\\t*]*(Full|Incr|Diff)[\\s*|\\t*]*([\\d+|,*]*)[\\s*|\\t*]*([\\d+|\\.*]* [K|M|G|T]*)[\\s*|\\t*]*(OK|Error)[\\s*|\\t*]*(\\d{2}-[a-zA-Z]{3}-\\d{2} \\d{2}:\\d{2})[\\s*|\\t*]*(.+)");
+        Pattern p = Pattern.compile(ParseJobs.REGEX_TERMINATED_JOB);
         Matcher m = p.matcher(linha);
         if(m.find()) {
             job.setJobid(Long.parseLong(m.group(1)));
@@ -83,7 +91,7 @@ public class ParseJobs {
             temp = p.getToken(Constants.CR);
             if(temp!=null) {
                 temp = temp.trim();
-                if(temp.matches("(\\| *[\\d+|,]* *\\|.*\\|.*\\|.*\\|.*\\|.*\\| *([\\d+|,]*) *\\|.*\\|)")) {
+                if(temp.matches(ParseJobs.REGEX_PARSE_LIST_JOB)) {
                     job.setJobbytes(parseJobbytes(temp));
                 }
             }
@@ -98,7 +106,7 @@ public class ParseJobs {
             temp = p.getToken(Constants.CR);
             if(temp!=null) {
                 temp = temp.trim();
-                if(temp.matches("(^jobid:) *(.+)")) {
+                if(temp.matches(ParseJobs.REGEX_PARSE_LLIST_JOB)) {
                     job.setJobid(parseNumber(temp));
                     temp = p.getToken(Constants.CR);
                     job.setJob(parseWord(temp));
@@ -155,7 +163,7 @@ public class ParseJobs {
     public Long parseJobbytes(String linha) {
         Long number = null;
         if(linha!=null) {
-            Pattern p = Pattern.compile("(\\| *[\\d+|,]* *\\|.*\\|.*\\|.*\\|.*\\|.*\\| *([\\d+|,]*) *\\|.*\\|)");
+            Pattern p = Pattern.compile(ParseJobs.REGEX_PARSE_LIST_JOB);
             Matcher m = p.matcher(linha);
             if(m.find()) {
                 number = Long.parseLong((m.group(2).replace(",", "")).replace(" ", ""));
@@ -167,7 +175,7 @@ public class ParseJobs {
     public Long parseNumber(String linha) {
         Long number = null;
         if(linha!=null) {
-            Pattern p = Pattern.compile(" *(jobid:|clientid:|purgedfiles:|jobtdate:|volsessionid:|volsessiontime:|jobfiles:|joberrors:|jobmissingfiles:|poolid:|priorjobid:|filesetid:) *(.+)");
+            Pattern p = Pattern.compile(ParseJobs.REGEX_PARSE_NUMBER);
             Matcher m = p.matcher(linha);
             while(m.find()) {
                 number = Long.parseLong(m.group(2).replace(",", ""));
@@ -179,7 +187,7 @@ public class ParseJobs {
     public String parseWord(String linha) {
         String word = null;
         if(linha!=null) {
-            Pattern p = Pattern.compile(" *(job:|name:|type:|level:|jobstatus:|[dt]time:|fileset:) +(.*)");
+            Pattern p = Pattern.compile(ParseJobs.REGEX_PARSE_WORD);
             Matcher m = p.matcher(linha);
             while(m.find()) {
                 word = m.group(2);

@@ -17,6 +17,7 @@
 package br.com.uktech.bmt.bacula.bean;
 
 import br.com.uktech.bmt.bacula.lib.Constants;
+import br.com.uktech.bmt.bacula.lib.Utils;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -427,21 +428,12 @@ public class BaculaJob implements Serializable {
 
     @Override
     public String toString() {
-        return "jobid=" + jobid + "\njob=" + job + "\nname=" + name + "\npurgedfiles=" + purgedfiles + "\ntype=" + type + "\nlevel=" + level + "\nclientid=" + clientid + "\nclientname=" + clientname + "\njobstatus=" + jobstatus + "\nschedtime=" + calendarToString(schedtime) + "\nstarttime=" + calendarToString(starttime) + "\nendtime=" + calendarToString(endtime) + "\nrealendtime=" + calendarToString(realendtime) + "\njobtdate=" + jobtdate + "\nvolsessionid=" + volsessionid + "\nvolsessiontime=" + volsessiontime + "\njobfiles=" + jobfiles + "\njobbytes=" + jobbytes + "\njoberrors=" + joberrors + "\njobmissingfiles=" + jobmissingfiles + "\npoolid=" + poolid + "\npoolname=" + poolname + "\npriorjobid=" + priorjobid + "\nfilesetid=" + filesetid + "\nfileset=" + fileset + "\ntypejob=" + typejob + "\nvolumename=" + volumename + "\nscheduled=" + calendarToString(scheduled)+"\ndirstatus=" + dirstatus + "\n";
-    }
-    
-    public String calendarToString(Calendar calendar) {
-        if(calendar!=null) {
-            Date date = calendar.getTime();
-            SimpleDateFormat format = new SimpleDateFormat(Constants.Bacula.DATE_FORMAT);
-            return format.format(date);
-        }
-        return null;
+        return "jobid=" + jobid + "\njob=" + job + "\nname=" + name + "\npurgedfiles=" + purgedfiles + "\ntype=" + type + "\nlevel=" + level + "\nclientid=" + clientid + "\nclientname=" + clientname + "\njobstatus=" + jobstatus + "\nschedtime=" + Utils.calendarToString(schedtime) + "\nstarttime=" + Utils.calendarToString(starttime) + "\nendtime=" + Utils.calendarToString(endtime) + "\nrealendtime=" + Utils.calendarToString(realendtime) + "\njobtdate=" + jobtdate + "\nvolsessionid=" + volsessionid + "\nvolsessiontime=" + volsessiontime + "\njobfiles=" + jobfiles + "\njobbytes=" + jobbytes + "\njoberrors=" + joberrors + "\njobmissingfiles=" + jobmissingfiles + "\npoolid=" + poolid + "\npoolname=" + poolname + "\npriorjobid=" + priorjobid + "\nfilesetid=" + filesetid + "\nfileset=" + fileset + "\ntypejob=" + typejob + "\nvolumename=" + volumename + "\nscheduled=" + Utils.calendarToString(scheduled)+"\ndirstatus=" + dirstatus + "\n";
     }
     
     public String lineScheduledJobs() {
         String s = new String();
-        s = level+"\t"+type+"\t"+priorjobid+"\t"+calendarToString(scheduled)+"\t"+name+"\t"+volumename;
+        s = level+"\t"+type+"\t"+priorjobid+"\t"+Utils.calendarToString(scheduled)+"\t"+name+"\t"+volumename;
         return s;
     }
     
@@ -453,7 +445,7 @@ public class BaculaJob implements Serializable {
     
     public String lineTerminatedJobs() {
         String s = new String();
-        s = jobid+"\t"+level+"\t"+jobfiles+"\t"+jobbytes+"\t"+dirstatus+"\t"+calendarToString(realendtime)+"\t"+name;
+        s = jobid+"\t"+level+"\t"+jobfiles+"\t"+jobbytes+"\t"+dirstatus+"\t"+Utils.calendarToString(realendtime)+"\t"+name;
         return s;
     }
 }

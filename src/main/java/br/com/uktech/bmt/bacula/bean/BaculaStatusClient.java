@@ -28,7 +28,7 @@ import java.util.Objects;
 public class BaculaStatusClient implements Serializable {
     
     private String header;
-    private List<BaculaJobRunning> runningJobs = new ArrayList<BaculaJobRunning>();
+    private List<BaculaJobRunningClient> runningJobs = new ArrayList<BaculaJobRunningClient>();
     private List<BaculaJob> terminatedJobs = new ArrayList<BaculaJob>();
 
     public String getHeader() {
@@ -39,11 +39,11 @@ public class BaculaStatusClient implements Serializable {
         this.header = header;
     }
 
-    public List<BaculaJobRunning> getRunningJobs() {
+    public List<BaculaJobRunningClient> getRunningJobs() {
         return runningJobs;
     }
 
-    public void setRunningJobs(List<BaculaJobRunning> runningJobs) {
+    public void setRunningJobs(List<BaculaJobRunningClient> runningJobs) {
         this.runningJobs = runningJobs;
     }
 

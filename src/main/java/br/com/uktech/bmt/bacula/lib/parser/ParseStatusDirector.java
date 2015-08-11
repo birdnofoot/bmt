@@ -48,7 +48,7 @@ public class ParseStatusDirector {
                 } else if(temp.matches("(\\d+)[\\s*|\\t*]*(Differe|Increme|Full)[\\s*|\\t*]*([\\w+|-]*.\\d{4}-\\d{2}-\\d{2}_\\d{2}.\\d{2}.\\d{2}_\\d{2})[\\s*|\\t*]*(is waiting execution|is running|is waiting for Client [\\w*|-]* to connect to Storage [\\w*|-]*)")) {
                     statusDirector.getRunningJobs().add(parse.parseRunningJob(temp));
                 } else if(temp.matches("(\\d+)[\\s*|\\t*]*(Full|Incr|Diff)[\\s*|\\t*]*([\\d+|,*]*)[\\s*|\\t*]*([\\d+|\\.*]* [K|M|G|T]*)[\\s*|\\t*]*(OK|Error)[\\s*|\\t*]*(\\d{2}-[a-zA-Z]{3}-\\d{2} \\d{2}:\\d{2})[\\s*|\\t*]*(.+)")) {
-                    statusDirector.getTerminatedJobs().add(parse.parseTerminadedJob(temp));
+                    statusDirector.getTerminatedJobs().add(parse.parseTerminatedJob(temp));
                 }
             }
         } while(temp!=null);

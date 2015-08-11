@@ -17,7 +17,7 @@
 package br.com.uktech.bmt.dto.bacula.client;
 
 import br.com.uktech.bmt.bacula.bean.BaculaJob;
-import br.com.uktech.bmt.bacula.bean.BaculaJobRunning;
+import br.com.uktech.bmt.bacula.bean.BaculaJobRunningClient;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -28,7 +28,7 @@ import java.util.Objects;
  */
 public class BaculaStatusClientDto {
     private String header;
-    private List<BaculaJobRunning> runningJobs = new ArrayList<BaculaJobRunning>();
+    private List<BaculaJobRunningClient> runningJobs = new ArrayList<BaculaJobRunningClient>();
     private List<BaculaJob> terminatedJobs = new ArrayList<BaculaJob>();
 
     public String getHeader() {
@@ -39,11 +39,11 @@ public class BaculaStatusClientDto {
         this.header = header;
     }
 
-    public List<BaculaJobRunning> getRunningJobs() {
+    public List<BaculaJobRunningClient> getRunningJobs() {
         return runningJobs;
     }
 
-    public void setRunningJobs(List<BaculaJobRunning> runningJobs) {
+    public void setRunningJobs(List<BaculaJobRunningClient> runningJobs) {
         this.runningJobs = runningJobs;
     }
 
