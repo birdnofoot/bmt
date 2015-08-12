@@ -22,6 +22,7 @@ import br.com.uktech.bmt.bacula.bean.BaculaClient;
 import br.com.uktech.bmt.bacula.bean.BaculaJob;
 import br.com.uktech.bmt.bacula.bean.BaculaStatusClient;
 import br.com.uktech.bmt.bacula.bean.BaculaStatusDirector;
+import br.com.uktech.bmt.bacula.bean.BaculaStorage;
 import br.com.uktech.bmt.bacula.exceptions.BaculaCommandException;
 import br.com.uktech.bmt.bacula.exceptions.BaculaInvalidDataSize;
 import br.com.uktech.bmt.bacula.exceptions.BaculaNoInteger;
@@ -30,7 +31,9 @@ import br.com.uktech.bmt.bacula.lib.parser.ParseJobs;
 import br.com.uktech.bmt.bacula.lib.parser.ParseListClient;
 import br.com.uktech.bmt.bacula.lib.parser.ParseStatusClient;
 import br.com.uktech.bmt.bacula.lib.parser.ParseStatusDirector;
+import br.com.uktech.bmt.bacula.lib.parser.ParseStorage;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -114,7 +117,6 @@ public class BaculaConsole5 extends AbstractBaculaConsole implements BaculaConso
     @Override
     public void updateListJobId(BaculaJob job) {
         try {
-            Thread.sleep(400);
             String receivedData = this.getConnection().sendAndReceive(Constants.Connection.Commands.LIST_JOBID+job.getJobid());
             this.logger.trace(receivedData);
             new ParseJobs().parseListJob(receivedData, job);
@@ -133,5 +135,17 @@ public class BaculaConsole5 extends AbstractBaculaConsole implements BaculaConso
         } catch (IOException | InterruptedException | BaculaInvalidDataSize | BaculaNoInteger | BaculaCommandException ex) {
             this.logger.error(ex.getLocalizedMessage());
         }
+    }
+
+    @Override
+    public List<BaculaStorage> getStorages() {
+        List<BaculaStorage> baculaStorage = new ArrayList<>();
+        try {
+            String receivedData = this.getConnection().sendAndReceive(Constants.Connection.Commands.SHOW_STORAGE);
+            baculaStorage = new ParseStorage().parse(receivedData);
+        } catch (IOException | InterruptedException | BaculaInvalidDataSize | BaculaNoInteger | BaculaCommandException ex) {
+            this.logger.error(ex.getLocalizedMessage());
+        }
+        return baculaStorage;
     }
 }

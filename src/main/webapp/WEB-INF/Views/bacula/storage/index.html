@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<!--
+Copyright (C) 2015 Uhlig e Korovsky Tecnologia Ltda - ME
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<html>
+    <head th:replace="fragments/header :: head">
+        <title th:text="#{system.name}">Bacula Manager Tool</title>
+
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <meta name="description" content=""/>
+        <meta name="author" content="Uhlig &amp; Korovsky Tecnologia Ltda - ME"/>
+
+        <link rel="icon" href="../../../images/favicon.gif" th:href="@{/images/favicon.gif}"/>
+    </head>
+    <body>
+        <div th:replace="fragments/navbar :: navbar">&nbsp;</div>
+        <div>
+            <a href="#" th:href="@{'/bacula/director/'}">Return to director's page</a>
+            <a href="#" th:href="@{/bacula/storage/add}">Add new storage</a>
+        </div> 
+        <div>
+            <table id="tbbaculastorages" border="1" style="width:100%">
+                <thead>
+                    <th th:text="#{view.bacula.storage[name]}">Name</th>
+                    <th th:text="#{view.bacula.storage[storageid]}">Storage Id</th>
+                    <th th:text="#{view.bacula.storage[address]}">Address</th>
+                    <th th:text="#{view.bacula.storage[sdport]}">SDport</th>
+                    <th th:text="#{view.bacula.storage[maxjobs]}">Max Jobs</th>
+                    <th th:text="#{view.bacula.storage[devicename]}">Device Name</th>
+                    <th th:text="#{view.bacula.storage[mediatype]}">Media Type</th>
+                    <th th:text="#{view.default[action]}">Action</th>
+                </thead>
+                <tbody>
+                    <tr th:if="${storages == null}">
+                        <td colspan="4">No bacula storages configured!</td>
+                    </tr>
+                    <tr th:if="${storages != null}" th:each="storage : ${storages}">
+                        <td th:text="${storage.name}">Name</td>
+                        <td th:text="${storage.storageId}">storageId</td>
+                        <td th:text="${storage.address}">address</td>
+                        <td th:text="${storage.SDport}">JSDport</td>
+                        <td th:text="${storage.maxJobs}">maxJobs</td>
+                        <td th:text="${storage.deviceName}">deviceName</td>
+                        <td th:text="${storage.mediaType}">mediaType</td>
+                        <td>
+                            <div class="pull-right action-buttons">
+                                <a href="#" th:href="@{'/bacula/storage/status/'+${directorId}+'/'+${storage.name}}">Status</a>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div th:replace="fragments/footer :: footer">&nbsp;</div>
+    </body>
+</html>

@@ -54,6 +54,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                             <a href="#" th:href="@{'/bacula/director/delete/'+${director.id}}" sec:authorize="hasAnyRole('ROLE_BACULA_DIRECTOR_DELETE')">Delete</a>
                             <a href="#" th:href="@{'/bacula/director/status/'+${director.id}}" sec:authorize="hasAnyRole('ROLE_BACULA_DIRECTOR_READ')">Status</a>
                             <a href="#" th:href="@{'/bacula/client/'+${director.id}}">Clients</a>
+                            <a href="#" th:href="@{'/bacula/storage/'+${director.id}}">Storages</a>
                         </div>
                     </td>
                 </tr>

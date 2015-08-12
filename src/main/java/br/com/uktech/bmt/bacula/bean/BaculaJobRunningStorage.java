@@ -117,7 +117,7 @@ public class BaculaJobRunningStorage extends AbstractJobRunning{
 
     @Override
     public int hashCode() {
-        int hash = 3;
+        int hash = super.hashCode();
         hash = 23 * hash + Objects.hashCode(this.name);
         hash = 23 * hash + Objects.hashCode(this.volume);
         hash = 23 * hash + Objects.hashCode(this.pool);
@@ -134,6 +134,9 @@ public class BaculaJobRunningStorage extends AbstractJobRunning{
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
+            return false;
+        }
+        if (!super.equals(obj)) {
             return false;
         }
         if (getClass() != obj.getClass()) {
@@ -175,7 +178,7 @@ public class BaculaJobRunningStorage extends AbstractJobRunning{
 
     @Override
     public String toString() {
-        return "BaculaJobRunningStorage{" + "name=" + name + ", volume=" + volume + ", pool=" + pool + ", device=" + device + ", spooling=" + spooling + ", despooling=" + despooling + ", despoolWait=" + despoolWait + ", FDReadSeqNo=" + FDReadSeqNo + ", inMsg=" + inMsg + ", outMsg=" + outMsg + '}';
+        return super.toString() + ", name=" + name + ", volume=" + volume + ", pool=" + pool + ", device=" + device + ", spooling=" + spooling + ", despooling=" + despooling + ", despoolWait=" + despoolWait + ", FDReadSeqNo=" + FDReadSeqNo + ", inMsg=" + inMsg + ", outMsg=" + outMsg + '}';
     }
     
 }

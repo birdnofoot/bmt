@@ -84,6 +84,7 @@ public interface Constants {
             public static String LLIST_CLIENTS = "llist clients";
             public static String LIST_JOBID = "list jobid=";
             public static String LLIST_JOBID = "llist jobid=";
+            public static String SHOW_STORAGE = "show storage";
             public static String EXIT = "exit";
             public static String QUIT = "quit";
             public static String VERSION = "version";
