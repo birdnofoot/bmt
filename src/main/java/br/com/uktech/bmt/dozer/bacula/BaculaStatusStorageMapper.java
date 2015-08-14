@@ -14,21 +14,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package br.com.uktech.bmt.service;
 
+package br.com.uktech.bmt.dozer.bacula;
+
+import br.com.uktech.bmt.bacula.bean.BaculaStatusStorage;
 import br.com.uktech.bmt.dto.bacula.storage.BaculaStatusStorageDto;
-import br.com.uktech.bmt.dto.bacula.storage.BaculaStorageDto;
-import br.com.uktech.bmt.dto.model.director.DirectorDto;
-import java.util.List;
+import org.dozer.loader.api.BeanMappingBuilder;
 
 /**
- *
+ * 
  * @author João Paulo Siqueira <joao.siqueira@uktech.com.br>
  */
-public interface BaculaStorageService {
-    
-    public BaculaStorageDto newStorage();
-    public List<BaculaStorageDto> getListStorage(DirectorDto baculadirdto);
-    public BaculaStatusStorageDto getStatusStorage(DirectorDto baculadirdto, String nameStorage);
-    
+public class BaculaStatusStorageMapper extends BeanMappingBuilder {
+
+    @Override
+    protected void configure() {
+        this.mapping(BaculaStatusStorage.class, BaculaStatusStorageDto.class);
+    }
+
 }

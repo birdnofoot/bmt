@@ -74,7 +74,7 @@ public class ParseJobs {
             job.setJobid(Long.parseLong(m.group(1)));
             job.setLevel(m.group(2));
             job.setJobfiles(Integer.parseInt(m.group(3).replace(",", "")));
-            //job.setBytes(m.group(4));
+            job.setJobbytes(convertejobBytes(m.group(4)));
             job.setDirstatus(m.group(5));
             job.setRealendtime(Utils.toCalendar(m.group(6)));
             job.setName(m.group(7));
@@ -197,5 +197,26 @@ public class ParseJobs {
             }
         }
         return word;
+    }
+    
+    private Long convertejobBytes(String jobBytes) {
+        String aux = null;
+        Long bytes = null;
+        Pattern p = Pattern.compile("([\\d|\\.]*)[\\s|\\t]*([K|M|G|T]*)");
+        Matcher m = p.matcher(jobBytes);
+        if(m.find()) {
+            bytes = Long.parseLong((m.group(1).replace(".", "")).replace(" ", ""));
+            aux = m.group(2).replace(" ", "");
+            if(aux.equals("K")) {
+                return bytes * 1024l;
+            } else if(aux.equals("M")) {
+                return bytes * 1024l * 1024l;
+            } else if(aux.equals("G")) {
+                return bytes * 1024l * 1024l * 1024l;
+            } else if(aux.equals("T")) {
+                return bytes * 1024l * 1024l * 1024l * 1024l;
+            }
+        }
+        return bytes;
     }
 }

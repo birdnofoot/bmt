@@ -20,6 +20,7 @@ import br.com.uktech.bmt.bacula.bean.BaculaClient;
 import br.com.uktech.bmt.bacula.bean.BaculaJob;
 import br.com.uktech.bmt.bacula.bean.BaculaStatusClient;
 import br.com.uktech.bmt.bacula.bean.BaculaStatusDirector;
+import br.com.uktech.bmt.bacula.bean.BaculaStatusStorage;
 import br.com.uktech.bmt.bacula.bean.BaculaStorage;
 import br.com.uktech.bmt.bacula.exceptions.BaculaAuthenticationException;
 import br.com.uktech.bmt.bacula.exceptions.BaculaCommunicationException;
@@ -52,5 +53,7 @@ public interface BaculaConsole {
     public void updateLlistJobId(BaculaJob job);
     
     public List<BaculaStorage> getStorages();
+    
+    public BaculaStatusStorage getStatusStorage(String storageName);
     
 }

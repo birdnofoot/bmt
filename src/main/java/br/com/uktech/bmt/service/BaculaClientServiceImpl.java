@@ -87,7 +87,7 @@ public class BaculaClientServiceImpl implements BaculaClientService{
     public BaculaStatusClientDto getStatusClient(DirectorDto baculadirdto, String clientName) {
         BaculaStatusClientDto statusClientDto = null;
         BaculaStatusClient statusClient = null;
-        BaculaClient client = null;
+        //BaculaClient client = null;
         try{
             BaculaConsole console = consoleFactory.getConsole(baculadirdto.getName(), baculadirdto.getHostname(), baculadirdto.getPort(), baculadirdto.getPassword());
             if (console != null) {

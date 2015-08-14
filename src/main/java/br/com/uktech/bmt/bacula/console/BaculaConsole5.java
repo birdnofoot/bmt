@@ -22,6 +22,7 @@ import br.com.uktech.bmt.bacula.bean.BaculaClient;
 import br.com.uktech.bmt.bacula.bean.BaculaJob;
 import br.com.uktech.bmt.bacula.bean.BaculaStatusClient;
 import br.com.uktech.bmt.bacula.bean.BaculaStatusDirector;
+import br.com.uktech.bmt.bacula.bean.BaculaStatusStorage;
 import br.com.uktech.bmt.bacula.bean.BaculaStorage;
 import br.com.uktech.bmt.bacula.exceptions.BaculaCommandException;
 import br.com.uktech.bmt.bacula.exceptions.BaculaInvalidDataSize;
@@ -31,6 +32,7 @@ import br.com.uktech.bmt.bacula.lib.parser.ParseJobs;
 import br.com.uktech.bmt.bacula.lib.parser.ParseListClient;
 import br.com.uktech.bmt.bacula.lib.parser.ParseStatusClient;
 import br.com.uktech.bmt.bacula.lib.parser.ParseStatusDirector;
+import br.com.uktech.bmt.bacula.lib.parser.ParseStatusStorage;
 import br.com.uktech.bmt.bacula.lib.parser.ParseStorage;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -117,6 +119,7 @@ public class BaculaConsole5 extends AbstractBaculaConsole implements BaculaConso
     @Override
     public void updateListJobId(BaculaJob job) {
         try {
+            
             String receivedData = this.getConnection().sendAndReceive(Constants.Connection.Commands.LIST_JOBID+job.getJobid());
             this.logger.trace(receivedData);
             new ParseJobs().parseListJob(receivedData, job);
@@ -147,5 +150,22 @@ public class BaculaConsole5 extends AbstractBaculaConsole implements BaculaConso
             this.logger.error(ex.getLocalizedMessage());
         }
         return baculaStorage;
+    }
+
+    @Override
+    public BaculaStatusStorage getStatusStorage(String storageName) {
+        BaculaStatusStorage statusStorage = null;
+        try {
+            String receivedData = this.getConnection().sendAndReceive(Constants.Connection.Commands.STATUS_STORAGE+storageName);
+            statusStorage = new ParseStatusStorage().parse(receivedData);
+            for (Iterator<BaculaJob> iterator = statusStorage.getTerminatedJobs().iterator(); iterator.hasNext();) {
+                BaculaJob job = iterator.next();
+                detailBaculaJob(job);
+            }
+            //System.err.println("\n\n\n"+statusStorage.toString()+"\n\n\n");
+        } catch(IOException | InterruptedException | BaculaInvalidDataSize | BaculaNoInteger | BaculaCommandException ex) {
+            this.logger.error(ex.getLocalizedMessage());
+        }
+        return statusStorage;
     }
 }

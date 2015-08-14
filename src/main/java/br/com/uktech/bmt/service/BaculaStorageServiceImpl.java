@@ -19,15 +19,19 @@ package br.com.uktech.bmt.service;
 
 import br.com.uktech.bmt.bacula.BaculaConsole;
 import br.com.uktech.bmt.bacula.BaculaConsoleFactory;
+import br.com.uktech.bmt.bacula.bean.BaculaStatusStorage;
 import br.com.uktech.bmt.bacula.bean.BaculaStorage;
 import br.com.uktech.bmt.bacula.exceptions.BaculaAuthenticationException;
 import br.com.uktech.bmt.bacula.exceptions.BaculaCommunicationException;
 import br.com.uktech.bmt.bacula.exceptions.BaculaDirectorNotSupported;
+import br.com.uktech.bmt.dto.bacula.storage.BaculaStatusStorageDto;
 import br.com.uktech.bmt.dto.bacula.storage.BaculaStorageDto;
 import br.com.uktech.bmt.dto.model.director.DirectorDto;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.dozer.Mapper;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,14 +55,14 @@ public class BaculaStorageServiceImpl implements BaculaStorageService{
     
     @Override
     public BaculaStorageDto newStorage() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return new BaculaStorageDto();
     }
     
     @Transactional(readOnly = true) //Se é apenas uma consulta e não uma alteração. Perguntar se é isto mesmo.
     @Override
     public List<BaculaStorageDto> getListStorage(DirectorDto baculadirdto) {
         List<BaculaStorageDto> storagesDto = new ArrayList<>();
-        List<BaculaStorage> storages = new ArrayList<>();
+        List<BaculaStorage> storages = null;
         try{
             BaculaConsole console = consoleFactory.getConsole(baculadirdto.getName(), baculadirdto.getHostname(), baculadirdto.getPort(), baculadirdto.getPassword());
             if(console != null) {
@@ -77,6 +81,25 @@ public class BaculaStorageServiceImpl implements BaculaStorageService{
             return null;
         }
         return storagesDto;
+    }
+
+    @Override
+    public BaculaStatusStorageDto getStatusStorage(DirectorDto baculadirdto, String nameStorage) {
+        BaculaStatusStorageDto statusStorageDto = new BaculaStatusStorageDto();
+        BaculaStatusStorage statusStorage = null;
+        try {
+            BaculaConsole console = consoleFactory.getConsole(baculadirdto.getName(), baculadirdto.getHostname(), baculadirdto.getPort(), baculadirdto.getPassword());
+            if (console != null) {
+                statusStorage = console.getStatusStorage(nameStorage);
+                if(statusStorage!=null) {
+                    mapper.map(statusStorage, statusStorageDto);
+                }
+            }
+        }
+        catch (BaculaAuthenticationException | BaculaDirectorNotSupported | BaculaCommunicationException ex) {
+            Logger.getLogger(BaculaStorageServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return statusStorageDto;
     }
 
 }

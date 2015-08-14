@@ -81,6 +81,7 @@ public interface Constants {
         interface Commands {
             public static String STATUS_DIRECTOR = "status dir";
             public static String STATUS_CLIENT = "status client=";
+            public static String STATUS_STORAGE = "status storage=";
             public static String LLIST_CLIENTS = "llist clients";
             public static String LIST_JOBID = "list jobid=";
             public static String LLIST_JOBID = "llist jobid=";

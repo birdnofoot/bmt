@@ -16,11 +16,6 @@
  */
 package br.com.uktech.bmt.configuration;
 
-import br.com.uktech.bmt.dozer.BaculaDirectorMapper;
-import br.com.uktech.bmt.dozer.SystemModuleMapper;
-import br.com.uktech.bmt.dozer.SystemUserMapper;
-import br.com.uktech.bmt.dozer.SystemUserPermissionIdMapper;
-import br.com.uktech.bmt.dozer.SystemUserPermissionMapper;
 import br.com.uktech.bmt.dozer.converter.LocaleConverter;
 import br.com.uktech.bmt.dozer.converter.TimeZoneConverter;
 import br.com.uktech.bmt.dozer.converter.URLConverter;
@@ -28,7 +23,6 @@ import br.com.uktech.bmt.dozer.converter.UUIDConverter;
 import java.util.ArrayList;
 import java.util.List;
 import org.dozer.CustomConverter;
-import org.dozer.loader.api.BeanMappingBuilder;
 import org.dozer.spring.DozerBeanMapperFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -39,21 +33,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class MapperConfig {
-    
-    @Bean
-    public List<BeanMappingBuilder> getMapperBuilders() {
-        List<BeanMappingBuilder> mappers = new ArrayList();
-        mappers.add(new SystemModuleMapper());
-        mappers.add(new SystemUserMapper());
-        mappers.add(new SystemUserPermissionMapper());
-        mappers.add(new SystemUserPermissionIdMapper());
-        mappers.add(new BaculaDirectorMapper());
-        mappers.add(new br.com.uktech.bmt.dozer.bacula.BaculaClientMapper());
-        mappers.add(new br.com.uktech.bmt.dozer.bacula.BaculaJobMapper());
-        mappers.add(new br.com.uktech.bmt.dozer.bacula.BaculaStatusDirectorMapper());
-        return mappers;
-    }
-    
+
     @Bean
     public List<CustomConverter> getCustomConverters() {
         List<CustomConverter> converters = new ArrayList();
@@ -68,8 +48,6 @@ public class MapperConfig {
     public DozerBeanMapperFactoryBean mapper() {
         DozerBeanMapperFactoryBean mapper = new DozerBeanMapperFactoryBean();
         mapper.setCustomConverters(getCustomConverters());
-        //mapper.setCustomFieldMapper(new HibernateInitializedFieldMapper());
-        mapper.setMappingBuilders(getMapperBuilders());
         return mapper;
     }    
 }

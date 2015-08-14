@@ -37,7 +37,7 @@ public class ParseStorage {
     public List<BaculaStorage> parse(String input) {
         List<BaculaStorage> baculaStorage = new ArrayList<>();
         try{
-            BaculaStorage storage = new BaculaStorage();
+            BaculaStorage storage = null;
             StringBuffer sbTemp = new StringBuffer();
             String temp;
             Parser parser = new Parser(input);
@@ -48,6 +48,7 @@ public class ParseStorage {
                 if (temp != null) {
                     temp = temp.trim();
                     if(temp.matches(ParseStorage.REGEX_SHOW_STORAGE_NAME)) {
+                        storage = new BaculaStorage();
                         p = Pattern.compile(ParseStorage.REGEX_SHOW_STORAGE_NAME);
                         m = p.matcher(temp);
                         if(m.find()) {

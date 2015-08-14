@@ -17,6 +17,7 @@
 
 package br.com.uktech.bmt.controller.bacula;
 
+import br.com.uktech.bmt.dto.bacula.storage.BaculaStatusStorageDto;
 import br.com.uktech.bmt.dto.bacula.storage.BaculaStorageDto;
 import br.com.uktech.bmt.dto.model.director.DirectorDto;
 import br.com.uktech.bmt.service.BaculaDirectorService;
@@ -70,5 +71,20 @@ public class StorageController extends BasicBaculaController {
         mav.addObject("storages", storages);
         return mav;
     }
-
+    
+    @RequestMapping(value = "/status/{directorId}/{storageName}", method = RequestMethod.GET)
+    public ModelAndView status(@PathVariable Long directorId, @PathVariable String storageName, HttpServletRequest request, HttpServletResponse response, Pageable p) {
+        logger.debug("Show Bacula Storage Status");
+        ModelAndView mav;
+        BaculaStatusStorageDto status = null;
+        mav = new ModelAndView("bacula/storage/status");
+        DirectorDto directorDto = baculaDirectorService.getBaculaDirectorById(directorId);
+        if (directorDto != null) {
+            status = baculaStorageService.getStatusStorage(directorDto, storageName);
+        }
+        mav.addObject("status", status);
+        mav.addObject("directorId", directorId);
+        return mav;
+    }
+    
 }

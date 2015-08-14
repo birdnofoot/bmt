@@ -57,6 +57,7 @@ public class BaculaDirectorServiceImpl implements BaculaDirectorService {
         return new DirectorDto();
     }
 
+    @Transactional(readOnly = false)
     @Override
     public DirectorDto save(DirectorDto baculadirdto) {
         Director baculadir = new Director();

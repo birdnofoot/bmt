@@ -47,7 +47,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 </thead>
                 <tbody>
                     <tr th:if="${storages == null}">
-                        <td colspan="4">No bacula storages configured!</td>
+                        <td colspan="8">No bacula storages configured!</td>
                     </tr>
                     <tr th:if="${storages != null}" th:each="storage : ${storages}">
                         <td th:text="${storage.name}">Name</td>

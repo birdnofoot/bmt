@@ -16,13 +16,14 @@
  */
 package br.com.uktech.bmt.dto.bacula.storage;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
  * 
  * @author João Paulo Siqueira <joao.siqueira@uktech.com.br>
  */
-public class BaculaStorageDto {
+public class BaculaStorageDto implements Serializable{
     
     private String name;
     private Long storageId;
