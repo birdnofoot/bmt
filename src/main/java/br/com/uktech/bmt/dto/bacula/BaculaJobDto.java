@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package br.com.uktech.bmt.bacula.bean;
+package br.com.uktech.bmt.dto.bacula;
 
 import br.com.uktech.bmt.bacula.lib.Utils;
 import java.io.Serializable;
@@ -22,10 +22,10 @@ import java.util.Calendar;
 import java.util.Objects;
 
 /**
- * @author Carlos Alberto Cipriano Korovsky <carlos.korovsky@uktech.com.br>
+ *
  * @author João Paulo Siqueira <joao.siqueira@uktech.com.br>
  */
-public class BaculaJob implements Serializable {
+public class BaculaJobDto implements Serializable {
     
     private Long jobid;
     private String job;
@@ -56,7 +56,7 @@ public class BaculaJob implements Serializable {
     private String volumename;  //Necessário para os trabalhos agendados
     private Calendar scheduled; //Necessário para os trabalhos agendados
     private String dirstatus;   //Status do job em quando no status dir
-    
+
     public Long getJobid() {
         return jobid;
     }
@@ -291,36 +291,36 @@ public class BaculaJob implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 37 * hash + Objects.hashCode(this.jobid);
-        hash = 37 * hash + Objects.hashCode(this.job);
-        hash = 37 * hash + Objects.hashCode(this.name);
-        hash = 37 * hash + Objects.hashCode(this.purgedfiles);
-        hash = 37 * hash + Objects.hashCode(this.type);
-        hash = 37 * hash + Objects.hashCode(this.level);
-        hash = 37 * hash + Objects.hashCode(this.clientid);
-        hash = 37 * hash + Objects.hashCode(this.clientname);
-        hash = 37 * hash + Objects.hashCode(this.jobstatus);
-        hash = 37 * hash + Objects.hashCode(this.schedtime);
-        hash = 37 * hash + Objects.hashCode(this.starttime);
-        hash = 37 * hash + Objects.hashCode(this.endtime);
-        hash = 37 * hash + Objects.hashCode(this.realendtime);
-        hash = 37 * hash + Objects.hashCode(this.jobtdate);
-        hash = 37 * hash + Objects.hashCode(this.volsessionid);
-        hash = 37 * hash + Objects.hashCode(this.volsessiontime);
-        hash = 37 * hash + Objects.hashCode(this.jobfiles);
-        hash = 37 * hash + Objects.hashCode(this.jobbytes);
-        hash = 37 * hash + Objects.hashCode(this.joberrors);
-        hash = 37 * hash + Objects.hashCode(this.jobmissingfiles);
-        hash = 37 * hash + Objects.hashCode(this.poolid);
-        hash = 37 * hash + Objects.hashCode(this.poolname);
-        hash = 37 * hash + Objects.hashCode(this.priorjobid);
-        hash = 37 * hash + Objects.hashCode(this.filesetid);
-        hash = 37 * hash + Objects.hashCode(this.fileset);
-        hash = 37 * hash + Objects.hashCode(this.typejob);
-        hash = 37 * hash + Objects.hashCode(this.volumename);
-        hash = 37 * hash + Objects.hashCode(this.scheduled);
-        hash = 37 * hash + Objects.hashCode(this.dirstatus);
+        int hash = 3;
+        hash = 97 * hash + Objects.hashCode(this.jobid);
+        hash = 97 * hash + Objects.hashCode(this.job);
+        hash = 97 * hash + Objects.hashCode(this.name);
+        hash = 97 * hash + Objects.hashCode(this.purgedfiles);
+        hash = 97 * hash + Objects.hashCode(this.type);
+        hash = 97 * hash + Objects.hashCode(this.level);
+        hash = 97 * hash + Objects.hashCode(this.clientid);
+        hash = 97 * hash + Objects.hashCode(this.clientname);
+        hash = 97 * hash + Objects.hashCode(this.jobstatus);
+        hash = 97 * hash + Objects.hashCode(this.schedtime);
+        hash = 97 * hash + Objects.hashCode(this.starttime);
+        hash = 97 * hash + Objects.hashCode(this.endtime);
+        hash = 97 * hash + Objects.hashCode(this.realendtime);
+        hash = 97 * hash + Objects.hashCode(this.jobtdate);
+        hash = 97 * hash + Objects.hashCode(this.volsessionid);
+        hash = 97 * hash + Objects.hashCode(this.volsessiontime);
+        hash = 97 * hash + Objects.hashCode(this.jobfiles);
+        hash = 97 * hash + Objects.hashCode(this.jobbytes);
+        hash = 97 * hash + Objects.hashCode(this.joberrors);
+        hash = 97 * hash + Objects.hashCode(this.jobmissingfiles);
+        hash = 97 * hash + Objects.hashCode(this.poolid);
+        hash = 97 * hash + Objects.hashCode(this.poolname);
+        hash = 97 * hash + Objects.hashCode(this.priorjobid);
+        hash = 97 * hash + Objects.hashCode(this.filesetid);
+        hash = 97 * hash + Objects.hashCode(this.fileset);
+        hash = 97 * hash + Objects.hashCode(this.typejob);
+        hash = 97 * hash + Objects.hashCode(this.volumename);
+        hash = 97 * hash + Objects.hashCode(this.scheduled);
+        hash = 97 * hash + Objects.hashCode(this.dirstatus);
         return hash;
     }
 
@@ -332,7 +332,7 @@ public class BaculaJob implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final BaculaJob other = (BaculaJob) obj;
+        final BaculaJobDto other = (BaculaJobDto) obj;
         if (!Objects.equals(this.jobid, other.jobid)) {
             return false;
         }
@@ -422,7 +422,7 @@ public class BaculaJob implements Serializable {
         }
         return true;
     }
-
+    
     @Override
     public String toString() {
         return "jobid=" + jobid + "\njob=" + job + "\nname=" + name + "\npurgedfiles=" + purgedfiles + "\ntype=" + type + "\nlevel=" + level + "\nclientid=" + clientid + "\nclientname=" + clientname + "\njobstatus=" + jobstatus + "\nschedtime=" + Utils.calendarToString(schedtime) + "\nstarttime=" + Utils.calendarToString(starttime) + "\nendtime=" + Utils.calendarToString(endtime) + "\nrealendtime=" + Utils.calendarToString(realendtime) + "\njobtdate=" + jobtdate + "\nvolsessionid=" + volsessionid + "\nvolsessiontime=" + volsessiontime + "\njobfiles=" + jobfiles + "\njobbytes=" + jobbytes + "\njoberrors=" + joberrors + "\njobmissingfiles=" + jobmissingfiles + "\npoolid=" + poolid + "\npoolname=" + poolname + "\npriorjobid=" + priorjobid + "\nfilesetid=" + filesetid + "\nfileset=" + fileset + "\ntypejob=" + typejob + "\nvolumename=" + volumename + "\nscheduled=" + Utils.calendarToString(scheduled)+"\ndirstatus=" + dirstatus + "\n";

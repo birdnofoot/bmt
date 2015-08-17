@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <logger name="org.springframework" level="WARN"/>
     
     <logger name="br.com.uktech" level="DEBUG" />
+    <logger name="br.com.uktech.bmt.bacula.lib.parser" level="TRACE" />
 
     <root level="INFO">
         <appender-ref ref="STDOUT" />

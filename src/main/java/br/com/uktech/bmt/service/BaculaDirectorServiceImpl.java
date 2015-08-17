@@ -25,7 +25,6 @@ import br.com.uktech.bmt.bacula.exceptions.BaculaDirectorNotSupported;
 import br.com.uktech.bmt.dto.model.director.DirectorDto;
 import br.com.uktech.bmt.model.Director;
 import br.com.uktech.bmt.model.repository.BaculaDirectorRepository;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;

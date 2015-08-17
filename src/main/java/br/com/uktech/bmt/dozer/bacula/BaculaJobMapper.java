@@ -17,7 +17,7 @@
 package br.com.uktech.bmt.dozer.bacula;
 
 import br.com.uktech.bmt.bacula.bean.BaculaJob;
-import br.com.uktech.bmt.dto.bacula.director.BaculaJobDto;
+import br.com.uktech.bmt.dto.bacula.BaculaJobDto;
 import org.dozer.loader.api.BeanMappingBuilder;
 
 /**

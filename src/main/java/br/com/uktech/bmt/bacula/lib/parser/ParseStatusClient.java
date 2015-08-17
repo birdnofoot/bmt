@@ -6,8 +6,11 @@ import br.com.uktech.bmt.bacula.bean.BaculaStatusClient;
 import br.com.uktech.bmt.bacula.lib.Utils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.slf4j.LoggerFactory;
 
 public class ParseStatusClient {
+    
+    private final org.slf4j.Logger logger = LoggerFactory.getLogger(ParseStatusClient.class);
     
     public static final String REGEX_JOB_RUNNING_CLIENT_HEADER = "[\\s*|\\t*]*([\\w*|-]*)[\\s*|\\t*]*(Version: [\\.|\\d]*)[\\s*|\\t*]*(\\(\\d{2} \\w+ \\d{4}\\))[\\s*|\\t*]*(.+)";
     public static final String REGEX_JOB_RUNNING_CLIENT_ID = "JobId[\\s*|\\t*]*(\\d+)[\\s*|\\t*]*Job[\\s*|\\t*]*(.[^ ]+)[\\s*|\\t*]*(is waiting execution\\.*|is running\\.*|is waiting for Client [\\w*|-]* to connect to Storage [\\w*|-]*\\.*)";
@@ -18,6 +21,7 @@ public class ParseStatusClient {
     public static final String REGEX_JOB_RUNNING_CLIENT_SDREADSEQNO = "SDReadSeqNo=([\\d|,]*)[\\s|\\t]*fd=([\\d|,]*)";
     
     public BaculaStatusClient parse(String input) {
+        this.logger.info("Realiza o parse do status client");
         BaculaStatusClient statusClient = new BaculaStatusClient();
         ParseJobs parse = new ParseJobs();
         StringBuffer header = new StringBuffer();

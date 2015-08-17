@@ -15,13 +15,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package br.com.uktech.bmt.dto.bacula.storage;
+package br.com.uktech.bmt.dto.bacula;
 
-import br.com.uktech.bmt.bacula.bean.BaculaJob;
-import br.com.uktech.bmt.bacula.bean.BaculaJobRunningStorage;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
@@ -31,42 +28,42 @@ import java.util.Objects;
  */
 public class BaculaStatusStorageDto implements Serializable {
     
-    private String banner;
-    private List<BaculaJobRunningStorage> runningJobs = new ArrayList<>();
-    private List<BaculaJob> jobsWaiting = new ArrayList<>();
-    private List<BaculaJob> terminatedJobs = new ArrayList<>();
+    private String header;
+    private List<BaculaJobRunningStorageDto> runningJobs = new ArrayList<>();
+    private List<BaculaJobDto> jobsWaiting = new ArrayList<>();
+    private List<BaculaJobDto> terminatedJobs = new ArrayList<>();
     private List<String> devices = new ArrayList<>();
     private String volumeStatus;
 
-    public String getBanner() {
-        return banner;
+    public String getHeader() {
+        return header;
     }
 
-    public void setBanner(String banner) {
-        this.banner = banner;
+    public void setHeader(String header) {
+        this.header = header;
     }
 
-    public List<BaculaJobRunningStorage> getRunningJobs() {
+    public List<BaculaJobRunningStorageDto> getRunningJobs() {
         return runningJobs;
     }
 
-    public void setRunningJobs(List<BaculaJobRunningStorage> runningJobs) {
+    public void setRunningJobs(List<BaculaJobRunningStorageDto> runningJobs) {
         this.runningJobs = runningJobs;
     }
 
-    public List<BaculaJob> getJobsWaiting() {
+    public List<BaculaJobDto> getJobsWaiting() {
         return jobsWaiting;
     }
 
-    public void setJobsWaiting(List<BaculaJob> jobsWaiting) {
+    public void setJobsWaiting(List<BaculaJobDto> jobsWaiting) {
         this.jobsWaiting = jobsWaiting;
     }
 
-    public List<BaculaJob> getTerminatedJobs() {
+    public List<BaculaJobDto> getTerminatedJobs() {
         return terminatedJobs;
     }
 
-    public void setTerminatedJobs(List<BaculaJob> terminatedJobs) {
+    public void setTerminatedJobs(List<BaculaJobDto> terminatedJobs) {
         this.terminatedJobs = terminatedJobs;
     }
 
@@ -89,7 +86,7 @@ public class BaculaStatusStorageDto implements Serializable {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 17 * hash + Objects.hashCode(this.banner);
+        hash = 17 * hash + Objects.hashCode(this.header);
         hash = 17 * hash + Objects.hashCode(this.runningJobs);
         hash = 17 * hash + Objects.hashCode(this.jobsWaiting);
         hash = 17 * hash + Objects.hashCode(this.terminatedJobs);
@@ -107,7 +104,7 @@ public class BaculaStatusStorageDto implements Serializable {
             return false;
         }
         final BaculaStatusStorageDto other = (BaculaStatusStorageDto) obj;
-        if (!Objects.equals(this.banner, other.banner)) {
+        if (!Objects.equals(this.header, other.header)) {
             return false;
         }
         if (!Objects.equals(this.runningJobs, other.runningJobs)) {
@@ -131,7 +128,7 @@ public class BaculaStatusStorageDto implements Serializable {
     @Override
     public String toString() {
         String str;
-        str = banner + "\n\nRunning Jobs:";
+        str = header + "\n\nRunning Jobs:";
         if(runningJobs==null) {
             str += "\nNo Jobs running.\n";
         } else {
@@ -147,8 +144,7 @@ public class BaculaStatusStorageDto implements Serializable {
             str += "Terminated Jobs:\n" +
                 " JobId  Level    Files      Bytes   Status   Finished        Name \n" +
                 "===================================================================";
-            for (Iterator<BaculaJob> iterator = terminatedJobs.iterator(); iterator.hasNext();) {
-                BaculaJob job = iterator.next();
+            for (BaculaJobDto job : terminatedJobs) {
                 str += "\n" + job.lineTerminatedJobs();
             }
             

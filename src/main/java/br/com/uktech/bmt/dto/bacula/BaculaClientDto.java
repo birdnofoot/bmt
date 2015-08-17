@@ -14,28 +14,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package br.com.uktech.bmt.dto.bacula.client;
+package br.com.uktech.bmt.dto.bacula;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
  *
  * @author João Paulo Siqueira <joao.siqueira@uktech.com.br>
  */
-public class BaculaClientDto {
+public class BaculaClientDto implements Serializable{
     
-    private int id;
+    private Integer id;
     private String name;
     private String uname;
-    private boolean autoprune;
-    private int fileretention;
-    private int jobretention;
+    private Boolean autoprune;
+    private Integer fileretention;
+    private Integer jobretention;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -55,39 +56,39 @@ public class BaculaClientDto {
         this.uname = uname;
     }
 
-    public boolean isAutoprune() {
+    public Boolean getAutoprune() {
         return autoprune;
     }
 
-    public void setAutoprune(boolean autoprune) {
+    public void setAutoprune(Boolean autoprune) {
         this.autoprune = autoprune;
     }
 
-    public int getFileretention() {
+    public Integer getFileretention() {
         return fileretention;
     }
 
-    public void setFileretention(int fileretention) {
+    public void setFileretention(Integer fileretention) {
         this.fileretention = fileretention;
     }
 
-    public int getJobretention() {
+    public Integer getJobretention() {
         return jobretention;
     }
 
-    public void setJobretention(int jobretention) {
+    public void setJobretention(Integer jobretention) {
         this.jobretention = jobretention;
     }
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 59 * hash + this.id;
-        hash = 59 * hash + Objects.hashCode(this.name);
-        hash = 59 * hash + Objects.hashCode(this.uname);
-        hash = 59 * hash + (this.autoprune ? 1 : 0);
-        hash = 59 * hash + this.fileretention;
-        hash = 59 * hash + this.jobretention;
+        int hash = 3;
+        hash = 23 * hash + Objects.hashCode(this.id);
+        hash = 23 * hash + Objects.hashCode(this.name);
+        hash = 23 * hash + Objects.hashCode(this.uname);
+        hash = 23 * hash + Objects.hashCode(this.autoprune);
+        hash = 23 * hash + Objects.hashCode(this.fileretention);
+        hash = 23 * hash + Objects.hashCode(this.jobretention);
         return hash;
     }
 
@@ -100,7 +101,7 @@ public class BaculaClientDto {
             return false;
         }
         final BaculaClientDto other = (BaculaClientDto) obj;
-        if (this.id != other.id) {
+        if (!Objects.equals(this.id, other.id)) {
             return false;
         }
         if (!Objects.equals(this.name, other.name)) {
@@ -109,13 +110,13 @@ public class BaculaClientDto {
         if (!Objects.equals(this.uname, other.uname)) {
             return false;
         }
-        if (this.autoprune != other.autoprune) {
+        if (!Objects.equals(this.autoprune, other.autoprune)) {
             return false;
         }
-        if (this.fileretention != other.fileretention) {
+        if (!Objects.equals(this.fileretention, other.fileretention)) {
             return false;
         }
-        if (this.jobretention != other.jobretention) {
+        if (!Objects.equals(this.jobretention, other.jobretention)) {
             return false;
         }
         return true;
@@ -125,4 +126,5 @@ public class BaculaClientDto {
     public String toString() {
         return "id:\t\t" + id + "\nname:\t\t" + name + "\nuname:\t\t" + uname + "\nautoprune:\t" + autoprune + "\nfileretention:\t" + fileretention + "\njobretention:\t" + jobretention;
     }
+    
 }

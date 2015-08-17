@@ -28,7 +28,7 @@ import java.util.Objects;
  */
 public class BaculaStatusDirector implements Serializable {
     
-    private String banner;
+    private String header;
     private Calendar upSince;
     private Integer jobsRunned;
     private List<BaculaJob> scheduledJobs = new ArrayList<>();
@@ -36,17 +36,17 @@ public class BaculaStatusDirector implements Serializable {
     private List<BaculaJob> terminatedJobs = new ArrayList<>();
 
     /**
-     * @return the banner
+     * @return the header
      */
-    public String getBanner() {
-        return banner;
+    public String getHeader() {
+        return header;
     }
 
     /**
-     * @param banner the banner to set
+     * @param header the header to set
      */
-    public void setBanner(String banner) {
-        this.banner = banner;
+    public void setHeader(String header) {
+        this.header = header;
     }
 
     /**
@@ -113,7 +113,7 @@ public class BaculaStatusDirector implements Serializable {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 43 * hash + Objects.hashCode(this.banner);
+        hash = 43 * hash + Objects.hashCode(this.header);
         hash = 43 * hash + Objects.hashCode(this.upSince);
         hash = 43 * hash + Objects.hashCode(this.jobsRunned);
         hash = 43 * hash + Objects.hashCode(this.scheduledJobs);
@@ -131,7 +131,7 @@ public class BaculaStatusDirector implements Serializable {
             return false;
         }
         final BaculaStatusDirector other = (BaculaStatusDirector) obj;
-        if (!Objects.equals(this.banner, other.banner)) {
+        if (!Objects.equals(this.header, other.header)) {
             return false;
         }
         if (!Objects.equals(this.upSince, other.upSince)) {
@@ -155,7 +155,7 @@ public class BaculaStatusDirector implements Serializable {
     @Override
     public String toString() {
         String output = "";
-        output = banner;
+        output = header;
         
         output +=   
         "Scheduled Jobs:\n";

@@ -19,7 +19,6 @@ package br.com.uktech.bmt.bacula.bean;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
@@ -29,19 +28,19 @@ import java.util.Objects;
  */
 public class BaculaStatusStorage implements Serializable{
     
-    private String banner;
+    private String header;
     private List<BaculaJobRunningStorage> runningJobs = new ArrayList<>();
     private List<BaculaJob> jobsWaiting = new ArrayList<>();
     private List<BaculaJob> terminatedJobs = new ArrayList<>();
     private List<String> devices = new ArrayList<>();
     private String volumeStatus;
 
-    public String getBanner() {
-        return banner;
+    public String getHeader() {
+        return header;
     }
 
-    public void setBanner(String banner) {
-        this.banner = banner;
+    public void setHeader(String header) {
+        this.header = header;
     }
 
     public List<BaculaJobRunningStorage> getRunningJobs() {
@@ -87,7 +86,7 @@ public class BaculaStatusStorage implements Serializable{
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 23 * hash + Objects.hashCode(this.banner);
+        hash = 23 * hash + Objects.hashCode(this.header);
         hash = 23 * hash + Objects.hashCode(this.runningJobs);
         hash = 23 * hash + Objects.hashCode(this.jobsWaiting);
         hash = 23 * hash + Objects.hashCode(this.terminatedJobs);
@@ -105,7 +104,7 @@ public class BaculaStatusStorage implements Serializable{
             return false;
         }
         final BaculaStatusStorage other = (BaculaStatusStorage) obj;
-        if (!Objects.equals(this.banner, other.banner)) {
+        if (!Objects.equals(this.header, other.header)) {
             return false;
         }
         if (!Objects.equals(this.runningJobs, other.runningJobs)) {
@@ -129,7 +128,7 @@ public class BaculaStatusStorage implements Serializable{
     @Override
     public String toString() {
         String str;
-        str = banner + "\n\nRunning Jobs:";
+        str = header + "\n\nRunning Jobs:";
         if(runningJobs==null) {
             str += "\nNo Jobs running.\n";
         } else {
@@ -145,8 +144,7 @@ public class BaculaStatusStorage implements Serializable{
             str += "Terminated Jobs:\n" +
                 " JobId  Level    Files      Bytes   Status   Finished        Name \n" +
                 "===================================================================";
-            for (Iterator<BaculaJob> iterator = terminatedJobs.iterator(); iterator.hasNext();) {
-                BaculaJob job = iterator.next();
+            for (BaculaJob job : terminatedJobs) {
                 str += "\n" + job.lineTerminatedJobs();
             }
             

@@ -23,12 +23,16 @@ import br.com.uktech.bmt.bacula.bean.BaculaStatusStorage;
 import br.com.uktech.bmt.bacula.lib.Constants;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 
  * @author João Paulo Siqueira <joao.siqueira@uktech.com.br>
  */
 public class ParseStatusStorage {
+    
+    private final Logger logger = LoggerFactory.getLogger(ParseStatusStorage.class);
     
     public static final String REGEX_JOB_RUNNING_STORAGE_LEVEL = "\\w+:[\\s|\\t]*([Full|Diff|Incr]+)[\\s|\\t]*(Backup)[\\s|\\t]*job[\\s|\\t]*([\\w|-]*)[\\s|\\t]*JobId=(\\d+)[\\s|\\t]*Volume=\"([\\w|-]*)\"";
     public static final String REGEX_JOB_RUNNING_STORAGE_POOL = "pool=(.*)[\\s|\\t]*device=(.*)";
@@ -38,6 +42,7 @@ public class ParseStatusStorage {
     public static final String REGEX_JOB_RUNNING_STORAGE_DEVICE = "(Device[\\s|\\t]*\".*)";
     
     public BaculaStatusStorage parse(String input) {
+        this.logger.trace("Mensagem Recebiga: {}", input);
         BaculaStatusStorage statusStorage = new BaculaStatusStorage();
         ParseJobs parse = new ParseJobs();
         StringBuffer header = new StringBuffer();
@@ -48,12 +53,13 @@ public class ParseStatusStorage {
             if (temp != null)
             {
                 temp = temp.trim();
+                this.logger.trace("Processando Linha: {}", temp);
                 if(temp.matches(ParseStatusClient.REGEX_JOB_RUNNING_CLIENT_HEADER)){
                     header.append(temp+"\n");
                     header.append(p.getToken(Constants.CR));
                     header.append(p.getToken(Constants.CR));
                     header.append(p.getToken(Constants.CR)).append(Constants.CR);
-                    statusStorage.setBanner(header.toString());
+                    statusStorage.setHeader(header.toString());
                 } else if(temp.matches(ParseStatusStorage.REGEX_JOB_RUNNING_STORAGE_LEVEL)) {
                     BaculaJobRunningStorage jobRunning = new BaculaJobRunningStorage();
                     Pattern pa = Pattern.compile(ParseStatusStorage.REGEX_JOB_RUNNING_STORAGE_LEVEL);

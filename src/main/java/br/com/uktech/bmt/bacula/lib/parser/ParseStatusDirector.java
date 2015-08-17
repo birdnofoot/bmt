@@ -18,6 +18,8 @@ package br.com.uktech.bmt.bacula.lib.parser;
 
 import br.com.uktech.bmt.bacula.bean.BaculaStatusDirector;
 import br.com.uktech.bmt.bacula.lib.Constants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -25,21 +27,25 @@ import br.com.uktech.bmt.bacula.lib.Constants;
  */
 public class ParseStatusDirector {
     
+    private final Logger logger = LoggerFactory.getLogger(ParseStatusDirector.class);
+    
     public BaculaStatusDirector parse(String input) {
+        this.logger.trace("Mensagem recebida: {}", input);
         BaculaStatusDirector statusDirector = new BaculaStatusDirector();
         ParseJobs parse = new ParseJobs();
         StringBuffer sbTemp = new StringBuffer();
         String temp;
         Parser p = new Parser(input);
-        
-        //Criar um Regex e um parse para o Banner
+        //Criar um Regex e um parse para o Header
         sbTemp.append(p.getToken(Constants.CR));
         sbTemp.append(p.getToken(Constants.CR));
         sbTemp.append(p.getToken(Constants.CR)).append(Constants.CR);
-        statusDirector.setBanner(sbTemp.toString());
+        statusDirector.setHeader(sbTemp.toString());
+        this.logger.debug("Header: {}", sbTemp.toString());
         //Jobs
         do{
             temp = p.getToken(Constants.CR);
+            this.logger.trace("Processando linha: {}", temp);
             if (temp != null)
             {
                 temp = temp.trim();

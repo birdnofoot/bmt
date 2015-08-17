@@ -16,8 +16,8 @@
  */
 package br.com.uktech.bmt.service;
 
-import br.com.uktech.bmt.dto.bacula.client.BaculaClientDto;
-import br.com.uktech.bmt.dto.bacula.client.BaculaStatusClientDto;
+import br.com.uktech.bmt.dto.bacula.BaculaClientDto;
+import br.com.uktech.bmt.dto.bacula.BaculaStatusClientDto;
 import br.com.uktech.bmt.dto.model.director.DirectorDto;
 import java.util.List;
 

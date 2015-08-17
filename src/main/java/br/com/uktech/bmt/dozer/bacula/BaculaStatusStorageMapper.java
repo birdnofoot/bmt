@@ -18,7 +18,7 @@
 package br.com.uktech.bmt.dozer.bacula;
 
 import br.com.uktech.bmt.bacula.bean.BaculaStatusStorage;
-import br.com.uktech.bmt.dto.bacula.storage.BaculaStatusStorageDto;
+import br.com.uktech.bmt.dto.bacula.BaculaStatusStorageDto;
 import org.dozer.loader.api.BeanMappingBuilder;
 
 /**

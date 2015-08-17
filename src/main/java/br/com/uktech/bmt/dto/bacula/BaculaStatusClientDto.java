@@ -14,10 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package br.com.uktech.bmt.dto.bacula.client;
+package br.com.uktech.bmt.dto.bacula;
 
-import br.com.uktech.bmt.bacula.bean.BaculaJob;
-import br.com.uktech.bmt.bacula.bean.BaculaJobRunningClient;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -26,10 +25,11 @@ import java.util.Objects;
  *
  * @author João Paulo Siqueira <joao.siqueira@uktech.com.br>
  */
-public class BaculaStatusClientDto {
+public class BaculaStatusClientDto implements Serializable{
+    
     private String header;
-    private List<BaculaJobRunningClient> runningJobs = new ArrayList<BaculaJobRunningClient>();
-    private List<BaculaJob> terminatedJobs = new ArrayList<BaculaJob>();
+    private List<BaculaJobRunningClientDto> runningJobs = new ArrayList<>();
+    private List<BaculaJobDto> terminatedJobs = new ArrayList<>();
 
     public String getHeader() {
         return header;
@@ -39,19 +39,19 @@ public class BaculaStatusClientDto {
         this.header = header;
     }
 
-    public List<BaculaJobRunningClient> getRunningJobs() {
+    public List<BaculaJobRunningClientDto> getRunningJobs() {
         return runningJobs;
     }
 
-    public void setRunningJobs(List<BaculaJobRunningClient> runningJobs) {
+    public void setRunningJobs(List<BaculaJobRunningClientDto> runningJobs) {
         this.runningJobs = runningJobs;
     }
 
-    public List<BaculaJob> getTerminatedJobs() {
+    public List<BaculaJobDto> getTerminatedJobs() {
         return terminatedJobs;
     }
 
-    public void setTerminatedJobs(List<BaculaJob> terminatedJobs) {
+    public void setTerminatedJobs(List<BaculaJobDto> terminatedJobs) {
         this.terminatedJobs = terminatedJobs;
     }
 

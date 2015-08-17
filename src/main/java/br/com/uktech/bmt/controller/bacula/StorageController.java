@@ -17,8 +17,8 @@
 
 package br.com.uktech.bmt.controller.bacula;
 
-import br.com.uktech.bmt.dto.bacula.storage.BaculaStatusStorageDto;
-import br.com.uktech.bmt.dto.bacula.storage.BaculaStorageDto;
+import br.com.uktech.bmt.dto.bacula.BaculaStatusStorageDto;
+import br.com.uktech.bmt.dto.bacula.BaculaStorageDto;
 import br.com.uktech.bmt.dto.model.director.DirectorDto;
 import br.com.uktech.bmt.service.BaculaDirectorService;
 import br.com.uktech.bmt.service.BaculaStorageService;

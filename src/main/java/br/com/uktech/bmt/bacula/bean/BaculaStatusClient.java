@@ -28,8 +28,8 @@ import java.util.Objects;
 public class BaculaStatusClient implements Serializable {
     
     private String header;
-    private List<BaculaJobRunningClient> runningJobs = new ArrayList<BaculaJobRunningClient>();
-    private List<BaculaJob> terminatedJobs = new ArrayList<BaculaJob>();
+    private List<BaculaJobRunningClient> runningJobs = new ArrayList<>();
+    private List<BaculaJob> terminatedJobs = new ArrayList<>();
 
     public String getHeader() {
         return header;

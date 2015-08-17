@@ -14,9 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package br.com.uktech.bmt.dto.bacula.director;
+package br.com.uktech.bmt.dto.bacula;
 
-import br.com.uktech.bmt.bacula.bean.BaculaJob;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -29,25 +28,25 @@ import java.util.Objects;
  */
 public class BaculaStatusDirectorDto implements Serializable {
     
-    private String banner;
+    private String header;
     private Calendar upSince;
-    private int jobsRunned;
-    private final List<BaculaJob> scheduledJobs = new ArrayList<>();
-    private final List<BaculaJob> runningJobs = new ArrayList<>();
-    private final List<BaculaJob> terminatedJobs = new ArrayList<>();
+    private Integer jobsRunned;
+    private List<BaculaJobDto> scheduledJobs = new ArrayList<>();
+    private List<BaculaJobDto> runningJobs = new ArrayList<>();
+    private List<BaculaJobDto> terminatedJobs = new ArrayList<>();
 
     /**
-     * @return the banner
+     * @return the header
      */
-    public String getBanner() {
-        return banner;
+    public String getHeader() {
+        return header;
     }
 
     /**
-     * @param banner the banner to set
+     * @param header the header to set
      */
-    public void setBanner(String banner) {
-        this.banner = banner;
+    public void setHeader(String header) {
+        this.header = header;
     }
 
     /**
@@ -67,44 +66,44 @@ public class BaculaStatusDirectorDto implements Serializable {
     /**
      * @return the jobsRunned
      */
-    public int getJobsRunned() {
+    public Integer getJobsRunned() {
         return jobsRunned;
     }
 
     /**
      * @param jobsRunned the jobsRunned to set
      */
-    public void setJobsRunned(int jobsRunned) {
+    public void setJobsRunned(Integer jobsRunned) {
         this.jobsRunned = jobsRunned;
     }
 
     /**
      * @return the scheduledJobs
      */
-    public List<BaculaJob> getScheduledJobs() {
+    public List<BaculaJobDto> getScheduledJobs() {
         return scheduledJobs;
     }
 
     /**
      * @return the runningJobs
      */
-    public List<BaculaJob> getRunningJobs() {
+    public List<BaculaJobDto> getRunningJobs() {
         return runningJobs;
     }
 
     /**
      * @return the terminatedJobs
      */
-    public List<BaculaJob> getTerminatedJobs() {
+    public List<BaculaJobDto> getTerminatedJobs() {
         return terminatedJobs;
     }
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 43 * hash + Objects.hashCode(this.banner);
+        hash = 43 * hash + Objects.hashCode(this.header);
         hash = 43 * hash + Objects.hashCode(this.upSince);
-        hash = 43 * hash + this.jobsRunned;
+        hash = 43 * hash + Objects.hashCode(this.jobsRunned);
         hash = 43 * hash + Objects.hashCode(this.scheduledJobs);
         hash = 43 * hash + Objects.hashCode(this.runningJobs);
         hash = 43 * hash + Objects.hashCode(this.terminatedJobs);
@@ -120,13 +119,13 @@ public class BaculaStatusDirectorDto implements Serializable {
             return false;
         }
         final BaculaStatusDirectorDto other = (BaculaStatusDirectorDto) obj;
-        if (!Objects.equals(this.banner, other.banner)) {
+        if (!Objects.equals(this.header, other.header)) {
             return false;
         }
         if (!Objects.equals(this.upSince, other.upSince)) {
             return false;
         }
-        if (this.jobsRunned != other.jobsRunned) {
+        if (!Objects.equals(this.jobsRunned, other.jobsRunned)) {
             return false;
         }
         if (!Objects.equals(this.scheduledJobs, other.scheduledJobs)) {
@@ -144,7 +143,7 @@ public class BaculaStatusDirectorDto implements Serializable {
     @Override
     public String toString() {
         String output = "";
-        output = banner;
+        output = header;
         
         output +=   
         "Scheduled Jobs:\n";

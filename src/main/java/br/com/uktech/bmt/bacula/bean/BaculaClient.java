@@ -25,18 +25,18 @@ import java.util.Objects;
  */
 public class BaculaClient implements Serializable {
     
-    private int id;
+    private Integer id;
     private String name;
     private String uname;
-    private boolean autoprune;
-    private int fileretention;
-    private int jobretention;
+    private Boolean autoprune;
+    private Integer fileretention;
+    private Integer jobretention;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -56,39 +56,39 @@ public class BaculaClient implements Serializable {
         this.uname = uname;
     }
 
-    public boolean isAutoprune() {
+    public Boolean getAutoprune() {
         return autoprune;
     }
 
-    public void setAutoprune(boolean autoprune) {
+    public void setAutoprune(Boolean autoprune) {
         this.autoprune = autoprune;
     }
 
-    public int getFileretention() {
+    public Integer getFileretention() {
         return fileretention;
     }
 
-    public void setFileretention(int fileretention) {
+    public void setFileretention(Integer fileretention) {
         this.fileretention = fileretention;
     }
 
-    public int getJobretention() {
+    public Integer getJobretention() {
         return jobretention;
     }
 
-    public void setJobretention(int jobretention) {
+    public void setJobretention(Integer jobretention) {
         this.jobretention = jobretention;
     }
 
     @Override
     public int hashCode() {
         int hash = 5;
-        hash = 59 * hash + this.id;
-        hash = 59 * hash + Objects.hashCode(this.name);
-        hash = 59 * hash + Objects.hashCode(this.uname);
-        hash = 59 * hash + (this.autoprune ? 1 : 0);
-        hash = 59 * hash + this.fileretention;
-        hash = 59 * hash + this.jobretention;
+        hash = 79 * hash + Objects.hashCode(this.id);
+        hash = 79 * hash + Objects.hashCode(this.name);
+        hash = 79 * hash + Objects.hashCode(this.uname);
+        hash = 79 * hash + Objects.hashCode(this.autoprune);
+        hash = 79 * hash + Objects.hashCode(this.fileretention);
+        hash = 79 * hash + Objects.hashCode(this.jobretention);
         return hash;
     }
 
@@ -101,7 +101,7 @@ public class BaculaClient implements Serializable {
             return false;
         }
         final BaculaClient other = (BaculaClient) obj;
-        if (this.id != other.id) {
+        if (!Objects.equals(this.id, other.id)) {
             return false;
         }
         if (!Objects.equals(this.name, other.name)) {
@@ -110,13 +110,13 @@ public class BaculaClient implements Serializable {
         if (!Objects.equals(this.uname, other.uname)) {
             return false;
         }
-        if (this.autoprune != other.autoprune) {
+        if (!Objects.equals(this.autoprune, other.autoprune)) {
             return false;
         }
-        if (this.fileretention != other.fileretention) {
+        if (!Objects.equals(this.fileretention, other.fileretention)) {
             return false;
         }
-        if (this.jobretention != other.jobretention) {
+        if (!Objects.equals(this.jobretention, other.jobretention)) {
             return false;
         }
         return true;

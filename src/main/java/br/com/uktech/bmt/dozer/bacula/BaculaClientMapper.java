@@ -17,7 +17,7 @@
 package br.com.uktech.bmt.dozer.bacula;
 
 import br.com.uktech.bmt.bacula.bean.BaculaClient;
-import br.com.uktech.bmt.dto.bacula.client.BaculaClientDto;
+import br.com.uktech.bmt.dto.bacula.BaculaClientDto;
 import org.dozer.loader.api.BeanMappingBuilder;
 
 /**

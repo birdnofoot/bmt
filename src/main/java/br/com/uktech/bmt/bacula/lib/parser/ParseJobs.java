@@ -21,12 +21,15 @@ import br.com.uktech.bmt.bacula.lib.Constants;
 import br.com.uktech.bmt.bacula.lib.Utils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Carlos Alberto Cipriano Korovsky <carlos.korovsky@uktech.com.br>
  */
 public class ParseJobs {
+    
+    private final org.slf4j.Logger logger = LoggerFactory.getLogger(ParseJobs.class);
     
     public static final String REGEX_SCHEDULED_JOB = "(Incremental|Diferencial|Full)[\\s*|\\t*]*(\\w+)[\\s*|\\t*]*(\\d+)[\\s*|\\t*]*(\\d{2}-[a-zA-Z]{3}-\\d{2} \\d{2}:\\d{2})[\\s*|\\t*]*([\\w*|-]*)[\\s{0,}|\\t{0,}]*([\\w+|\\*]+)";
     public static final String REGEX_RUNNING_JOB = "(\\d+)[\\s*|\\t*]*(Differe|Increme|Full)[\\s*|\\t*]*([\\w+|-]*.\\d{4}-\\d{2}-\\d{2}_\\d{2}.\\d{2}.\\d{2}_\\d{2})[\\s*|\\t*]*(is waiting execution\\.*|is running\\.*|is waiting for Client [\\w*|-]* to connect to Storage [\\w*|-]*\\.*)";
@@ -37,6 +40,7 @@ public class ParseJobs {
     public static final String REGEX_PARSE_WORD = " *(job:|name:|type:|level:|jobstatus:|[dt]time:|fileset:) +(.*)";
     
     public BaculaJob parseScheduledJob(String linha) {
+        this.logger.trace("Processando linha: {}", linha);
         BaculaJob job = new BaculaJob();
         Pattern p = Pattern.compile(ParseJobs.REGEX_SCHEDULED_JOB);
         Matcher m = p.matcher(linha);
@@ -53,6 +57,7 @@ public class ParseJobs {
     }
     
     public BaculaJob parseRunningJob(String linha) {
+        this.logger.trace("Processando linha: {}", linha);
         BaculaJob job = new BaculaJob();
         Pattern p = Pattern.compile(ParseJobs.REGEX_RUNNING_JOB);
         Matcher m = p.matcher(linha);
@@ -67,6 +72,7 @@ public class ParseJobs {
     }
     
     public BaculaJob parseTerminatedJob(String linha) {
+        this.logger.trace("Processando linha: {}", linha);
         BaculaJob job = new BaculaJob();
         Pattern p = Pattern.compile(ParseJobs.REGEX_TERMINATED_JOB);
         Matcher m = p.matcher(linha);
@@ -84,13 +90,14 @@ public class ParseJobs {
     }
 
     public void parseListJob(String receivedData, BaculaJob job) {
+        this.logger.trace("Mensagem Recebida: {}", receivedData);
         String temp;
         Parser p = new Parser(receivedData);
-        
         do {
             temp = p.getToken(Constants.CR);
             if(temp!=null) {
                 temp = temp.trim();
+                this.logger.trace("Processando linha: {}", temp);
                 if(temp.matches(ParseJobs.REGEX_PARSE_LIST_JOB)) {
                     job.setJobbytes(parseJobbytes(temp));
                 }
@@ -99,13 +106,14 @@ public class ParseJobs {
     }
 
     public void parseLlistJob(String receivedData, BaculaJob job) {
+        this.logger.trace("Mensagem Recebida: {}", receivedData);
         String temp;
         Parser p = new Parser(receivedData);
-        
         do {
             temp = p.getToken(Constants.CR);
             if(temp!=null) {
                 temp = temp.trim();
+                this.logger.trace("Processando linha: {}", temp);
                 if(temp.matches(ParseJobs.REGEX_PARSE_LLIST_JOB)) {
                     job.setJobid(parseNumber(temp));
                     temp = p.getToken(Constants.CR);
@@ -161,6 +169,7 @@ public class ParseJobs {
     }
     
     public Long parseJobbytes(String linha) {
+        this.logger.trace("Processando linha: {}", linha);
         Long number = null;
         if(linha!=null) {
             Pattern p = Pattern.compile(ParseJobs.REGEX_PARSE_LIST_JOB);
@@ -173,6 +182,7 @@ public class ParseJobs {
     }
     
     public Long parseNumber(String linha) {
+        this.logger.trace("Processando linha: {}", linha);
         Long number = null;
         if(linha!=null) {
             Pattern p = Pattern.compile(ParseJobs.REGEX_PARSE_NUMBER);
@@ -185,6 +195,7 @@ public class ParseJobs {
     }
     
     public String parseWord(String linha) {
+        this.logger.trace("Processando linha: {}", linha);
         String word = null;
         if(linha!=null) {
             Pattern p = Pattern.compile(ParseJobs.REGEX_PARSE_WORD);
@@ -200,6 +211,7 @@ public class ParseJobs {
     }
     
     private Long convertejobBytes(String jobBytes) {
+        this.logger.trace("Processando linha: {}", jobBytes);
         String aux = null;
         Long bytes = null;
         Pattern p = Pattern.compile("([\\d|\\.]*)[\\s|\\t]*([K|M|G|T]*)");

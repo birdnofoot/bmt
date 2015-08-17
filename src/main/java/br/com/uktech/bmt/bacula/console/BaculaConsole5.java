@@ -36,9 +36,7 @@ import br.com.uktech.bmt.bacula.lib.parser.ParseStatusStorage;
 import br.com.uktech.bmt.bacula.lib.parser.ParseStorage;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import javax.swing.JOptionPane;
 import org.slf4j.LoggerFactory;
 
 
@@ -65,12 +63,10 @@ public class BaculaConsole5 extends AbstractBaculaConsole implements BaculaConso
         try {
             String receivedData = this.getConnection().sendAndReceive(Constants.Connection.Commands.STATUS_DIRECTOR);
             sd = new ParseStatusDirector().parse(receivedData);
-            for (Iterator<BaculaJob> iterator = sd.getTerminatedJobs().iterator(); iterator.hasNext();) {
-                BaculaJob job = iterator.next();
+            for (BaculaJob job : sd.getTerminatedJobs()) {
                 detailBaculaJob(job);
             }
-            for (Iterator<BaculaJob> iterator = sd.getRunningJobs().iterator(); iterator.hasNext();) {
-                BaculaJob job = iterator.next();
+            for (BaculaJob job : sd.getRunningJobs()) {
                 detailBaculaJob(job);
             }
         }
@@ -99,8 +95,7 @@ public class BaculaConsole5 extends AbstractBaculaConsole implements BaculaConso
         try {
             String receivedData = this.getConnection().sendAndReceive(Constants.Connection.Commands.STATUS_CLIENT+clientName);
             statusClient = new ParseStatusClient().parse(receivedData);
-            for (Iterator<BaculaJob> iterator = statusClient.getTerminatedJobs().iterator(); iterator.hasNext();) {
-                BaculaJob job = iterator.next();
+            for (BaculaJob job : statusClient.getTerminatedJobs()) {
                 detailBaculaJob(job);
             }
         }
@@ -158,11 +153,9 @@ public class BaculaConsole5 extends AbstractBaculaConsole implements BaculaConso
         try {
             String receivedData = this.getConnection().sendAndReceive(Constants.Connection.Commands.STATUS_STORAGE+storageName);
             statusStorage = new ParseStatusStorage().parse(receivedData);
-            for (Iterator<BaculaJob> iterator = statusStorage.getTerminatedJobs().iterator(); iterator.hasNext();) {
-                BaculaJob job = iterator.next();
+            for (BaculaJob job : statusStorage.getTerminatedJobs()) {
                 detailBaculaJob(job);
-            }
-            //System.err.println("\n\n\n"+statusStorage.toString()+"\n\n\n");
+            } //System.err.println("\n\n\n"+statusStorage.toString()+"\n\n\n");
         } catch(IOException | InterruptedException | BaculaInvalidDataSize | BaculaNoInteger | BaculaCommandException ex) {
             this.logger.error(ex.getLocalizedMessage());
         }

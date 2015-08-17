@@ -17,7 +17,7 @@
 package br.com.uktech.bmt.dozer.bacula;
 
 import br.com.uktech.bmt.bacula.bean.BaculaStatusDirector;
-import br.com.uktech.bmt.dto.bacula.director.BaculaStatusDirectorDto;
+import br.com.uktech.bmt.dto.bacula.BaculaStatusDirectorDto;
 import org.dozer.loader.api.BeanMappingBuilder;
 
 /**
