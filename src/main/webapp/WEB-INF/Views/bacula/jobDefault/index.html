@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<!--
+Copyright (C) 2015 Uhlig e Korovsky Tecnologia Ltda - ME
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<html>
+    <head th:replace="fragments/header :: head">
+        <title th:text="#{system.name}">Bacula Manager Tool</title>
+
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <meta name="description" content=""/>
+        <meta name="author" content="Uhlig &amp; Korovsky Tecnologia Ltda - ME"/>
+
+        <link rel="icon" href="../../../images/favicon.gif" th:href="@{/images/favicon.gif}"/>
+    </head>
+    <body>
+        <div th:replace="fragments/navbar :: navbar">&nbsp;</div>
+        <div>
+            <a href="#" th:href="@{'/bacula/director/'}">Return to director's page</a>
+            
+        </div> 
+        <div>
+            <table id="tbbaculajobdefault" border="1" style="width:100%">
+                <thead>
+                    <th th:text="#{view.bacula.jobdefault[job]}">Job</th>
+                    <th th:text="#{view.bacula.jobdefault[pool]}">Pool</th>
+                    <th th:text="#{view.bacula.jobdefault[poolmessages]}">Pool Messages</th>
+                    <th th:text="#{view.bacula.jobdefault[client]}">Client</th>
+                    <th th:text="#{view.bacula.jobdefault[storage]}">Storage</th>
+                    <th th:text="#{view.bacula.jobdefault[where]}">Where</th>
+                    <th th:text="#{view.bacula.jobdefault[level]}">Level</th>
+                    <th th:text="#{view.bacula.jobdefault[type]}">Type</th>
+                    <th th:text="#{view.bacula.jobdefault[fileset]}">Fileset</th>
+                    <th th:text="#{view.bacula.jobdefault[enabled]}">Enabled</th>
+                    <th th:text="#{view.bacula.jobdefault[catalog]}">Catalog</th>
+                    <th th:text="#{view.default[action]}">Action</th>
+                    
+                </thead>
+                <tbody>
+                    <tr th:if="${jobsDefault == null}">
+                        <td colspan="12">No bacula Jobs Default configured!</td>
+                    </tr>
+                    <tr th:if="${jobsDefault != null}" th:each="jobDefault : ${jobsDefault}">
+
+                        <td th:text="${jobDefault.job}">Id</td>
+                        <td th:text="${jobDefault.pool}">Pool</td>
+                        <td th:text="${jobDefault.poolmessages}">Pool Messages</td>
+                        <td th:text="${jobDefault.client}">Client</td>
+                        <td th:text="${jobDefault.storage}">Storage</td>
+                        <td th:text="${jobDefault.where}">Where</td>
+                        <td th:text="${jobDefault.level}">Level</td>
+                        <td th:text="${jobDefault.type}">Type</td>
+                        <td th:text="${jobDefault.fileset}">Fileset</td>
+                        <td th:text="${jobDefault.enabled}">Enabled</td>
+                        <td th:text="${jobDefault.catalog}">Catalog</td>
+                        <td>
+                            <div class="pull-right action-buttons">
+                                <a href="#" th:href="@{'/bacula/jobDefault/estimate/form/'+${directorId}+'/'+${jobDefault.job}}">Estimate</a>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div th:replace="fragments/footer :: footer">&nbsp;</div>
+    </body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<!--
+Copyright (C) 2015 Uhlig e Korovsky Tecnologia Ltda - ME
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<html>
+    <head th:replace="fragments/header :: head">
+        <title th:text="#{system.name}">Bacula Manager Tool</title>
+
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <meta name="description" content=""/>
+        <meta name="author" content="Uhlig &amp; Korovsky Tecnologia Ltda - ME"/>
+
+        <link rel="icon" href="../../../../images/favicon.gif" th:href="@{/images/favicon.gif}"/>
+    </head>
+    <body>
+        <div th:replace="fragments/navbar :: navbar">&nbsp;</div>
+        <div>
+            <a href="#" th:href="@{'/bacula/director/'}">Return to director's page</a>
+            <a href="#" th:href="@{'/bacula/jobDefault/'+${directorId}}">Return to JobDefault's page</a>
+        </div>
+        
+        <div>
+            <form action="#" th:action="@{/bacula/jobDefault/estimate/show}" th:object="${formestimate}" method="post">
+                <fieldset>
+                    <div>
+                        <input type="text" hidden="hidden" th:value="*{id}" th:field="*{id}" />
+                        <input type="text" hidden="hidden" th:value="*{job}" th:field="*{job}" />
+                        <label th:text="*{job}">name</label>
+                    </div>
+                    <div>
+                        <label th:text="#{view.bacula.jobdefault.estimate[type]}">type</label>
+                        <div>
+                            <select th:field="*{type}">
+                                <option type="text" th:value="Full">Full</option>
+                                <option type="text" th:value="Incremental">Incremental</option>
+                                <option type="text" th:value="Differential">Differential</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label th:text="#{view.bacula.jobdefault.estimate[listing]}">listing</label>
+                        <div>
+                            <input type="checkbox" th:checked="*{listing}" th:field="*{listing}" />
+                            <p th:if="${#fields.hasErrors('listing')}" th:errors="*{listing}">listing error</p> 
+                        </div>
+                    </div>
+                    <div>
+                        <label th:text="#{view.bacula.jobdefault.estimate[accurate]}">accurate</label>
+                        <div>
+                            <input type="checkbox" th:checked="*{accurate}" th:field="*{accurate}" />
+                            <p th:if="${#fields.hasErrors('accurate')}" th:errors="*{accurate}">accurate error</p> 
+                        </div>
+                    </div>
+                </fieldset>
+                <div>
+                    <div>
+                        <button type="submit" name="action" value="submit">Show</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        
+        <div th:replace="fragments/footer :: footer">&nbsp;</div>
+    </body>
+</html>

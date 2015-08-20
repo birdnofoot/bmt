@@ -72,7 +72,8 @@ public interface Constants {
         interface DotCommands {
             public static String MESSAGES = ".messages\n";
             public static String CLIENTS = ".clients\n";
-            public static String JOBS = ".jobs\n";
+            public static String JOBS = ".jobs";
+            public static String DEFAULT_JOBS = ".defaults job=";
             public static String LEVELS = ".levels\n";
             public static String FILESETS = ".filesets\n";
             public static String POOLS = ".pools\n";
@@ -86,6 +87,7 @@ public interface Constants {
             public static String LIST_JOBID = "list jobid=";
             public static String LLIST_JOBID = "llist jobid=";
             public static String SHOW_STORAGE = "show storage";
+            public static String ESTIMATE = "estimate job=%s level=%s accurate=%s %s";
             public static String EXIT = "exit";
             public static String QUIT = "quit";
             public static String VERSION = "version";

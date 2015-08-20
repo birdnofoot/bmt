@@ -15,6 +15,9 @@
         "th:href": {
             "context": "link"
         },
+        "th:field": {
+            "context": "select"
+        },
         "th:value": {
             "context": "input"
         }

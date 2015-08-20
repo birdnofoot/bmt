@@ -16,7 +16,6 @@
  */
 package br.com.uktech.bmt.controller.bacula;
 
-import br.com.uktech.bmt.bacula.bean.BaculaStatusDirector;
 import br.com.uktech.bmt.dto.bacula.BaculaClientDto;
 import br.com.uktech.bmt.dto.bacula.BaculaStatusClientDto;
 import br.com.uktech.bmt.dto.model.director.DirectorDto;

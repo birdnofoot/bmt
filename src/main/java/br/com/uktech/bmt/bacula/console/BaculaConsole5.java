@@ -19,7 +19,9 @@ package br.com.uktech.bmt.bacula.console;
 import br.com.uktech.bmt.bacula.lib.Connection;
 import br.com.uktech.bmt.bacula.BaculaConsole;
 import br.com.uktech.bmt.bacula.bean.BaculaClient;
+import br.com.uktech.bmt.bacula.bean.BaculaEstimate;
 import br.com.uktech.bmt.bacula.bean.BaculaJob;
+import br.com.uktech.bmt.bacula.bean.BaculaJobDefault;
 import br.com.uktech.bmt.bacula.bean.BaculaStatusClient;
 import br.com.uktech.bmt.bacula.bean.BaculaStatusDirector;
 import br.com.uktech.bmt.bacula.bean.BaculaStatusStorage;
@@ -28,7 +30,9 @@ import br.com.uktech.bmt.bacula.exceptions.BaculaCommandException;
 import br.com.uktech.bmt.bacula.exceptions.BaculaInvalidDataSize;
 import br.com.uktech.bmt.bacula.exceptions.BaculaNoInteger;
 import br.com.uktech.bmt.bacula.lib.Constants;
+import br.com.uktech.bmt.bacula.lib.parser.ParseEstimate;
 import br.com.uktech.bmt.bacula.lib.parser.ParseJobs;
+import br.com.uktech.bmt.bacula.lib.parser.ParseJobsDefault;
 import br.com.uktech.bmt.bacula.lib.parser.ParseListClient;
 import br.com.uktech.bmt.bacula.lib.parser.ParseStatusClient;
 import br.com.uktech.bmt.bacula.lib.parser.ParseStatusDirector;
@@ -160,5 +164,47 @@ public class BaculaConsole5 extends AbstractBaculaConsole implements BaculaConso
             this.logger.error(ex.getLocalizedMessage());
         }
         return statusStorage;
+    }
+
+    @Override
+    public BaculaEstimate getEstimate(String nameJob, String level, Boolean accurate, Boolean listing) {
+        BaculaEstimate estimate = null;
+        try {//estimate job=Backup_BACKUP-00 level=Incremental accurate=yes listing
+            String comand = "", accuratedAux = "no", listingAux = "";
+            if(accurate) {
+                accuratedAux="yes";
+            }
+            if(listing) {
+                listingAux=" listing";
+            }
+            comand = "estimate job=" + nameJob + " level=" + level + " accurate=" + accuratedAux + listingAux;
+            String receivedData = this.getConnection().sendAndReceive(comand);
+            estimate = new ParseEstimate().parse(receivedData);
+        } catch(IOException | InterruptedException | BaculaInvalidDataSize | BaculaNoInteger | BaculaCommandException ex) {
+            this.logger.error(ex.getLocalizedMessage());
+        }
+        return estimate;
+    }
+
+    @Override
+    public List<BaculaJobDefault> getJobsDefault() {
+        List<BaculaJobDefault> jobsDefault = new ArrayList<>();
+        BaculaJobDefault jobDefault = null;
+        try {
+            String receivedJobs = this.getConnection().sendAndReceive(Constants.Connection.DotCommands.JOBS);
+            jobsDefault = new ParseJobsDefault().setNames(receivedJobs);
+            logger.info("Lista jobsD: {}", jobsDefault);
+            for (int i = 0; i < jobsDefault.size(); i++) {
+                String receivedJobsDefault = this.getConnection().sendAndReceive(Constants.Connection.DotCommands.DEFAULT_JOBS+jobsDefault.get(i).getJob());
+                logger.info("comando recebido: {}", receivedJobsDefault);
+                jobDefault = new BaculaJobDefault();
+                jobDefault = new ParseJobsDefault().detailJobDefault(receivedJobsDefault);
+                jobsDefault.set(i, jobDefault);
+            }
+        }
+        catch (IOException | InterruptedException | BaculaInvalidDataSize | BaculaNoInteger | BaculaCommandException ex) {
+            this.logger.error(ex.getLocalizedMessage());
+        }
+        return jobsDefault;
     }
 }

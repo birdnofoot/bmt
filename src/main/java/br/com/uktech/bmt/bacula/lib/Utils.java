@@ -96,4 +96,13 @@ public class Utils {
         }
         return null;
     }
+    
+    public static String calendarToStringAnotherCalendar(Calendar calendar) {
+        if(calendar!=null) {
+            Date date = calendar.getTime();
+            SimpleDateFormat format = new SimpleDateFormat(Constants.Bacula.ANOTHER_DATE_FORMAT, Locale.US);
+            return format.format(date);
+        }
+        return null;
+    }
 }

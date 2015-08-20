@@ -17,7 +17,9 @@
 package br.com.uktech.bmt.bacula;
 
 import br.com.uktech.bmt.bacula.bean.BaculaClient;
+import br.com.uktech.bmt.bacula.bean.BaculaEstimate;
 import br.com.uktech.bmt.bacula.bean.BaculaJob;
+import br.com.uktech.bmt.bacula.bean.BaculaJobDefault;
 import br.com.uktech.bmt.bacula.bean.BaculaStatusClient;
 import br.com.uktech.bmt.bacula.bean.BaculaStatusDirector;
 import br.com.uktech.bmt.bacula.bean.BaculaStatusStorage;
@@ -56,4 +58,7 @@ public interface BaculaConsole {
     
     public BaculaStatusStorage getStatusStorage(String storageName);
     
+    public BaculaEstimate getEstimate(String nameJob, String level, Boolean accurate, Boolean listing);
+    
+    public List<BaculaJobDefault> getJobsDefault();
 }
