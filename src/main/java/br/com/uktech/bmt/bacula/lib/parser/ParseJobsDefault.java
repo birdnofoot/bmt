@@ -84,7 +84,7 @@ public class ParseJobsDefault {
                         jobDefault.setLevel(m.group(7));
                         jobDefault.setType(m.group(8));
                         jobDefault.setFileset(m.group(9));
-                        jobDefault.setEnabled(m.group(10).equals(1));
+                        jobDefault.setEnabled(m.group(10).contains("1"));
                         jobDefault.setCatalog(m.group(11));
                     }
                 }
