@@ -85,8 +85,9 @@ public class JobDefaultController extends BasicBaculaController {
         formestimate = baculaJobDefaultService.newFormEstimate();
         formestimate.setId(directorId);
         formestimate.setJob(jobDefaultName);
+        formestimate.setType("Full");
         formestimate.setAccurate(Boolean.TRUE);
-        formestimate.setType("Incremental");
+        formestimate.setListing(Boolean.TRUE);
         mav.addObject("formestimate", formestimate);
         return mav;
     }
@@ -106,9 +107,11 @@ public class JobDefaultController extends BasicBaculaController {
             BaculaEstimateDto estimate = baculaJobDefaultService.getEstimate(baculadirdto, formestimate);
             mav = new ModelAndView("bacula/jobDefault/estimate/show");
             if(estimate != null) {
-                mav.addObject("estimate", estimate.toString());
+                mav.addObject("estimate", estimate);
+                mav.addObject("formestimate", formestimate);
             } else {
                 mav.addObject("estimate", "Erro!<br/>Estimate null");
+                mav.addObject("formestimate", formestimate);
             }
             
         }

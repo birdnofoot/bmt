@@ -37,7 +37,7 @@ public class ParseEstimate {
     
     private final Logger logger = LoggerFactory.getLogger(ParseEstimate.class);
     
-    public static final String REGEX_ESTIMATE_FILESYSTEM = "([-|\\w]*)[\\s|\\t]*([\\d|,]*)[\\s|\\t]*([\\w|-]*)[\\s|\\t]*([\\w|-]*)[\\s|\\t]*(\\d*)[\\s|\\t]*(\\d{4}-\\d{2}-\\d{2}\\s\\d{2}:\\d{2}:\\d{2})[\\s|\\t]*([\\w|/|\\.|-]*)";
+    public static final String REGEX_ESTIMATE_FILESYSTEM = "([-|\\w]*)[\\s|\\t]*([\\d|,]*)[\\s|\\t]*([\\w|-]*)[\\s|\\t]*([\\w|-]*)[\\s|\\t]*(\\d*)[\\s|\\t]*(\\d{4}-\\d{2}-\\d{2}\\s\\d{2}:\\d{2}:\\d{2})[\\s|\\t]*(.*)";
     public static final String REGEX_ESTIMATE_FILES_BYTES = "2000[\\s|\\t]*OK[\\s|\\t]*estimate[\\s|\\t]*files=([\\d|,]*)[\\s|\\t]*bytes=([\\d|,]*)";
     
     public BaculaEstimate parse(String input) {
@@ -50,15 +50,15 @@ public class ParseEstimate {
         String temp = null;
         do{
             temp = p.getToken(Constants.CR);
-            this.logger.trace("Processando linha: {}", temp);
             if(temp != null) {
                 temp = temp.trim();
                 this.logger.trace("Processando Linha: {}", temp);
                 if(temp.matches(ParseEstimate.REGEX_ESTIMATE_FILESYSTEM)) {
-                    fileSystem = new BaculaFileSystem();
+                    
                     pat = Pattern.compile(ParseEstimate.REGEX_ESTIMATE_FILESYSTEM);
                     mat = pat.matcher(temp);
                     if(mat.find()) {
+                        fileSystem = new BaculaFileSystem();
                         fileSystem.setPermission(mat.group(1));
                         fileSystem.setType(Integer.parseInt(mat.group(2).replace(" ", "")));
                         fileSystem.setUser(mat.group(3));

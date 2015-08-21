@@ -116,7 +116,7 @@ public class SocketReader implements Runnable {
     @Override
     public void run() {
         boolean finished = (this.getInputStream() == null);
-        byte data[] = new byte[256];
+        byte data[] = new byte[300];
         byte dataSize[] = new byte[4];
         int bytesReturned;
         while (!finished) {

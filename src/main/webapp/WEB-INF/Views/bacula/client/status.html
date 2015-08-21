@@ -52,7 +52,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                         <th th:text="#{view.bacula.job[jobfiles]}">Files</th>
                         <th th:text="#{view.bacula.job[jobbytes]}">Bytes</th>
                         <th th:text="#{view.bacula.job[dirstatus]}">Status</th>
-                        <!--<th th:text="#{view.bacula.job[realendtime]}">Finished</th>-->
+                        <th th:text="#{view.bacula.job[realendtime]}">Finished</th>
                         <th th:text="#{view.bacula.job[name]}">Name</th>
                     </thead>
                     <tbody>
@@ -65,7 +65,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                             <td th:text="${terminatedJob.jobfiles}">Files</td>
                             <td th:text="${terminatedJob.jobbytes}">Bytes</td>
                             <td th:text="${terminatedJob.dirstatus}">Status</td>
-                            <!--<td th:text="${terminatedJob.realendtime}">Finished</td>-->
+                            <td th:text="${#dates.format(terminatedJob.realendtime, 'dd/MMM/yy HH:mm')}">Finished</td>
                             <td th:text="${terminatedJob.name}">Name</td>
                         </tr>
                     </tbody>

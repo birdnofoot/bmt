@@ -33,7 +33,7 @@ public class ParseJobsDefault {
     
     private final org.slf4j.Logger logger = LoggerFactory.getLogger(ParseJobsDefault.class);
     
-    public static final String REGEX_JOB_DEFAULT = "job=(.*)pool=(.*)Poolmessages=(.*)client=(.*)storage=(.*)where=(.*)level=(.*)type=(.*)fileset=(.*)enabled=(.*)catalog=(.*)\\.*";
+    public static final String REGEX_JOB_DEFAULT = "job=(.*)pool=(.*)\\w{4,5}messages=(.*)client=(.*)storage=(.*)where=(.*)level=(.*)type=(.*)fileset=(.*)enabled=(.*)catalog=(.*)\\.*";
     
     public List<BaculaJobDefault> setNames(String input) {
         this.logger.trace("Mensagem recebida: {}", input);

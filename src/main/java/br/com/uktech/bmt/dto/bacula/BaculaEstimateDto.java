@@ -18,6 +18,7 @@
 package br.com.uktech.bmt.dto.bacula;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -27,7 +28,7 @@ import java.util.Objects;
  */
 public class BaculaEstimateDto implements Serializable{
     
-    private List<BaculaFileSystemDto> fileSystem;
+    private List<BaculaFileSystemDto> fileSystem = new ArrayList<>();
     private Long files;
     private Long bytes;
 

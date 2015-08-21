@@ -31,13 +31,46 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <div th:replace="fragments/navbar :: navbar">&nbsp;</div>
         <div>
             <a href="#" th:href="@{'/bacula/director/'}">Return to director's page</a>
+            <a href="#" th:href="@{'/bacula/jobDefault/estimate/form/'+${formestimate.id}+'/'+${formestimate.job}}">Return to form's page</a>
         </div> 
         <div>
             <div th:if="${estimate == null}">
                 <span>Error getting the estimate jobDefault!</span>
             </div>
             <div th:if="${estimate != null}">
-                <span th:text="${estimate}">estimate</span>
+                
+                <p th:text="'Estimate files='+${estimate.files}+' bytes='+${estimate.bytes}">filesAndBytes</p>
+                
+                <table id="tbestimatejob" border="1" style="width:100%">
+                    <thead>
+                        <th th:text="#{view.bacula.estimate[permission]}">Permission</th>
+                        <th th:text="#{view.bacula.estimate[type]}">Type</th>
+                        <th th:text="#{view.bacula.estimate[user]}">User</th>
+                        <th th:text="#{view.bacula.estimate[group]}">Group</th>
+                        <th th:text="#{view.bacula.estimate[links]}">Links</th>
+                        <th th:text="#{view.bacula.estimate[creationdate]}">Creation Date</th>
+                        <th th:text="#{view.bacula.estimate[path]}">Path</th>
+                        <!--view.bacula.estimate[files]=Files
+                        view.bacula.estimate[bytes]=Bytes-->
+                    </thead>
+                    <tbody>
+                        <tr th:if="${estimate.fileSystem == null}">
+                            <td colspan="4">No FileSystem!</td>
+                        </tr>
+                        <tr th:if="${estimate.fileSystem != null}" th:each="file : ${estimate.fileSystem}">
+
+                            <td th:text="${file.permission}">Permission</td>
+                            <td th:text="${file.type}">Type</td>
+                            <td th:text="${file.user}">User</td>
+                            <td th:text="${file.group}">Group</td>
+                            <td th:text="${file.links}">Links</td>
+                            <td th:text="${#dates.format(file.creationDate, 'yyyy/MM/dd HH:mm:ss')}">Creation Date</td>
+                            <td th:text="${file.path}">Path</td>
+
+                        </tr>
+                    </tbody>
+                </table>
+                
             </div>
         </div>
         <div th:replace="fragments/footer :: footer">&nbsp;</div>

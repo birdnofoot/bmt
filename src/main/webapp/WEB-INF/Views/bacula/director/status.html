@@ -38,8 +38,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <div th:if="${statusdir != null}">
             <div style="color: red">
                 <span th:text="${statusdir.header}">header</span><br/>
-                <!--<span th:text="${statusdir.upSince}">upsince</span><br/>
-                <span th:text="${statusdir.jobsRunned}">jobsRunned</span><br/>-->
+                
             </div>
             <br/>
             <div>
@@ -60,13 +59,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                             <td th:text="${scheduledJob.level}">Level</td>
                             <td th:text="${scheduledJob.type}">Type</td>
                             <td th:text="${scheduledJob.priorjobid}">Pri</td>
-                            <td th:text="${scheduledJob.scheduled}">Scheduled</td>
+                            <td th:text="${#dates.format(scheduledJob.scheduled, 'dd/MMM/yy HH:mm')}">Scheduled</td>
                             <td th:text="${scheduledJob.name}">Name</td>
                             <td th:text="${scheduledJob.volumename}">Volume</td>
                         </tr>
                     </tbody>
                 </table>
-                <!--<span th:text="${statusdir.scheduledJobs}">scheduledJobs</span>-->
+                
             </div>
             <br/>
             <div>
@@ -89,7 +88,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                         </tr>
                     </tbody>
                 </table>
-                <!--<span th:text="${statusdir.runningJobs}">runningJobs</span>-->
+                
             </div>
             <br/>
             <div>
@@ -100,7 +99,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                         <th th:text="#{view.bacula.job[jobfiles]}">Files</th>
                         <th th:text="#{view.bacula.job[jobbytes]}">Bytes</th>
                         <th th:text="#{view.bacula.job[dirstatus]}">Status</th>
-                        <!--<th th:text="#{view.bacula.job[realendtime]}">Finished</th>-->
+                        <th th:text="#{view.bacula.job[realendtime]}">Finished</th>
                         <th th:text="#{view.bacula.job[name]}">Name</th>
                     </thead>
                     <tbody>
@@ -113,12 +112,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                             <td th:text="${terminatedJob.jobfiles}">Files</td>
                             <td th:text="${terminatedJob.jobbytes}">Bytes</td>
                             <td th:text="${terminatedJob.dirstatus}">Status</td>
-                            <!--<td th:text="${terminatedJob.realendtime}">Finished</td>-->
+                            <td th:text="${#dates.format(terminatedJob.realendtime, 'dd/MMM/yy HH:mm')}">Finished</td>
                             <td th:text="${terminatedJob.name}">Name</td>
                         </tr>
                     </tbody>
                 </table>
-                <!--<span th:text="${statusdir.terminatedJobs}">terminatedJobs</span>-->
+                
             </div>
         </div>
         <div th:replace="fragments/footer :: footer">&nbsp;</div>
