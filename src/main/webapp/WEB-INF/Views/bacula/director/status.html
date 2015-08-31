@@ -75,6 +75,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                         <th th:text="#{view.bacula.job[level]}">Level</th>
                         <th th:text="#{view.bacula.job[name]}">Name</th>
                         <th th:text="#{view.bacula.job[dirstatus]}">Status</th>
+                        <th th:text="#{view.default[action]}">Action</th>
                     </thead>
                     <tbody>
                         <tr th:if="${statusdir.runningJobs == null}">
@@ -85,6 +86,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                             <td th:text="${job.level}">Level</td>
                             <td th:text="${job.job}">Job</td>
                             <td th:text="${job.dirstatus}">Status</td>
+                            <td>
+                                <div class="pull-right action-buttons">
+                                    <a href="#" th:href="@{'/bacula/jobDefault/run/show/'+${directorId}+'/'+${job.jobid}}">Show</a>
+                                </div>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -101,6 +107,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                         <th th:text="#{view.bacula.job[dirstatus]}">Status</th>
                         <th th:text="#{view.bacula.job[realendtime]}">Finished</th>
                         <th th:text="#{view.bacula.job[name]}">Name</th>
+                        <th th:text="#{view.default[action]}">Action</th>
                     </thead>
                     <tbody>
                         <tr th:if="${statusdir.terminatedJobs == null}">
@@ -114,6 +121,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                             <td th:text="${terminatedJob.dirstatus}">Status</td>
                             <td th:text="${#dates.format(terminatedJob.realendtime, 'dd/MMM/yy HH:mm')}">Finished</td>
                             <td th:text="${terminatedJob.name}">Name</td>
+                            <td>
+                                <div class="pull-right action-buttons">
+                                    <a href="#" th:href="@{'/bacula/jobDefault/run/show/'+${directorId}+'/'+${terminatedJob.jobid}}">Show</a>
+                                </div>
+                            </td>
                         </tr>
                     </tbody>
                 </table>

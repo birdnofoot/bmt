@@ -24,8 +24,16 @@ import br.com.uktech.bmt.bacula.bean.BaculaStatusClient;
 import br.com.uktech.bmt.bacula.bean.BaculaStatusDirector;
 import br.com.uktech.bmt.bacula.bean.BaculaStatusStorage;
 import br.com.uktech.bmt.bacula.bean.BaculaStorage;
+import br.com.uktech.bmt.bacula.bean.dot.BaculaDotClient;
+import br.com.uktech.bmt.bacula.bean.dot.BaculaDotFileset;
+import br.com.uktech.bmt.bacula.bean.dot.BaculaDotJob;
+import br.com.uktech.bmt.bacula.bean.dot.BaculaDotLevel;
+import br.com.uktech.bmt.bacula.bean.dot.BaculaDotPool;
+import br.com.uktech.bmt.bacula.bean.dot.BaculaDotStorage;
+import br.com.uktech.bmt.bacula.bean.dot.BaculaDotType;
 import br.com.uktech.bmt.bacula.exceptions.BaculaAuthenticationException;
 import br.com.uktech.bmt.bacula.exceptions.BaculaCommunicationException;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -60,5 +68,23 @@ public interface BaculaConsole {
     
     public BaculaEstimate getEstimate(String nameJob, String level, Boolean accurate, Boolean listing);
     
-    public List<BaculaJobDefault> getJobsDefault();
+    public List<BaculaJobDefault> getListJobsDefault();
+    
+    public BaculaJobDefault getJobDefault(String jobDefaultName);
+    
+    public Long runJob(BaculaJobDefault jobDefault, String when, Integer priority);
+    
+    public List<BaculaDotClient> getListDotClients();
+    
+    public List<BaculaDotFileset> getListDotFilesets();
+    
+    public List<BaculaDotJob> getListDotJobs();
+    
+    public List<BaculaDotLevel> getListDotLevels();
+    
+    public List<BaculaDotPool> getListDotPools();
+    
+    public List<BaculaDotStorage> getListDotStorage();
+    
+    public List<BaculaDotType> getListDotTypes();
 }

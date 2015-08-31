@@ -26,6 +26,13 @@ import br.com.uktech.bmt.bacula.bean.BaculaStatusClient;
 import br.com.uktech.bmt.bacula.bean.BaculaStatusDirector;
 import br.com.uktech.bmt.bacula.bean.BaculaStatusStorage;
 import br.com.uktech.bmt.bacula.bean.BaculaStorage;
+import br.com.uktech.bmt.bacula.bean.dot.BaculaDotClient;
+import br.com.uktech.bmt.bacula.bean.dot.BaculaDotFileset;
+import br.com.uktech.bmt.bacula.bean.dot.BaculaDotJob;
+import br.com.uktech.bmt.bacula.bean.dot.BaculaDotLevel;
+import br.com.uktech.bmt.bacula.bean.dot.BaculaDotPool;
+import br.com.uktech.bmt.bacula.bean.dot.BaculaDotStorage;
+import br.com.uktech.bmt.bacula.bean.dot.BaculaDotType;
 import br.com.uktech.bmt.bacula.exceptions.BaculaCommandException;
 import br.com.uktech.bmt.bacula.exceptions.BaculaInvalidDataSize;
 import br.com.uktech.bmt.bacula.exceptions.BaculaNoInteger;
@@ -38,8 +45,16 @@ import br.com.uktech.bmt.bacula.lib.parser.ParseStatusClient;
 import br.com.uktech.bmt.bacula.lib.parser.ParseStatusDirector;
 import br.com.uktech.bmt.bacula.lib.parser.ParseStatusStorage;
 import br.com.uktech.bmt.bacula.lib.parser.ParseStorage;
+import br.com.uktech.bmt.bacula.lib.parser.dot.ParseDotClients;
+import br.com.uktech.bmt.bacula.lib.parser.dot.ParseDotFilesets;
+import br.com.uktech.bmt.bacula.lib.parser.dot.ParseDotJobs;
+import br.com.uktech.bmt.bacula.lib.parser.dot.ParseDotLevels;
+import br.com.uktech.bmt.bacula.lib.parser.dot.ParseDotPools;
+import br.com.uktech.bmt.bacula.lib.parser.dot.ParseDotStorage;
+import br.com.uktech.bmt.bacula.lib.parser.dot.ParseDotTypes;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import org.slf4j.LoggerFactory;
 
@@ -111,7 +126,7 @@ public class BaculaConsole5 extends AbstractBaculaConsole implements BaculaConso
 
     @Override
     public void detailBaculaJob(BaculaJob job) {
-        updateListJobId(job);
+        //updateListJobId(job);
         updateLlistJobId(job);
     }
 
@@ -187,7 +202,7 @@ public class BaculaConsole5 extends AbstractBaculaConsole implements BaculaConso
     }
 
     @Override
-    public List<BaculaJobDefault> getJobsDefault() {
+    public List<BaculaJobDefault> getListJobsDefault() {
         List<BaculaJobDefault> jobsDefault = new ArrayList<>();
         BaculaJobDefault jobDefault = null;
         try {
@@ -206,5 +221,129 @@ public class BaculaConsole5 extends AbstractBaculaConsole implements BaculaConso
             this.logger.error(ex.getLocalizedMessage());
         }
         return jobsDefault;
+    }
+    
+    @Override
+    public BaculaJobDefault getJobDefault(String jobDefaultName) {
+        BaculaJobDefault jobDefault = new BaculaJobDefault();
+        try {
+            String receivedData = this.getConnection().sendAndReceive(Constants.Connection.DotCommands.DEFAULT_JOBS+jobDefaultName);
+            jobDefault = new ParseJobsDefault().detailJobDefault(receivedData);
+            this.logger.trace("getJobDefault: {}",jobDefault.toString());
+        }
+        catch (IOException | InterruptedException | BaculaInvalidDataSize | BaculaNoInteger | BaculaCommandException ex) {
+            this.logger.error(ex.getLocalizedMessage());
+        }
+        return jobDefault;
+    }
+    
+    @Override
+    public Long runJob(BaculaJobDefault jobDefault, String when, Integer priority) {
+        Long jobId = null;
+        try {
+            logger.info("Run Job: {}",jobDefault.getJob());
+            String comand = "run job="+jobDefault.getJob()+" fileset="+jobDefault.getFileset()+" level="+jobDefault.getLevel()+" client="+jobDefault.getClient()+" pool="+jobDefault.getPool()+" storage="+jobDefault.getStorage()+" priority="+priority+" when=\""+when+"\" yes";
+            comand = comand.replaceAll("\r", "");
+            comand = comand.replaceAll("\t", "");
+            comand = comand.replaceAll("\n", "");
+            String receivedJobs = this.getConnection().sendAndReceive(comand);
+            jobId = new ParseJobsDefault().getJobId(receivedJobs);
+            this.logger.debug("\n\n\nJobId: {}\n\n\n",jobId);
+        }
+        catch (IOException | InterruptedException | BaculaInvalidDataSize | BaculaNoInteger | BaculaCommandException ex) {
+            this.logger.error(ex.getLocalizedMessage());
+        }
+        return  jobId;
+    }
+
+    @Override
+    public List<BaculaDotClient> getListDotClients() {
+        List<BaculaDotClient> clients = new ArrayList<>();
+        try {
+            String receivedData = this.getConnection().sendAndReceive(Constants.Connection.DotCommands.CLIENTS);
+            clients = new ParseDotClients().getReturn(receivedData);
+        
+        } catch (IOException | InterruptedException | BaculaInvalidDataSize | BaculaNoInteger | BaculaCommandException ex) {
+            this.logger.error(ex.getLocalizedMessage());
+        }
+        return clients;
+    }
+
+    @Override
+    public List<BaculaDotFileset> getListDotFilesets() {
+        List<BaculaDotFileset> filesets = new ArrayList<>();
+        try {
+            String receivedData = this.getConnection().sendAndReceive(Constants.Connection.DotCommands.FILESETS);
+            filesets = new ParseDotFilesets().getReturn(receivedData);
+        
+        } catch (IOException | InterruptedException | BaculaInvalidDataSize | BaculaNoInteger | BaculaCommandException ex) {
+            this.logger.error(ex.getLocalizedMessage());
+        }
+        return filesets;
+    }
+
+    @Override
+    public List<BaculaDotJob> getListDotJobs() {
+        List<BaculaDotJob> jobs = new ArrayList<>();
+        try {
+            String receivedData = this.getConnection().sendAndReceive(Constants.Connection.DotCommands.JOBS);
+            jobs = new ParseDotJobs().getReturn(receivedData);
+        
+        } catch (IOException | InterruptedException | BaculaInvalidDataSize | BaculaNoInteger | BaculaCommandException ex) {
+            this.logger.error(ex.getLocalizedMessage());
+        }
+        return jobs;
+    }
+
+    @Override
+    public List<BaculaDotLevel> getListDotLevels() {
+        List<BaculaDotLevel> levels = new ArrayList<>();
+        try {
+            String receivedData = this.getConnection().sendAndReceive(Constants.Connection.DotCommands.LEVELS);
+            levels = new ParseDotLevels().getReturn(receivedData);
+        
+        } catch (IOException | InterruptedException | BaculaInvalidDataSize | BaculaNoInteger | BaculaCommandException ex) {
+            this.logger.error(ex.getLocalizedMessage());
+        }
+        return levels;
+    }
+
+    @Override
+    public List<BaculaDotPool> getListDotPools() {
+        List<BaculaDotPool> pools = new ArrayList<>();
+        try {
+            String receivedData = this.getConnection().sendAndReceive(Constants.Connection.DotCommands.POOLS);
+            pools = new ParseDotPools().getReturn(receivedData);
+        
+        } catch (IOException | InterruptedException | BaculaInvalidDataSize | BaculaNoInteger | BaculaCommandException ex) {
+            this.logger.error(ex.getLocalizedMessage());
+        }
+        return pools;
+    }
+
+    @Override
+    public List<BaculaDotStorage> getListDotStorage() {
+        List<BaculaDotStorage> storage = new ArrayList<>();
+        try {
+            String receivedData = this.getConnection().sendAndReceive(Constants.Connection.DotCommands.STORAGE);
+            storage = new ParseDotStorage().getReturn(receivedData);
+        
+        } catch (IOException | InterruptedException | BaculaInvalidDataSize | BaculaNoInteger | BaculaCommandException ex) {
+            this.logger.error(ex.getLocalizedMessage());
+        }
+        return storage;
+    }
+
+    @Override
+    public List<BaculaDotType> getListDotTypes() {
+        List<BaculaDotType> types = new ArrayList<>();
+        try {
+            String receivedData = this.getConnection().sendAndReceive(Constants.Connection.DotCommands.TYPES);
+            types = new ParseDotTypes().getReturn(receivedData);
+        
+        } catch (IOException | InterruptedException | BaculaInvalidDataSize | BaculaNoInteger | BaculaCommandException ex) {
+            this.logger.error(ex.getLocalizedMessage());
+        }
+        return types;
     }
 }

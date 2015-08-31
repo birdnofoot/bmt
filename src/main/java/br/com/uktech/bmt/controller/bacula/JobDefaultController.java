@@ -19,10 +19,15 @@ package br.com.uktech.bmt.controller.bacula;
 
 import br.com.uktech.bmt.dto.bacula.BaculaEstimateDto;
 import br.com.uktech.bmt.dto.bacula.BaculaFormEstimateDto;
+import br.com.uktech.bmt.dto.bacula.BaculaFormRunJobDto;
 import br.com.uktech.bmt.dto.bacula.BaculaJobDefaultDto;
+import br.com.uktech.bmt.dto.bacula.BaculaStatusClientDto;
+import br.com.uktech.bmt.dto.bacula.BaculaStatusStorageDto;
 import br.com.uktech.bmt.dto.model.director.DirectorDto;
+import br.com.uktech.bmt.service.BaculaClientService;
 import br.com.uktech.bmt.service.BaculaDirectorService;
 import br.com.uktech.bmt.service.BaculaJobDefaultService;
+import br.com.uktech.bmt.service.BaculaStorageService;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -33,6 +38,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -53,6 +59,12 @@ public class JobDefaultController extends BasicBaculaController {
     
     @Autowired
     BaculaJobDefaultService baculaJobDefaultService;
+    
+    @Autowired
+    BaculaClientService baculaClientService;
+    
+    @Autowired
+    BaculaStorageService baculaStorageService;
     
     @Override
     public String getModule() {
@@ -117,4 +129,66 @@ public class JobDefaultController extends BasicBaculaController {
         }
         return mav;
     }
+    
+    @RequestMapping(value = "/run/form/{directorId}/{jobDefaultName}", method = RequestMethod.GET)
+    public ModelAndView formRun(@PathVariable Long directorId, @PathVariable String jobDefaultName, HttpServletRequest request, HttpServletResponse response) {
+        logger.debug("completing a new form for the run job");
+        ModelAndView mav;
+        BaculaFormRunJobDto formrunjob;
+        mav = new ModelAndView("bacula/jobDefault/run/form");
+        DirectorDto baculadirdto = baculaDirectorService.getBaculaDirectorById(directorId);
+        formrunjob = baculaJobDefaultService.getFormRunJob(baculadirdto, jobDefaultName);
+        formrunjob.setId(directorId);
+        formrunjob.setPriority(10);
+        mav.addObject("formrunjob", formrunjob);
+        mav.addObject("directorId",directorId);
+        logger.debug("Form Run Job: {}", formrunjob.toString());
+        return mav;
+    }
+    
+    @RequestMapping(value = "/run/", method = RequestMethod.POST)
+    public ModelAndView runJob(@Valid BaculaFormRunJobDto formrunjob, BindingResult result, HttpServletRequest request, HttpServletResponse response) {
+        logger.debug("Run Job");
+        ModelAndView mav;
+        if (result.hasErrors()) {
+            logger.debug("Run Job Error!");
+            mav = new ModelAndView("bacula/jobDefault/run/form");
+            mav.addObject("formrunjob",formrunjob);
+            mav.addObject("directorId",formrunjob.getId());
+            logger.debug("Mensagem do erro: {}",result);
+        } else {
+            DirectorDto baculadirdto = baculaDirectorService.getBaculaDirectorById(formrunjob.getId());
+            Long jobId = baculaJobDefaultService.runJob(baculadirdto, formrunjob);
+            
+            mav = new ModelAndView("redirect:/bacula/jobDefault/run/show/"+formrunjob.getId()+"/"+jobId);
+            
+            //mav = new ModelAndView("bacula/jobDefault/run/show");
+            
+            if(jobId!=null) {
+                mav.addObject("jobId",jobId);
+                mav.addObject("formrunjob",formrunjob);
+                logger.debug("\n\nDir: {}\n\n", baculadirdto.toString());
+                logger.debug("\n\nFor: {}\n\n",formrunjob.toString());
+                logger.debug("\n\nId: {}\n\n",jobId);
+            } else {
+                mav.addObject("id","Erro! id é null");
+                mav.addObject("formrunjob",formrunjob);
+            }
+        }
+        return mav;
+    }
+    
+    @RequestMapping(value = "/run/show/{directorId}/{jobId}", method = RequestMethod.GET)
+    public ModelAndView showJob(@PathVariable Long directorId, @PathVariable Long jobId, HttpServletRequest request, HttpServletResponse response) {
+        ModelAndView mav;
+        mav = new ModelAndView("bacula/jobDefault/run/show");
+        
+        DirectorDto baculadirdto = baculaDirectorService.getBaculaDirectorById(directorId);
+        
+        mav.addObject("jobId",jobId);
+        mav.addObject("directorId", directorId);
+        
+        return mav;
+    }
+    
 }

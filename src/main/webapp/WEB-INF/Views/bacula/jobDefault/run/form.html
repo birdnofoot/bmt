@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<!--
+Copyright (C) 2015 Uhlig e Korovsky Tecnologia Ltda - ME
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<html>
+    <head th:replace="fragments/header :: head">
+        <title th:text="#{system.name}">Bacula Manager Tool</title>
+
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <meta name="description" content=""/>
+        <meta name="author" content="Uhlig &amp; Korovsky Tecnologia Ltda - ME"/>
+
+        <link rel="icon" href="../../../../images/favicon.gif" th:href="@{/images/favicon.gif}"/>
+    </head>
+    <body>
+        <div th:replace="fragments/navbar :: navbar">&nbsp;</div>
+        <div>
+            <a href="#" th:href="@{'/bacula/director/'}">Return to director's page</a>
+            <a href="#" th:href="@{'/bacula/jobDefault/'+${directorId}}">Return to JobDefault's page</a>
+        </div>
+        <div th:if="${formrunjob == null}">
+            <span>Error getting the formrunjob!</span>
+        </div>
+        <div th:if="${formrunjob != null}">
+            
+            <form action="#" th:action="@{/bacula/jobDefault/run/}" th:object="${formrunjob}" method="post">
+                <fieldset>
+                    <div>
+                        <input type="text" hidden="hidden" th:value="*{id}" th:field="*{id}" />
+                    </div>
+                    
+                    <div>
+                        <label th:text="Job">name</label>
+                        <div th:if="${formrunjob.jobs != null}">
+                            <select th:field="*{job}" >
+                                <option type="text" th:each="j : ${formrunjob.jobs}" th:value="${j.job}" th:text="${j.job}"/>
+                            </select>
+                        </div>
+                    </div>
+                    <br/>
+                    <div>
+                        <label th:text="Fileset">fileset</label>
+                        <div th:if="${formrunjob.filesets != null}">
+                            <select th:field="*{fileset}" >
+                                <option type="text" th:each="f : ${formrunjob.filesets}" th:value="${f.fileset}" th:text="${f.fileset}"/>
+                            </select>
+                        </div>
+                    </div>
+                    <br/>
+                    <div>
+                        <label th:text="Level">level</label>
+                        <div th:if="${formrunjob.levels != null}">
+                            <select th:field="*{level}" >
+                                <option type="text" th:each="l : ${formrunjob.levels}" th:value="${l.level}" th:text="${l.level}"/>
+                            </select>
+                        </div>
+                    </div>
+                    <br/>
+                    <div>
+                        <label th:text="Client">client</label>
+                        <div th:if="${formrunjob.clients != null}">
+                            <select th:field="*{client}" >
+                                <option type="text" th:each="c : ${formrunjob.clients}"  th:value="${c.client}" th:text="${c.client}"/>
+                            </select>
+                        </div>
+                    </div>
+                    <br/>
+                    <div>
+                        <label th:text="Pool">pool</label>
+                        <div th:if="${formrunjob.pools != null}">
+                            <select th:field="*{pool}" >
+                                <option type="text" th:each="p : ${formrunjob.pools}" th:value="${p.pool}" th:text="${p.pool}"/>
+                            </select>
+                        </div>
+                    </div>
+                    <br/>
+                    <div>
+                        <label th:text="Storage">storage</label>
+                        <div th:if="${formrunjob.storages != null}">
+                            <select th:field="*{storage}" >
+                                <option type="text" th:each="s : ${formrunjob.storages}" th:value="${s.storage}" th:text="${s.storage}"/>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label th:text="Priority">priority</label>
+                        <div>
+                            <select th:field="*{priority}" >
+                                <option type="text" th:each="i: ${#numbers.sequence(0, 20)}" th:value="${i}"><label th:text="${i}"/></option>
+                            </select>
+                        </div>
+                    </div>
+                    <br/>
+                    <div>
+                        <label th:text="When">when</label>
+                        <div>
+                            Colocar um calendario. colocar o tipo?
+                            <br/>
+                            <input type="text" th:value="*{when}" th:field="*{when}"/>
+                            <!--<p th:if="${#fields.hasErrors('when')}" th:errors="*{when}">when error</p>-->
+                        </div>
+                    </div>
+                </fieldset>
+                
+                <div>
+                    <div>
+                        <button type="submit" name="action" value="submit">Run</button>
+                    </div>
+                </div>
+                
+            </form>
+        </div>
+        
+        <div th:replace="fragments/footer :: footer">&nbsp;</div>
+    </body>
+</html>
+<!--
+1: Level
+2: Storage
+3: Job
+4: FileSet
+5: Client
+6: When
+7: Priority
+8: Pool
+9: Plugin Options
+-->

@@ -32,8 +32,8 @@ public class ParseJobs {
     private final org.slf4j.Logger logger = LoggerFactory.getLogger(ParseJobs.class);
     
     public static final String REGEX_SCHEDULED_JOB = "(Incremental|Diferencial|Full)[\\s*|\\t*]*(\\w+)[\\s*|\\t*]*(\\d+)[\\s*|\\t*]*(\\d{2}-[a-zA-Z]{3}-\\d{2} \\d{2}:\\d{2})[\\s*|\\t*]*([\\w*|-]*)[\\s{0,}|\\t{0,}]*([\\w+|\\*]+)";
-    public static final String REGEX_RUNNING_JOB = "(\\d+)[\\s*|\\t*]*(Differe|Increme|Full)[\\s*|\\t*]*([\\w+|-]*.\\d{4}-\\d{2}-\\d{2}_\\d{2}.\\d{2}.\\d{2}_\\d{2})[\\s*|\\t*]*(is waiting execution\\.*|is running\\.*|is waiting for Client [\\w*|-]* to connect to Storage [\\w*|-]*\\.*)";
-    public static final String REGEX_TERMINATED_JOB = "(\\d+)[\\s*|\\t*]*(Full|Incr|Diff)[\\s*|\\t*]*([\\d+|,*]*)[\\s*|\\t*]*([\\d+|\\.*]* [K|M|G|T]*)[\\s*|\\t*]*(OK|Error)[\\s*|\\t*]*(\\d{2}-[a-zA-Z]{3}-\\d{2} \\d{2}:\\d{2})[\\s*|\\t*]*(.+)";
+    public static final String REGEX_RUNNING_JOB = "(\\d+)[\\s*|\\t*]*(Differe|Increme|Full)[\\s*|\\t*]*([\\w+|-]*.\\d{4}-\\d{2}-\\d{2}_\\d{2}.\\d{2}.\\d{2}_\\d{2})[\\s*|\\t*]*(is waiting for an appendable Volume|is waiting execution\\.*|is running\\.*|is waiting for Client [\\w*|-]* to connect to Storage [\\w*|-]*\\.*|is waiting on Storage [|\"\\w*|-]*|is waiting for its start time|has been canceled)";
+    public static final String REGEX_TERMINATED_JOB = "(\\d+)[\\s*|\\t*]*(Full|Incr|Diff)[\\s*|\\t*]*([\\d+|,*]*)[\\s*|\\t*]*([\\d+|\\.*]* [K|M|G|T]*)[\\s*|\\t*]*(OK|Error|Cancel)[\\s*|\\t*]*(\\d{2}-[a-zA-Z]{3}-\\d{2} \\d{2}:\\d{2})[\\s*|\\t*]*(.+)";
     public static final String REGEX_PARSE_LIST_JOB = "(\\| *[\\d+|,]* *\\|.*\\|.*\\|.*\\|.*\\|.*\\| *([\\d+|,]*) *\\|.*\\|)";
     public static final String REGEX_PARSE_LLIST_JOB = "(^jobid:) *(.+)";
     public static final String REGEX_PARSE_NUMBER = " *(jobid:|clientid:|purgedfiles:|jobtdate:|volsessionid:|volsessiontime:|jobfiles:|joberrors:|jobmissingfiles:|poolid:|priorjobid:|filesetid:) *(.+)";

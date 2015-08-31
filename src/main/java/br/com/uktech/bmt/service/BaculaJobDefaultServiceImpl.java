@@ -21,12 +21,27 @@ import br.com.uktech.bmt.bacula.BaculaConsole;
 import br.com.uktech.bmt.bacula.BaculaConsoleFactory;
 import br.com.uktech.bmt.bacula.bean.BaculaEstimate;
 import br.com.uktech.bmt.bacula.bean.BaculaJobDefault;
+import br.com.uktech.bmt.bacula.bean.dot.BaculaDotClient;
+import br.com.uktech.bmt.bacula.bean.dot.BaculaDotFileset;
+import br.com.uktech.bmt.bacula.bean.dot.BaculaDotJob;
+import br.com.uktech.bmt.bacula.bean.dot.BaculaDotLevel;
+import br.com.uktech.bmt.bacula.bean.dot.BaculaDotPool;
+import br.com.uktech.bmt.bacula.bean.dot.BaculaDotStorage;
+import br.com.uktech.bmt.bacula.bean.dot.BaculaDotType;
 import br.com.uktech.bmt.bacula.exceptions.BaculaAuthenticationException;
 import br.com.uktech.bmt.bacula.exceptions.BaculaCommunicationException;
 import br.com.uktech.bmt.bacula.exceptions.BaculaDirectorNotSupported;
 import br.com.uktech.bmt.dto.bacula.BaculaEstimateDto;
 import br.com.uktech.bmt.dto.bacula.BaculaFormEstimateDto;
+import br.com.uktech.bmt.dto.bacula.BaculaFormRunJobDto;
 import br.com.uktech.bmt.dto.bacula.BaculaJobDefaultDto;
+import br.com.uktech.bmt.dto.bacula.dot.BaculaDotClientDto;
+import br.com.uktech.bmt.dto.bacula.dot.BaculaDotFilesetDto;
+import br.com.uktech.bmt.dto.bacula.dot.BaculaDotJobDto;
+import br.com.uktech.bmt.dto.bacula.dot.BaculaDotLevelDto;
+import br.com.uktech.bmt.dto.bacula.dot.BaculaDotPoolDto;
+import br.com.uktech.bmt.dto.bacula.dot.BaculaDotStorageDto;
+import br.com.uktech.bmt.dto.bacula.dot.BaculaDotTypeDto;
 import br.com.uktech.bmt.dto.model.director.DirectorDto;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +76,11 @@ public class BaculaJobDefaultServiceImpl implements BaculaJobDefaultService{
         return new BaculaFormEstimateDto();
     }
     
+    @Override
+    public BaculaFormRunJobDto newFormRunJob() {
+        return new BaculaFormRunJobDto();
+    }
+    
     @Transactional(readOnly = true)
     @Override
     public List<BaculaJobDefaultDto> getListJobDefault(DirectorDto baculadirdto) {
@@ -69,7 +89,7 @@ public class BaculaJobDefaultServiceImpl implements BaculaJobDefaultService{
         try{
             BaculaConsole console = consoleFactory.getConsole(baculadirdto.getName(), baculadirdto.getHostname(), baculadirdto.getPort(), baculadirdto.getPassword());
             if (console != null) {
-                jobsDefault = console.getJobsDefault();
+                jobsDefault = console.getListJobsDefault();
                 if(jobsDefault!=null) {
                     for(BaculaJobDefault jobDefault : jobsDefault) {
                         BaculaJobDefaultDto jobDefaultDto = new BaculaJobDefaultDto();
@@ -105,4 +125,98 @@ public class BaculaJobDefaultServiceImpl implements BaculaJobDefaultService{
         return estimateDto;
     }
 
+    @Override
+    public Long runJob(DirectorDto baculadirdto, BaculaFormRunJobDto formRunJobDto) {
+        Long jobId = null;
+        BaculaJobDefault jobDefault = new BaculaJobDefault();
+        mapper.map((BaculaJobDefaultDto) formRunJobDto, jobDefault);
+        try{
+            BaculaConsole console = consoleFactory.getConsole(baculadirdto.getName(), baculadirdto.getHostname(), baculadirdto.getPort(), baculadirdto.getPassword());
+            if (console != null) {
+                jobId = console.runJob(jobDefault, formRunJobDto.getWhen(), formRunJobDto.getPriority());
+            }
+        } catch (BaculaCommunicationException | BaculaAuthenticationException | BaculaDirectorNotSupported ex) {
+            this.logger.error(ex.getLocalizedMessage());
+            return null;
+        }
+        return jobId;
+    }
+    
+    @Override
+    public BaculaFormRunJobDto getFormRunJob(DirectorDto baculadirdto, String jobDefaultName) {
+        BaculaJobDefaultDto jobDefaultDto = new BaculaJobDefaultDto();
+        BaculaJobDefault jobDefault = null;
+        BaculaFormRunJobDto formrunjob = new BaculaFormRunJobDto();
+        
+        List <BaculaDotClientDto> dotClientDto = new ArrayList();
+        List <BaculaDotFilesetDto> dotFilesetDto = new ArrayList();
+        List <BaculaDotJobDto> dotJobDto = new ArrayList();
+        List <BaculaDotLevelDto> dotLevelDto = new ArrayList();
+        List <BaculaDotPoolDto> dotPoolDto = new ArrayList();
+        List <BaculaDotStorageDto> dotStorageDto = new ArrayList();
+        List <BaculaDotTypeDto> dotTypeDto = new ArrayList();
+        
+        List <BaculaDotClient> dotClient = null;
+        List <BaculaDotFileset> dotFileset = null;
+        List <BaculaDotJob> dotJob = null;
+        List <BaculaDotLevel> dotLevel = null;
+        List <BaculaDotPool> dotPool = null;
+        List <BaculaDotStorage> dotStorage = null;
+        List <BaculaDotType> dotType = null;
+        
+        try{
+            BaculaConsole console = consoleFactory.getConsole(baculadirdto.getName(), baculadirdto.getHostname(), baculadirdto.getPort(), baculadirdto.getPassword());
+            if (console != null) {
+                jobDefault = console.getJobDefault(jobDefaultName);
+                
+                dotClient = console.getListDotClients();
+                dotFileset = console.getListDotFilesets();
+                dotJob = console.getListDotJobs();
+                dotLevel = console.getListDotLevels();
+                dotPool = console.getListDotPools();
+                dotStorage = console.getListDotStorage();
+                dotType = console.getListDotTypes();
+                
+                if(dotClient!=null) {
+                    mapper.map(dotClient,dotClientDto);
+                    formrunjob.setClients(dotClientDto);
+                }
+                if(dotFileset!=null) {
+                    mapper.map(dotFileset,dotFilesetDto);
+                    formrunjob.setFilesets(dotFilesetDto);
+                }
+                if(dotJob!=null) {
+                    mapper.map(dotJob,dotJobDto);
+                    formrunjob.setJobs(dotJobDto);
+                }
+                if(dotLevel!=null) {
+                    mapper.map(dotLevel,dotLevelDto);
+                    formrunjob.setLevels(dotLevelDto);
+                }
+                if(dotPool!=null) {
+                    mapper.map(dotPool,dotPoolDto);
+                    formrunjob.setPools(dotPoolDto);
+                }
+                if(dotStorage!=null) {
+                    mapper.map(dotStorage,dotStorageDto);
+                    formrunjob.setStorages(dotStorageDto);
+                }
+                if(dotType!=null) {
+                    mapper.map(dotType,dotTypeDto);
+                    formrunjob.setTypes(dotTypeDto);
+                }
+                
+                if(jobDefault!=null) {
+                    mapper.map(jobDefault, jobDefaultDto);
+                    mapper.map(jobDefaultDto, formrunjob);
+                }
+            }
+            this.logger.trace("getFormRunJob: {}",formrunjob.toString());
+        } catch (BaculaCommunicationException | BaculaAuthenticationException | BaculaDirectorNotSupported ex) {
+            this.logger.error(ex.getLocalizedMessage());
+            return null;
+        }
+        
+        return formrunjob;
+    }
 }

@@ -130,6 +130,7 @@ public class DirectorController extends BasicBaculaController {
         }
         
         mav.addObject("statusdir", statusdir);
+        mav.addObject("directorId",id);
         return mav;
     }
 }

@@ -34,6 +34,7 @@ public class ParseJobsDefault {
     private final org.slf4j.Logger logger = LoggerFactory.getLogger(ParseJobsDefault.class);
     
     public static final String REGEX_JOB_DEFAULT = "job=(.*)pool=(.*)\\w{4,5}messages=(.*)client=(.*)storage=(.*)where=(.*)level=(.*)type=(.*)fileset=(.*)enabled=(.*)catalog=(.*)\\.*";
+    public static final String REGEX_RUN_JOB = "Job[\\s|\\t]*queued\\.[\\s|\\t]*JobId=(\\d*)";
     
     public List<BaculaJobDefault> setNames(String input) {
         this.logger.trace("Mensagem recebida: {}", input);
@@ -93,4 +94,27 @@ public class ParseJobsDefault {
         return jobDefault;
     }
     
+    public Long getJobId(String input) {
+        this.logger.trace("Mensagem recebida: {}", input);
+        Long jobId = null;
+        Parser p = new Parser(input);
+        String temp = null;
+        do {
+            temp = p.getToken(Constants.CR);
+            if (temp != null) {
+                temp = temp.trim();
+                this.logger.trace("Processando Linha: {}", temp);
+                if(temp.matches(ParseJobsDefault.REGEX_RUN_JOB)) {
+                    this.logger.trace("\n\nTemp: {}\n\n", temp);
+                    Pattern pa = Pattern.compile(ParseJobsDefault.REGEX_RUN_JOB);
+                    Matcher m = pa.matcher(temp);
+                    if(m.find()) {
+                        jobId = Long.parseLong(m.group(1));
+                    }
+                }
+            }
+        } while(temp!=null);
+        //jobId = 10l;
+        return jobId;
+    }
 }

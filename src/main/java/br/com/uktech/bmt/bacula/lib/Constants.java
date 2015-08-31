@@ -71,12 +71,14 @@ public interface Constants {
         
         interface DotCommands {
             public static String MESSAGES = ".messages\n";
-            public static String CLIENTS = ".clients\n";
+            public static String CLIENTS = ".clients";
+            public static String FILESETS = ".filesets";
             public static String JOBS = ".jobs";
+            public static String LEVELS = ".levels";
+            public static String POOLS = ".pools";
+            public static String STORAGE = ".storage";
+            public static String TYPES = ".types";
             public static String DEFAULT_JOBS = ".defaults job=";
-            public static String LEVELS = ".levels\n";
-            public static String FILESETS = ".filesets\n";
-            public static String POOLS = ".pools\n";
         }
 
         interface Commands {
