@@ -14,24 +14,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package br.com.uktech.bmt.service;
 
-import br.com.uktech.bmt.dto.bacula.BaculaClientDto;
-import br.com.uktech.bmt.dto.bacula.BaculaStatusClientDto;
-import br.com.uktech.bmt.dto.bacula.dot.BaculaDotStatusClientRunningDto;
-import br.com.uktech.bmt.dto.model.director.DirectorDto;
-import java.util.List;
+package br.com.uktech.bmt.dto.bacula.sql;
 
 /**
- *
+ * 
  * @author João Paulo Siqueira <joao.siqueira@uktech.com.br>
  */
-public interface BaculaClientService {
-    
-    public BaculaClientDto newClient();
-    //Retornar um Dto
-    public List<BaculaClientDto> getListClients(DirectorDto baculadirdto);
-    public BaculaStatusClientDto getStatusClient(DirectorDto baculadirdto, String clientName);
-    public BaculaDotStatusClientRunningDto getDotStatusClient(DirectorDto baculadirdto, String clientName);
-    
+public class BaculaSqlRecyclePoolDto extends AbstractBaculaSqlDto {
+
+    public BaculaSqlRecyclePoolDto() {
+        super();
+    }
+
+    public BaculaSqlRecyclePoolDto(Long id) {
+        super(id);
+    }
+
+    @Override
+    public String toString() {
+        return "BaculaSqlRecyclePoolDto{" + super.toString() + '}';
+    }
+
 }

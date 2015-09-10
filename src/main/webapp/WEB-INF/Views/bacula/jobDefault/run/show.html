@@ -34,7 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <a href="#" th:href="@{'/bacula/jobDefault/'+${directorId}}">Return to Job Default's page</a>
         </div> 
         <div>
-            <div th:if="${jobId == null}">
+            <div style="color: blue" th:if="${jobId == null}">
                 <span>Error JobId!</span>
             </div>
             <div style="color: blue" th:if="${jobId != null}">
@@ -45,6 +45,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             </div>
             <div style="color: blue" th:if="${directorId != null}">
                 <span th:text="${directorId}">directorId</span>
+            </div>
+            <div style="color: blue" th:if="${job == null}">
+                <span>Error Job!</span>
+            </div>
+            <div style="color: blue" th:if="${job != null}">
+                <span th:text="${job}">job</span>
+            </div>
+            <div style="color: blue" th:if="${statusClient == null}">
+                <span>Error statusClient!</span>
+            </div>
+            <div style="color: blue" th:if="${statusClient != null}">
+                <span th:text="${statusClient}">statusClient</span>
             </div>
         </div>
         

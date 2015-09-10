@@ -17,37 +17,29 @@
 
 package br.com.uktech.bmt.bacula.bean.sql;
 
-import java.io.Serializable;
+import java.util.Date;
 import java.util.Objects;
 
 /**
  * 
  * @author João Paulo Siqueira <joao.siqueira@uktech.com.br>
  */
-public abstract class AbstractBaculaSql implements Serializable {
-
-    private Long id;
-
-    public AbstractBaculaSql() {
-        this.id = null;
-    }
+public class BaculaSqlCdImages extends BaculaSqlMedia {
     
-    public AbstractBaculaSql(Long id) {
-        this.id = id;
-    }
-    
-    public Long getId() {
-        return id;
+    private Date lastburn;
+
+    public Date getLastburn() {
+        return lastburn;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setLastburn(Date lastburn) {
+        this.lastburn = lastburn;
     }
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 83 * hash + Objects.hashCode(this.id);
+        int hash = 5;
+        hash = 23 * hash + Objects.hashCode(this.lastburn);
         return hash;
     }
 
@@ -59,8 +51,8 @@ public abstract class AbstractBaculaSql implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final AbstractBaculaSql other = (AbstractBaculaSql) obj;
-        if (!Objects.equals(this.id, other.id)) {
+        final BaculaSqlCdImages other = (BaculaSqlCdImages) obj;
+        if (!Objects.equals(this.lastburn, other.lastburn)) {
             return false;
         }
         return true;
@@ -68,7 +60,7 @@ public abstract class AbstractBaculaSql implements Serializable {
 
     @Override
     public String toString() {
-        return "AbstractBaculaSql{" + "id=" + id + '}';
+        return "BaculaSqlCdImages{" + super.toString() + ", lastburn=" + lastburn + '}';
     }
     
 }

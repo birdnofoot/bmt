@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package br.com.uktech.bmt.bacula.bean.sql;
+package br.com.uktech.bmt.dto.bacula.sql;
 
 import java.util.Date;
 import java.util.Objects;
@@ -24,40 +24,40 @@ import java.util.Objects;
  * 
  * @author João Paulo Siqueira <joao.siqueira@uktech.com.br>
  */
-public class BaculaSqlJob extends AbstractBaculaSql {
-
+public class BaculaSqlJobDto extends AbstractBaculaSqlDto {
+    
     private String job;
     private String name;
     private String type;
     private String level;
-    private BaculaSqlClient client; //clientid é client.getId()
+    private BaculaSqlClientDto client;
     private String jobstatus;
     private Date schedtime;
     private Date starttime;
     private Date endtime;
     private Date realendtime;
     private Long jobtdate;
-    private BaculaSqlVolSession volsession; //volsessionid é volsession.getId()
+    private BaculaSqlVolSessionDto volsession;
     private Integer volsessiontime;
     private Integer jobfiles;
     private Long jobbytes;
     private Long readbytes;
     private Integer joberrors;
     private Integer jobmissingfiles;
-    private BaculaSqlPool pool; //poolid é pool.getId()
-    private BaculaSqlFileSet fileset;   //filesetid e fileset.getId()
-    private BaculaSqlPriorJob priorjob; //?
+    private BaculaSqlPoolDto pool;
+    private BaculaSqlFileSetDto fileset;
+    private BaculaSqlPriorJobDto priorjob;
     private Integer purgedfiles;
     private Integer hasbase;
     private Integer hascache;
     private Integer reviewed;
     private String comment;
 
-    public BaculaSqlJob() {
+    public BaculaSqlJobDto() {
         super();
     }
 
-    public BaculaSqlJob(Long id) {
+    public BaculaSqlJobDto(Long id) {
         super(id);
     }
 
@@ -93,11 +93,11 @@ public class BaculaSqlJob extends AbstractBaculaSql {
         this.level = level;
     }
 
-    public BaculaSqlClient getClient() {
+    public BaculaSqlClientDto getClient() {
         return client;
     }
 
-    public void setClient(BaculaSqlClient client) {
+    public void setClient(BaculaSqlClientDto client) {
         this.client = client;
     }
 
@@ -149,11 +149,11 @@ public class BaculaSqlJob extends AbstractBaculaSql {
         this.jobtdate = jobtdate;
     }
 
-    public BaculaSqlVolSession getVolsession() {
+    public BaculaSqlVolSessionDto getVolsession() {
         return volsession;
     }
 
-    public void setVolsession(BaculaSqlVolSession volsession) {
+    public void setVolsession(BaculaSqlVolSessionDto volsession) {
         this.volsession = volsession;
     }
 
@@ -205,27 +205,27 @@ public class BaculaSqlJob extends AbstractBaculaSql {
         this.jobmissingfiles = jobmissingfiles;
     }
 
-    public BaculaSqlPool getPool() {
+    public BaculaSqlPoolDto getPool() {
         return pool;
     }
 
-    public void setPool(BaculaSqlPool pool) {
+    public void setPool(BaculaSqlPoolDto pool) {
         this.pool = pool;
     }
 
-    public BaculaSqlFileSet getFileset() {
+    public BaculaSqlFileSetDto getFileset() {
         return fileset;
     }
 
-    public void setFileset(BaculaSqlFileSet fileset) {
+    public void setFileset(BaculaSqlFileSetDto fileset) {
         this.fileset = fileset;
     }
 
-    public BaculaSqlPriorJob getPriorjob() {
+    public BaculaSqlPriorJobDto getPriorjob() {
         return priorjob;
     }
 
-    public void setPriorjob(BaculaSqlPriorJob priorjob) {
+    public void setPriorjob(BaculaSqlPriorJobDto priorjob) {
         this.priorjob = priorjob;
     }
 
@@ -272,32 +272,32 @@ public class BaculaSqlJob extends AbstractBaculaSql {
     @Override
     public int hashCode() {
         int hash = super.hashCode();
-        hash = 37 * hash + Objects.hashCode(this.job);
-        hash = 37 * hash + Objects.hashCode(this.name);
-        hash = 37 * hash + Objects.hashCode(this.type);
-        hash = 37 * hash + Objects.hashCode(this.level);
-        hash = 37 * hash + Objects.hashCode(this.client);
-        hash = 37 * hash + Objects.hashCode(this.jobstatus);
-        hash = 37 * hash + Objects.hashCode(this.schedtime);
-        hash = 37 * hash + Objects.hashCode(this.starttime);
-        hash = 37 * hash + Objects.hashCode(this.endtime);
-        hash = 37 * hash + Objects.hashCode(this.realendtime);
-        hash = 37 * hash + Objects.hashCode(this.jobtdate);
-        hash = 37 * hash + Objects.hashCode(this.volsession);
-        hash = 37 * hash + Objects.hashCode(this.volsessiontime);
-        hash = 37 * hash + Objects.hashCode(this.jobfiles);
-        hash = 37 * hash + Objects.hashCode(this.jobbytes);
-        hash = 37 * hash + Objects.hashCode(this.readbytes);
-        hash = 37 * hash + Objects.hashCode(this.joberrors);
-        hash = 37 * hash + Objects.hashCode(this.jobmissingfiles);
-        hash = 37 * hash + Objects.hashCode(this.pool);
-        hash = 37 * hash + Objects.hashCode(this.fileset);
-        hash = 37 * hash + Objects.hashCode(this.priorjob);
-        hash = 37 * hash + Objects.hashCode(this.purgedfiles);
-        hash = 37 * hash + Objects.hashCode(this.hasbase);
-        hash = 37 * hash + Objects.hashCode(this.hascache);
-        hash = 37 * hash + Objects.hashCode(this.reviewed);
-        hash = 37 * hash + Objects.hashCode(this.comment);
+        hash = 53 * hash + Objects.hashCode(this.job);
+        hash = 53 * hash + Objects.hashCode(this.name);
+        hash = 53 * hash + Objects.hashCode(this.type);
+        hash = 53 * hash + Objects.hashCode(this.level);
+        hash = 53 * hash + Objects.hashCode(this.client);
+        hash = 53 * hash + Objects.hashCode(this.jobstatus);
+        hash = 53 * hash + Objects.hashCode(this.schedtime);
+        hash = 53 * hash + Objects.hashCode(this.starttime);
+        hash = 53 * hash + Objects.hashCode(this.endtime);
+        hash = 53 * hash + Objects.hashCode(this.realendtime);
+        hash = 53 * hash + Objects.hashCode(this.jobtdate);
+        hash = 53 * hash + Objects.hashCode(this.volsession);
+        hash = 53 * hash + Objects.hashCode(this.volsessiontime);
+        hash = 53 * hash + Objects.hashCode(this.jobfiles);
+        hash = 53 * hash + Objects.hashCode(this.jobbytes);
+        hash = 53 * hash + Objects.hashCode(this.readbytes);
+        hash = 53 * hash + Objects.hashCode(this.joberrors);
+        hash = 53 * hash + Objects.hashCode(this.jobmissingfiles);
+        hash = 53 * hash + Objects.hashCode(this.pool);
+        hash = 53 * hash + Objects.hashCode(this.fileset);
+        hash = 53 * hash + Objects.hashCode(this.priorjob);
+        hash = 53 * hash + Objects.hashCode(this.purgedfiles);
+        hash = 53 * hash + Objects.hashCode(this.hasbase);
+        hash = 53 * hash + Objects.hashCode(this.hascache);
+        hash = 53 * hash + Objects.hashCode(this.reviewed);
+        hash = 53 * hash + Objects.hashCode(this.comment);
         return hash;
     }
 
@@ -312,7 +312,7 @@ public class BaculaSqlJob extends AbstractBaculaSql {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final BaculaSqlJob other = (BaculaSqlJob) obj;
+        final BaculaSqlJobDto other = (BaculaSqlJobDto) obj;
         if (!Objects.equals(this.job, other.job)) {
             return false;
         }
@@ -396,6 +396,7 @@ public class BaculaSqlJob extends AbstractBaculaSql {
 
     @Override
     public String toString() {
-        return "BaculaSqlJob{" + super.toString() + ", job=" + job + ", name=" + name + ", type=" + type + ", level=" + level + ", client=" + client + ", jobstatus=" + jobstatus + ", schedtime=" + schedtime + ", starttime=" + starttime + ", endtime=" + endtime + ", realendtime=" + realendtime + ", jobtdate=" + jobtdate + ", volsession=" + volsession + ", volsessiontime=" + volsessiontime + ", jobfiles=" + jobfiles + ", jobbytes=" + jobbytes + ", readbytes=" + readbytes + ", joberrors=" + joberrors + ", jobmissingfiles=" + jobmissingfiles + ", pool=" + pool + ", fileset=" + fileset + ", priorjobid=" + priorjob + ", purgedfiles=" + purgedfiles + ", hasbase=" + hasbase + ", hascache=" + hascache + ", reviewed=" + reviewed + ", comment=" + comment +'}';
+        return "BaculaSqlJobDto{" + super.toString() + "job=" + job + ", name=" + name + ", type=" + type + ", level=" + level + ", client=" + client + ", jobstatus=" + jobstatus + ", schedtime=" + schedtime + ", starttime=" + starttime + ", endtime=" + endtime + ", realendtime=" + realendtime + ", jobtdate=" + jobtdate + ", volsession=" + volsession + ", volsessiontime=" + volsessiontime + ", jobfiles=" + jobfiles + ", jobbytes=" + jobbytes + ", readbytes=" + readbytes + ", joberrors=" + joberrors + ", jobmissingfiles=" + jobmissingfiles + ", pool=" + pool + ", fileset=" + fileset + ", priorjob=" + priorjob + ", purgedfiles=" + purgedfiles + ", hasbase=" + hasbase + ", hascache=" + hascache + ", reviewed=" + reviewed + ", comment=" + comment + '}';
     }
+    
 }

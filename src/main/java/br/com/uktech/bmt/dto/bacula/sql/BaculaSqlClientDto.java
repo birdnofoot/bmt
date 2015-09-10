@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package br.com.uktech.bmt.bacula.bean.sql;
+package br.com.uktech.bmt.dto.bacula.sql;
 
 import java.util.Objects;
 
@@ -23,22 +23,22 @@ import java.util.Objects;
  * 
  * @author João Paulo Siqueira <joao.siqueira@uktech.com.br>
  */
-public class BaculaSqlClient extends AbstractBaculaSql {
-    
+public class BaculaSqlClientDto extends AbstractBaculaSqlDto {
+
     private String name;
     private String uname;
     private Integer autoprune;
     private Long fileretention;
     private Long jobretention;
 
-    public BaculaSqlClient() {
+    public BaculaSqlClientDto() {
         super();
     }
-    
-    public BaculaSqlClient(Long id) {
+
+    public BaculaSqlClientDto(Long id) {
         super(id);
     }
-    
+
     public String getName() {
         return name;
     }
@@ -81,12 +81,12 @@ public class BaculaSqlClient extends AbstractBaculaSql {
 
     @Override
     public int hashCode() {
-        int hash = super.hashCode();
-        hash = 17 * hash + Objects.hashCode(this.name);
-        hash = 17 * hash + Objects.hashCode(this.uname);
-        hash = 17 * hash + Objects.hashCode(this.autoprune);
-        hash = 17 * hash + Objects.hashCode(this.fileretention);
-        hash = 17 * hash + Objects.hashCode(this.jobretention);
+        int hash = super.hashCode();;
+        hash = 53 * hash + Objects.hashCode(this.name);
+        hash = 53 * hash + Objects.hashCode(this.uname);
+        hash = 53 * hash + Objects.hashCode(this.autoprune);
+        hash = 53 * hash + Objects.hashCode(this.fileretention);
+        hash = 53 * hash + Objects.hashCode(this.jobretention);
         return hash;
     }
 
@@ -101,7 +101,7 @@ public class BaculaSqlClient extends AbstractBaculaSql {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final BaculaSqlClient other = (BaculaSqlClient) obj;
+        final BaculaSqlClientDto other = (BaculaSqlClientDto) obj;
         if (!Objects.equals(this.name, other.name)) {
             return false;
         }
@@ -122,7 +122,7 @@ public class BaculaSqlClient extends AbstractBaculaSql {
 
     @Override
     public String toString() {
-        return "BaculaSqlClient{" + super.toString() + ", name=" + name + ", uname=" + uname + ", autoprune=" + autoprune + ", fileretention=" + fileretention + ", jobretention=" + jobretention + '}';
+        return "BaculaSqlClientDto{" + super.toString() + "name=" + name + ", uname=" + uname + ", autoprune=" + autoprune + ", fileretention=" + fileretention + ", jobretention=" + jobretention + '}';
     }
     
 }

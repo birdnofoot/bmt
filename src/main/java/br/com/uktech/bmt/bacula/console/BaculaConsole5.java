@@ -31,8 +31,13 @@ import br.com.uktech.bmt.bacula.bean.dot.BaculaDotFileset;
 import br.com.uktech.bmt.bacula.bean.dot.BaculaDotJob;
 import br.com.uktech.bmt.bacula.bean.dot.BaculaDotLevel;
 import br.com.uktech.bmt.bacula.bean.dot.BaculaDotPool;
+import br.com.uktech.bmt.bacula.bean.dot.BaculaDotStatusClientRunning;
 import br.com.uktech.bmt.bacula.bean.dot.BaculaDotStorage;
 import br.com.uktech.bmt.bacula.bean.dot.BaculaDotType;
+import br.com.uktech.bmt.bacula.bean.sql.BaculaSqlClient;
+import br.com.uktech.bmt.bacula.bean.sql.BaculaSqlFileSet;
+import br.com.uktech.bmt.bacula.bean.sql.BaculaSqlJob;
+import br.com.uktech.bmt.bacula.bean.sql.BaculaSqlPool;
 import br.com.uktech.bmt.bacula.exceptions.BaculaCommandException;
 import br.com.uktech.bmt.bacula.exceptions.BaculaInvalidDataSize;
 import br.com.uktech.bmt.bacula.exceptions.BaculaNoInteger;
@@ -50,11 +55,15 @@ import br.com.uktech.bmt.bacula.lib.parser.dot.ParseDotFilesets;
 import br.com.uktech.bmt.bacula.lib.parser.dot.ParseDotJobs;
 import br.com.uktech.bmt.bacula.lib.parser.dot.ParseDotLevels;
 import br.com.uktech.bmt.bacula.lib.parser.dot.ParseDotPools;
+import br.com.uktech.bmt.bacula.lib.parser.dot.ParseDotStatusClient;
 import br.com.uktech.bmt.bacula.lib.parser.dot.ParseDotStorage;
 import br.com.uktech.bmt.bacula.lib.parser.dot.ParseDotTypes;
+import br.com.uktech.bmt.bacula.lib.parser.sql.ParseSqlClient;
+import br.com.uktech.bmt.bacula.lib.parser.sql.ParseSqlFileSet;
+import br.com.uktech.bmt.bacula.lib.parser.sql.ParseSqlJob;
+import br.com.uktech.bmt.bacula.lib.parser.sql.ParseSqlPool;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import org.slf4j.LoggerFactory;
 
@@ -346,4 +355,170 @@ public class BaculaConsole5 extends AbstractBaculaConsole implements BaculaConso
         }
         return types;
     }
+
+    @Override
+    public String executeSql(String sql) {
+        StringBuilder sb = new StringBuilder(".sql query=\"");
+        sb.append(sql);
+        sb.append("\"");
+        String receivedData = "";
+        this.logger.debug(sb.toString());
+        try {
+            receivedData = this.getConnection().sendAndReceive(sb.toString());
+        } catch (IOException | InterruptedException | BaculaInvalidDataSize | BaculaNoInteger | BaculaCommandException ex) {
+            this.logger.error(ex.getLocalizedMessage());
+        }
+        this.logger.trace("Received data: " + receivedData);
+        return receivedData;
+    }
+
+    @Override
+    public BaculaSqlJob getSqlJob(Long id) {
+        return getSqlJob(new BaculaSqlJob(id));
+    }
+    
+    @Override
+    public BaculaSqlJob getSqlJob(BaculaSqlJob job) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("SELECT ");
+        sb.append("jobid, job, name, type, level, clientid, "
+                + "jobstatus, schedtime, starttime, endtime, "
+                + "realendtime, jobtdate, volsessionid, volsessiontime, "
+                + "jobfiles, jobbytes, readbytes, joberrors, jobmissingfiles, "
+                + "poolid, filesetid, priorjobid, purgedfiles, "
+                + "hasbase, hascache, reviewed, comment ");
+        sb.append("FROM ");
+        sb.append("job ");
+        sb.append("WHERE ");
+        sb.append(" (jobid = ").append(job.getId()).append(") ");
+        sb.append("LIMIT 1");
+        this.logger.trace(sb.toString());
+        String receivedData = executeSql(sb.toString());
+        this.logger.debug("Dados Recebidos: {}",receivedData);
+        if(receivedData != null) {
+            if (!receivedData.trim().isEmpty()) {
+                job = new ParseSqlJob().parseJob(receivedData, job);
+                job.setClient(getSqlClient(job.getClient().getId()));
+                job.setPool(getSqlPool(job.getPool().getId()));
+                job.setFileset(getSqlFileSet(job.getFileset().getId()));
+            }
+            if (job.getId() == null) {
+                job = null;
+            }
+        } else {
+            job = null;
+        }
+        
+        return job;
+    }
+    
+    @Override
+    public BaculaSqlClient getSqlClient(Long id) {
+        return getSqlClient(new BaculaSqlClient(id));
+    }
+
+    @Override
+    public BaculaSqlClient getSqlClient(BaculaSqlClient client) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("SELECT ");
+        sb.append("clientid, name, \'###\', uname, \'###\', autoprune, fileretention, jobretention ");
+        sb.append("FROM ");
+        sb.append("client ");
+        sb.append("WHERE ");
+        sb.append(" (clientid = ").append(client.getId()).append(") ");
+        sb.append("LIMIT 1");
+        this.logger.trace(sb.toString());
+        String receivedData = executeSql(sb.toString());
+        if(receivedData != null) {
+            if (!receivedData.trim().isEmpty()) {
+                client = new ParseSqlClient().parseClient(receivedData, client);
+            }
+        } else {
+            client.setId(null);
+        }
+        if (client.getId() == null) {
+            client = null;
+        }
+        return client;
+    }
+
+    @Override
+    public BaculaSqlPool getSqlPool(Long id) {
+        return getSqlPool(new BaculaSqlPool(id));
+    }
+
+    @Override
+    public BaculaSqlPool getSqlPool(BaculaSqlPool pool) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("SELECT ");
+        sb.append("poolid, name, numvols, maxvols, useonce, usecatalog, ");
+        sb.append("acceptanyvolume, volretention, voluseduration, maxvoljobs, ");
+        sb.append("maxvolfiles, maxvolbytes, autoprune, recycle, actiononpurge, ");
+        sb.append("pooltype, labeltype, labelformat, enabled, scratchpoolid, ");
+        sb.append("recyclepoolid, nextpoolid, migrationhighbytes, ");
+        sb.append("migrationlowbytes, migrationtime ");
+        sb.append("FROM ");
+        sb.append("pool ");
+        sb.append("WHERE ");
+        sb.append("(poolid = ").append(pool.getId()).append(") ");
+        sb.append("LIMIT 1");
+        this.logger.trace(sb.toString());
+        String receivedData = executeSql(sb.toString());
+        if(receivedData != null) {
+            if (!receivedData.trim().isEmpty()) {
+                pool = new ParseSqlPool().parsePool(receivedData, pool);
+            }
+        } else {
+            pool.setId(null);
+        }
+        if (pool.getId() == null) {
+            pool = null;
+        }
+        this.logger.trace(String.valueOf(pool));
+        return pool;
+    }
+
+    @Override
+    public BaculaSqlFileSet getSqlFileSet(Long id) {
+        return getSqlFileSet(new BaculaSqlFileSet(id));
+    }
+
+    @Override
+    public BaculaSqlFileSet getSqlFileSet(BaculaSqlFileSet fileset) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("SELECT ");
+        sb.append("filesetid, fileset, md5, createtime ");
+        sb.append("FROM ");
+        sb.append("fileset ");
+        sb.append("WHERE ");
+        sb.append("(filesetid = ").append(fileset.getId()).append(") ");
+        sb.append("LIMIT 1");
+        this.logger.trace(sb.toString());
+        String receivedData = executeSql(sb.toString());
+        if(receivedData != null) { 
+            if (!receivedData.trim().isEmpty()) {
+                fileset = new ParseSqlFileSet().parseFileSet(receivedData, fileset);
+            }
+        } else {
+            fileset.setId(null);
+        }
+        if (fileset.getId() == null) {
+            fileset = null;
+        }
+        return fileset;
+    }
+
+    @Override
+    public BaculaDotStatusClientRunning getDotStatusClientRunning(String client) {
+        BaculaDotStatusClientRunning statusClientRunning = null;
+        String receivedData = "";
+        try {
+            receivedData = this.getConnection().sendAndReceive(Constants.Connection.DotCommands.STATUS_CLIENT+client+" running");
+            statusClientRunning = new ParseDotStatusClient().parse(receivedData);
+        } catch (IOException | InterruptedException | BaculaInvalidDataSize | BaculaNoInteger | BaculaCommandException ex) {
+            this.logger.error(ex.getLocalizedMessage());
+        }
+        return statusClientRunning;
+    }
+
 }

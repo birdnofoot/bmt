@@ -79,6 +79,7 @@ public interface Constants {
             public static String STORAGE = ".storage";
             public static String TYPES = ".types";
             public static String DEFAULT_JOBS = ".defaults job=";
+            public static String STATUS_CLIENT = ".status client=";
         }
 
         interface Commands {

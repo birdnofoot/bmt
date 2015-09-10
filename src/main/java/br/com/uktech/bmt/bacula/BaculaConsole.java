@@ -29,11 +29,15 @@ import br.com.uktech.bmt.bacula.bean.dot.BaculaDotFileset;
 import br.com.uktech.bmt.bacula.bean.dot.BaculaDotJob;
 import br.com.uktech.bmt.bacula.bean.dot.BaculaDotLevel;
 import br.com.uktech.bmt.bacula.bean.dot.BaculaDotPool;
+import br.com.uktech.bmt.bacula.bean.dot.BaculaDotStatusClientRunning;
 import br.com.uktech.bmt.bacula.bean.dot.BaculaDotStorage;
 import br.com.uktech.bmt.bacula.bean.dot.BaculaDotType;
+import br.com.uktech.bmt.bacula.bean.sql.BaculaSqlClient;
+import br.com.uktech.bmt.bacula.bean.sql.BaculaSqlFileSet;
+import br.com.uktech.bmt.bacula.bean.sql.BaculaSqlJob;
+import br.com.uktech.bmt.bacula.bean.sql.BaculaSqlPool;
 import br.com.uktech.bmt.bacula.exceptions.BaculaAuthenticationException;
 import br.com.uktech.bmt.bacula.exceptions.BaculaCommunicationException;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -87,4 +91,25 @@ public interface BaculaConsole {
     public List<BaculaDotStorage> getListDotStorage();
     
     public List<BaculaDotType> getListDotTypes();
+    
+    public String executeSql(String sql);
+    
+    public BaculaSqlJob getSqlJob(Long id);
+    
+    public BaculaSqlJob getSqlJob(BaculaSqlJob job);
+    
+    public BaculaSqlClient getSqlClient(Long id);
+    
+    public BaculaSqlClient getSqlClient(BaculaSqlClient client);
+    
+    public BaculaSqlPool getSqlPool(Long id);
+    
+    public BaculaSqlPool getSqlPool(BaculaSqlPool pool);
+    
+    public BaculaSqlFileSet getSqlFileSet(Long id);
+    
+    public BaculaSqlFileSet getSqlFileSet(BaculaSqlFileSet fileset);
+    
+    public BaculaDotStatusClientRunning getDotStatusClientRunning(String client);
+    
 }

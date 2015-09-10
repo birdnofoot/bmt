@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package br.com.uktech.bmt.bacula.bean.sql;
+package br.com.uktech.bmt.dto.bacula.sql;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -24,18 +24,18 @@ import java.util.Objects;
  * 
  * @author João Paulo Siqueira <joao.siqueira@uktech.com.br>
  */
-public abstract class AbstractBaculaSql implements Serializable {
-
+public abstract class AbstractBaculaSqlDto implements Serializable {
+    
     private Long id;
 
-    public AbstractBaculaSql() {
+    public AbstractBaculaSqlDto() {
         this.id = null;
     }
     
-    public AbstractBaculaSql(Long id) {
+    public AbstractBaculaSqlDto(Long id) {
         this.id = id;
     }
-    
+
     public Long getId() {
         return id;
     }
@@ -47,7 +47,7 @@ public abstract class AbstractBaculaSql implements Serializable {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 83 * hash + Objects.hashCode(this.id);
+        hash = 29 * hash + Objects.hashCode(this.id);
         return hash;
     }
 
@@ -59,7 +59,7 @@ public abstract class AbstractBaculaSql implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final AbstractBaculaSql other = (AbstractBaculaSql) obj;
+        final AbstractBaculaSqlDto other = (AbstractBaculaSqlDto) obj;
         if (!Objects.equals(this.id, other.id)) {
             return false;
         }
@@ -68,7 +68,7 @@ public abstract class AbstractBaculaSql implements Serializable {
 
     @Override
     public String toString() {
-        return "AbstractBaculaSql{" + "id=" + id + '}';
+        return "AbstractBaculaSqlDto{" + "id=" + id + '}';
     }
     
 }

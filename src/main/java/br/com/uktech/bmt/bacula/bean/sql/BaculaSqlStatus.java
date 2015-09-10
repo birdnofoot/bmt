@@ -17,37 +17,48 @@
 
 package br.com.uktech.bmt.bacula.bean.sql;
 
-import java.io.Serializable;
 import java.util.Objects;
 
 /**
  * 
  * @author João Paulo Siqueira <joao.siqueira@uktech.com.br>
  */
-public abstract class AbstractBaculaSql implements Serializable {
-
-    private Long id;
-
-    public AbstractBaculaSql() {
-        this.id = null;
-    }
+public class BaculaSqlStatus {
     
-    public AbstractBaculaSql(Long id) {
-        this.id = id;
-    }
-    
-    public Long getId() {
-        return id;
+    private String jobstatus;
+    private String jobstatuslong;
+    private Integer severity;
+
+    public String getJobstatus() {
+        return jobstatus;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setJobstatus(String jobstatus) {
+        this.jobstatus = jobstatus;
+    }
+
+    public String getJobstatuslong() {
+        return jobstatuslong;
+    }
+
+    public void setJobstatuslong(String jobstatuslong) {
+        this.jobstatuslong = jobstatuslong;
+    }
+
+    public Integer getSeverity() {
+        return severity;
+    }
+
+    public void setSeverity(Integer severity) {
+        this.severity = severity;
     }
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 83 * hash + Objects.hashCode(this.id);
+        int hash = 3;
+        hash = 41 * hash + Objects.hashCode(this.jobstatus);
+        hash = 41 * hash + Objects.hashCode(this.jobstatuslong);
+        hash = 41 * hash + Objects.hashCode(this.severity);
         return hash;
     }
 
@@ -59,8 +70,14 @@ public abstract class AbstractBaculaSql implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final AbstractBaculaSql other = (AbstractBaculaSql) obj;
-        if (!Objects.equals(this.id, other.id)) {
+        final BaculaSqlStatus other = (BaculaSqlStatus) obj;
+        if (!Objects.equals(this.jobstatus, other.jobstatus)) {
+            return false;
+        }
+        if (!Objects.equals(this.jobstatuslong, other.jobstatuslong)) {
+            return false;
+        }
+        if (!Objects.equals(this.severity, other.severity)) {
             return false;
         }
         return true;
@@ -68,7 +85,7 @@ public abstract class AbstractBaculaSql implements Serializable {
 
     @Override
     public String toString() {
-        return "AbstractBaculaSql{" + "id=" + id + '}';
+        return "BaculaSqlStatus{" + "jobstatus=" + jobstatus + ", jobstatuslong=" + jobstatuslong + ", severity=" + severity + '}';
     }
     
 }

@@ -20,6 +20,7 @@ import br.com.uktech.bmt.dto.bacula.BaculaEstimateDto;
 import br.com.uktech.bmt.dto.bacula.BaculaFormEstimateDto;
 import br.com.uktech.bmt.dto.bacula.BaculaFormRunJobDto;
 import br.com.uktech.bmt.dto.bacula.BaculaJobDefaultDto;
+import br.com.uktech.bmt.dto.bacula.sql.BaculaSqlJobDto;
 import br.com.uktech.bmt.dto.model.director.DirectorDto;
 import java.util.List;
 
@@ -36,4 +37,5 @@ public interface BaculaJobDefaultService {
     public BaculaEstimateDto getEstimate(DirectorDto baculadirdto, BaculaFormEstimateDto formEstimate);
     public Long runJob(DirectorDto baculadirdto, BaculaFormRunJobDto formRunJobDto);
     public BaculaFormRunJobDto getFormRunJob(DirectorDto baculadirdto, String jobDefaultName);
+    public BaculaSqlJobDto getBaculaSqlJobDtoById(DirectorDto baculadirdto, Long jobId);
 }

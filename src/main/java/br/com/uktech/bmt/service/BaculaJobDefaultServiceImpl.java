@@ -28,6 +28,7 @@ import br.com.uktech.bmt.bacula.bean.dot.BaculaDotLevel;
 import br.com.uktech.bmt.bacula.bean.dot.BaculaDotPool;
 import br.com.uktech.bmt.bacula.bean.dot.BaculaDotStorage;
 import br.com.uktech.bmt.bacula.bean.dot.BaculaDotType;
+import br.com.uktech.bmt.bacula.bean.sql.BaculaSqlJob;
 import br.com.uktech.bmt.bacula.exceptions.BaculaAuthenticationException;
 import br.com.uktech.bmt.bacula.exceptions.BaculaCommunicationException;
 import br.com.uktech.bmt.bacula.exceptions.BaculaDirectorNotSupported;
@@ -42,6 +43,7 @@ import br.com.uktech.bmt.dto.bacula.dot.BaculaDotLevelDto;
 import br.com.uktech.bmt.dto.bacula.dot.BaculaDotPoolDto;
 import br.com.uktech.bmt.dto.bacula.dot.BaculaDotStorageDto;
 import br.com.uktech.bmt.dto.bacula.dot.BaculaDotTypeDto;
+import br.com.uktech.bmt.dto.bacula.sql.BaculaSqlJobDto;
 import br.com.uktech.bmt.dto.model.director.DirectorDto;
 import java.util.ArrayList;
 import java.util.List;
@@ -218,5 +220,24 @@ public class BaculaJobDefaultServiceImpl implements BaculaJobDefaultService{
         }
         
         return formrunjob;
+    }
+
+    @Override
+    public BaculaSqlJobDto getBaculaSqlJobDtoById(DirectorDto baculadirdto, Long jobId) {
+        BaculaSqlJobDto jobDto = new BaculaSqlJobDto();
+        BaculaSqlJob job = null;
+        try{
+            BaculaConsole console = consoleFactory.getConsole(baculadirdto.getName(), baculadirdto.getHostname(), baculadirdto.getPort(), baculadirdto.getPassword());
+            if (console != null) {
+                job = console.getSqlJob(jobId);
+                if(job != null) {
+                    mapper.map(job, jobDto);
+                }
+            }
+        } catch (BaculaCommunicationException | BaculaAuthenticationException | BaculaDirectorNotSupported ex) {
+            this.logger.error(ex.getLocalizedMessage());
+            return null;
+        }
+        return jobDto;
     }
 }

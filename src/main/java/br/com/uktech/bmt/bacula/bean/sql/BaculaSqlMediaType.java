@@ -17,37 +17,46 @@
 
 package br.com.uktech.bmt.bacula.bean.sql;
 
-import java.io.Serializable;
 import java.util.Objects;
 
 /**
  * 
  * @author João Paulo Siqueira <joao.siqueira@uktech.com.br>
  */
-public abstract class AbstractBaculaSql implements Serializable {
-
-    private Long id;
-
-    public AbstractBaculaSql() {
-        this.id = null;
-    }
+public class BaculaSqlMediaType extends AbstractBaculaSql {
     
-    public AbstractBaculaSql(Long id) {
-        this.id = id;
-    }
-    
-    public Long getId() {
-        return id;
+    private String mediatype;
+    private Integer readonly;
+
+    public BaculaSqlMediaType() {
+        super();
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public BaculaSqlMediaType(Long id) {
+        super(id);
+    }
+
+    public String getMediatype() {
+        return mediatype;
+    }
+
+    public void setMediatype(String mediatype) {
+        this.mediatype = mediatype;
+    }
+
+    public Integer getReadonly() {
+        return readonly;
+    }
+
+    public void setReadonly(Integer readonly) {
+        this.readonly = readonly;
     }
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 83 * hash + Objects.hashCode(this.id);
+        int hash = super.hashCode();
+        hash = 71 * hash + Objects.hashCode(this.mediatype);
+        hash = 71 * hash + Objects.hashCode(this.readonly);
         return hash;
     }
 
@@ -56,11 +65,17 @@ public abstract class AbstractBaculaSql implements Serializable {
         if (obj == null) {
             return false;
         }
+        if (super.equals(obj) == false) {
+            return false;
+        }
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final AbstractBaculaSql other = (AbstractBaculaSql) obj;
-        if (!Objects.equals(this.id, other.id)) {
+        final BaculaSqlMediaType other = (BaculaSqlMediaType) obj;
+        if (!Objects.equals(this.mediatype, other.mediatype)) {
+            return false;
+        }
+        if (!Objects.equals(this.readonly, other.readonly)) {
             return false;
         }
         return true;
@@ -68,7 +83,6 @@ public abstract class AbstractBaculaSql implements Serializable {
 
     @Override
     public String toString() {
-        return "AbstractBaculaSql{" + "id=" + id + '}';
+        return "BaculaSqlMediaType{" + super.toString() + ", mediatype=" + mediatype + ", readonly=" + readonly + '}';
     }
-    
 }

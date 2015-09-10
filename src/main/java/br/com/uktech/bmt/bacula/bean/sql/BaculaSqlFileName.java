@@ -17,37 +17,36 @@
 
 package br.com.uktech.bmt.bacula.bean.sql;
 
-import java.io.Serializable;
 import java.util.Objects;
 
 /**
  * 
  * @author João Paulo Siqueira <joao.siqueira@uktech.com.br>
  */
-public abstract class AbstractBaculaSql implements Serializable {
-
-    private Long id;
-
-    public AbstractBaculaSql() {
-        this.id = null;
-    }
+public class BaculaSqlFileName extends AbstractBaculaSql {
     
-    public AbstractBaculaSql(Long id) {
-        this.id = id;
-    }
-    
-    public Long getId() {
-        return id;
+    private String name;
+
+    public BaculaSqlFileName() {
+        super();
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public BaculaSqlFileName(Long id) {
+        super(id);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 83 * hash + Objects.hashCode(this.id);
+        int hash = super.hashCode();
+        hash = 41 * hash + Objects.hashCode(this.name);
         return hash;
     }
 
@@ -56,11 +55,14 @@ public abstract class AbstractBaculaSql implements Serializable {
         if (obj == null) {
             return false;
         }
+        if (super.equals(obj) == false) {
+            return false;
+        }
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final AbstractBaculaSql other = (AbstractBaculaSql) obj;
-        if (!Objects.equals(this.id, other.id)) {
+        final BaculaSqlFileName other = (BaculaSqlFileName) obj;
+        if (!Objects.equals(this.name, other.name)) {
             return false;
         }
         return true;
@@ -68,7 +70,6 @@ public abstract class AbstractBaculaSql implements Serializable {
 
     @Override
     public String toString() {
-        return "AbstractBaculaSql{" + "id=" + id + '}';
+        return "BaculaSqlFileName{" + super.toString() + ", name=" + name + '}';
     }
-    
 }
