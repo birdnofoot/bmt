@@ -26,6 +26,8 @@ import br.com.uktech.bmt.bacula.bean.sql.BaculaSqlVolSession;
 import br.com.uktech.bmt.bacula.lib.Constants;
 import br.com.uktech.bmt.bacula.lib.Utils;
 import br.com.uktech.bmt.bacula.lib.parser.Parser;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.slf4j.Logger;
@@ -113,4 +115,33 @@ public class ParseSqlJob {
         } while(temp != null);
         return job;
     }
+    
+    public List<Long> parseId(String input) {
+        this.logger.trace("Mensagem recebida: {}", input);
+        
+        List<Long> id = new ArrayList<>();
+        
+        Parser p = new Parser(input.replaceAll(";", "\n"));
+        Pattern pat = null;
+        Matcher mat = null;
+        String temp = null;
+        
+        do{
+            temp = p.getToken(Constants.CR);
+            if(temp != null) {
+                temp = temp.trim();
+                this.logger.trace("Processando Linha: {}", temp);
+                if(temp.matches(ParseSqlClient.REGEX_SQL_ID)) {
+                    pat = Pattern.compile(ParseSqlClient.REGEX_SQL_ID);
+                    mat = pat.matcher(temp);
+                    if(mat.find()) {
+                        id.add(Long.parseLong(mat.group(1)));
+                    }
+                }
+            }
+        } while(temp != null);
+        
+        return id;
+    }
+    
 }

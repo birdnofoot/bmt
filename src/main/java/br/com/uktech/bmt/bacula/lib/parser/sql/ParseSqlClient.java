@@ -20,6 +20,8 @@ package br.com.uktech.bmt.bacula.lib.parser.sql;
 import br.com.uktech.bmt.bacula.bean.sql.BaculaSqlClient;
 import br.com.uktech.bmt.bacula.lib.Constants;
 import br.com.uktech.bmt.bacula.lib.parser.Parser;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.slf4j.Logger;
@@ -34,6 +36,7 @@ public class ParseSqlClient {
     private final Logger logger = LoggerFactory.getLogger(ParseSqlClient.class);
     
     public static final String REGEX_SQL_CLIENT_ID = "(\\d*)\\t([\\w|\\-]*)\\t###\\t([\\,|\\)|\\(|\\s|\\.|\\w|\\-]*)\\t###\\t(\\d*)\\t(\\d*)\\t(\\d*)\\t";
+    public static final String REGEX_SQL_ID = "\\#\\#\\#\\t*(\\d*)\\t*\\#\\#\\#";
     
     public BaculaSqlClient parseClient(String input) {
         return parseClient(input, new BaculaSqlClient());
@@ -68,5 +71,33 @@ public class ParseSqlClient {
             }
         } while(temp != null);
         return client;
+    }
+    
+    public List<Long> parseId(String input) {
+        this.logger.trace("Mensagem recebida: {}", input);
+        
+        List<Long> id = new ArrayList<>();
+        
+        Parser p = new Parser(input.replaceAll(";", "\n"));
+        Pattern pat = null;
+        Matcher mat = null;
+        String temp = null;
+        
+        do{
+            temp = p.getToken(Constants.CR);
+            if(temp != null) {
+                temp = temp.trim();
+                this.logger.trace("Processando Linha: {}", temp);
+                if(temp.matches(ParseSqlClient.REGEX_SQL_ID)) {
+                    pat = Pattern.compile(ParseSqlClient.REGEX_SQL_ID);
+                    mat = pat.matcher(temp);
+                    if(mat.find()) {
+                        id.add(Long.parseLong(mat.group(1)));
+                    }
+                }
+            }
+        } while(temp != null);
+        
+        return id;
     }
 }

@@ -17,9 +17,14 @@
 package br.com.uktech.bmt.bacula;
 
 import br.com.uktech.bmt.bacula.bean.BaculaClient;
+import br.com.uktech.bmt.bacula.bean.BaculaDirectory;
 import br.com.uktech.bmt.bacula.bean.BaculaEstimate;
+import br.com.uktech.bmt.bacula.bean.BaculaFile;
+import br.com.uktech.bmt.bacula.bean.BaculaFileVersions;
 import br.com.uktech.bmt.bacula.bean.BaculaJob;
 import br.com.uktech.bmt.bacula.bean.BaculaJobDefault;
+import br.com.uktech.bmt.bacula.bean.BaculaRestoreFileDefault;
+import br.com.uktech.bmt.bacula.bean.BaculaRestoreJob;
 import br.com.uktech.bmt.bacula.bean.BaculaStatusClient;
 import br.com.uktech.bmt.bacula.bean.BaculaStatusDirector;
 import br.com.uktech.bmt.bacula.bean.BaculaStatusStorage;
@@ -35,6 +40,7 @@ import br.com.uktech.bmt.bacula.bean.dot.BaculaDotType;
 import br.com.uktech.bmt.bacula.bean.sql.BaculaSqlClient;
 import br.com.uktech.bmt.bacula.bean.sql.BaculaSqlFileSet;
 import br.com.uktech.bmt.bacula.bean.sql.BaculaSqlJob;
+import br.com.uktech.bmt.bacula.bean.sql.BaculaSqlJobToRestore;
 import br.com.uktech.bmt.bacula.bean.sql.BaculaSqlPool;
 import br.com.uktech.bmt.bacula.exceptions.BaculaAuthenticationException;
 import br.com.uktech.bmt.bacula.exceptions.BaculaCommunicationException;
@@ -98,9 +104,15 @@ public interface BaculaConsole {
     
     public BaculaSqlJob getSqlJob(BaculaSqlJob job);
     
+    public List<BaculaSqlJob> getListSqlJob();
+    
+    public List<BaculaSqlJobToRestore> getListSqlJobToRestore(String clientName);
+    
     public BaculaSqlClient getSqlClient(Long id);
     
     public BaculaSqlClient getSqlClient(BaculaSqlClient client);
+    
+    public List<BaculaSqlClient> getListSqlClient();
     
     public BaculaSqlPool getSqlPool(Long id);
     
@@ -111,5 +123,22 @@ public interface BaculaConsole {
     public BaculaSqlFileSet getSqlFileSet(BaculaSqlFileSet fileset);
     
     public BaculaDotStatusClientRunning getDotStatusClientRunning(String client);
+    
+    public String getListJobsRestore(Long jobid);
+    
+    public BaculaDirectory getRootDirectory(String listJobs, Integer limit, Integer offset);
+    
+    public BaculaDirectory browseDirectory(String listJobs, Long pathid, String client, Integer limit, Integer offset);
+    
+    public List<BaculaFileVersions> getFileVersions(String listJobs, Long pathid, Long fileNameId, String client);
+    
+    public BaculaRestoreFileDefault getBaculaRestoreFileDefault();
+    
+    public Boolean createTableRestore( List<BaculaDirectory> selectedDirectories, List<BaculaFile> selectedFiles, List<BaculaFileVersions> selectedFileVersions, String listJobs);
+    
+    //public BaculaRestoreJob runRestore(String client, String storage, String where, String when);
+    public BaculaRestoreJob runRestore(BaculaRestoreFileDefault restoreFileDefault);
+    
+    public void cleanTable();
     
 }

@@ -19,9 +19,14 @@ package br.com.uktech.bmt.bacula.console;
 import br.com.uktech.bmt.bacula.lib.Connection;
 import br.com.uktech.bmt.bacula.BaculaConsole;
 import br.com.uktech.bmt.bacula.bean.BaculaClient;
+import br.com.uktech.bmt.bacula.bean.BaculaDirectory;
 import br.com.uktech.bmt.bacula.bean.BaculaEstimate;
+import br.com.uktech.bmt.bacula.bean.BaculaFile;
+import br.com.uktech.bmt.bacula.bean.BaculaFileVersions;
 import br.com.uktech.bmt.bacula.bean.BaculaJob;
 import br.com.uktech.bmt.bacula.bean.BaculaJobDefault;
+import br.com.uktech.bmt.bacula.bean.BaculaRestoreFileDefault;
+import br.com.uktech.bmt.bacula.bean.BaculaRestoreJob;
 import br.com.uktech.bmt.bacula.bean.BaculaStatusClient;
 import br.com.uktech.bmt.bacula.bean.BaculaStatusDirector;
 import br.com.uktech.bmt.bacula.bean.BaculaStatusStorage;
@@ -37,19 +42,24 @@ import br.com.uktech.bmt.bacula.bean.dot.BaculaDotType;
 import br.com.uktech.bmt.bacula.bean.sql.BaculaSqlClient;
 import br.com.uktech.bmt.bacula.bean.sql.BaculaSqlFileSet;
 import br.com.uktech.bmt.bacula.bean.sql.BaculaSqlJob;
+import br.com.uktech.bmt.bacula.bean.sql.BaculaSqlJobToRestore;
 import br.com.uktech.bmt.bacula.bean.sql.BaculaSqlPool;
 import br.com.uktech.bmt.bacula.exceptions.BaculaCommandException;
 import br.com.uktech.bmt.bacula.exceptions.BaculaInvalidDataSize;
 import br.com.uktech.bmt.bacula.exceptions.BaculaNoInteger;
 import br.com.uktech.bmt.bacula.lib.Constants;
+import br.com.uktech.bmt.bacula.lib.parser.ParseDirectories;
 import br.com.uktech.bmt.bacula.lib.parser.ParseEstimate;
 import br.com.uktech.bmt.bacula.lib.parser.ParseJobs;
 import br.com.uktech.bmt.bacula.lib.parser.ParseJobsDefault;
 import br.com.uktech.bmt.bacula.lib.parser.ParseListClient;
+import br.com.uktech.bmt.bacula.lib.parser.ParseRestoreFileDefault;
+import br.com.uktech.bmt.bacula.lib.parser.ParseRestoreJob;
 import br.com.uktech.bmt.bacula.lib.parser.ParseStatusClient;
 import br.com.uktech.bmt.bacula.lib.parser.ParseStatusDirector;
 import br.com.uktech.bmt.bacula.lib.parser.ParseStatusStorage;
 import br.com.uktech.bmt.bacula.lib.parser.ParseStorage;
+import br.com.uktech.bmt.bacula.lib.parser.ParseTableRestore;
 import br.com.uktech.bmt.bacula.lib.parser.dot.ParseDotClients;
 import br.com.uktech.bmt.bacula.lib.parser.dot.ParseDotFilesets;
 import br.com.uktech.bmt.bacula.lib.parser.dot.ParseDotJobs;
@@ -61,10 +71,13 @@ import br.com.uktech.bmt.bacula.lib.parser.dot.ParseDotTypes;
 import br.com.uktech.bmt.bacula.lib.parser.sql.ParseSqlClient;
 import br.com.uktech.bmt.bacula.lib.parser.sql.ParseSqlFileSet;
 import br.com.uktech.bmt.bacula.lib.parser.sql.ParseSqlJob;
+import br.com.uktech.bmt.bacula.lib.parser.sql.ParseSqlJobToRestore;
 import br.com.uktech.bmt.bacula.lib.parser.sql.ParseSqlPool;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.slf4j.LoggerFactory;
 
 
@@ -413,6 +426,67 @@ public class BaculaConsole5 extends AbstractBaculaConsole implements BaculaConso
     }
     
     @Override
+    public List<BaculaSqlJob> getListSqlJob() {
+        List<BaculaSqlJob> jobs = new ArrayList<>();
+        List<Long> ids = new ArrayList<>();
+        StringBuilder sb = new StringBuilder();
+        sb.append("SELECT ");
+        sb.append("'###',jobid,'###;' ");
+        sb.append("FROM ");
+         sb.append("job ");
+        sb.append("ORDER ");
+        sb.append("BY ");
+        sb.append("jobid ");
+        this.logger.trace(sb.toString());
+        String receivedData = executeSql(sb.toString());
+        
+        if(receivedData != null) {
+            if (!receivedData.trim().isEmpty()) {
+                ids = new ParseSqlJob().parseId(receivedData);
+                if(!ids.isEmpty()) {
+                    for (Long id : ids) {
+                        jobs.add(getSqlJob(id));
+                    }
+                    if (jobs.isEmpty()) {
+                        jobs = null;
+                    }
+                }
+            }
+        } else {
+            jobs = null;
+        }
+        return jobs;
+    }
+    
+    @Override
+    public List<BaculaSqlJobToRestore> getListSqlJobToRestore(String clientName) {
+        List<BaculaSqlJobToRestore> jobs = new ArrayList<>();
+        StringBuilder sb = new StringBuilder();
+        sb.append("SELECT ");
+        sb.append("Job.Jobid, Job.StartTime, Job.Level, Job.Name, '###' ");
+        sb.append("FROM ");
+        sb.append("job ");
+        sb.append("JOIN Client USING (ClientId) WHERE ");
+        sb.append("Job.JobStatus IN ('T') AND Job.Type='B' AND Client.Name='"+clientName.trim()+"' ");
+        sb.append("ORDER BY StartTime DESC");
+        this.logger.trace(sb.toString());
+        String receivedData = executeSql(sb.toString());
+        this.logger.debug("Dados Recebidos: {}",receivedData);
+        if(receivedData != null) {
+            if (!receivedData.trim().isEmpty()) {
+                jobs = new ParseSqlJobToRestore().parseJobs(receivedData);
+            }
+            if (jobs.isEmpty()) {
+                jobs = null;
+            }
+        } else {
+            jobs = null;
+        }
+        
+        return jobs;
+    }
+    
+    @Override
     public BaculaSqlClient getSqlClient(Long id) {
         return getSqlClient(new BaculaSqlClient(id));
     }
@@ -440,6 +514,38 @@ public class BaculaConsole5 extends AbstractBaculaConsole implements BaculaConso
             client = null;
         }
         return client;
+    }
+    
+    @Override
+    public List<BaculaSqlClient> getListSqlClient() {
+        List<BaculaSqlClient> clients = new ArrayList<>();
+        List<Long> ids = new ArrayList<>();
+        StringBuilder sb = new StringBuilder();
+        sb.append("SELECT ");
+        sb.append("'###',clientid,'###;' ");
+        sb.append("FROM ");
+        sb.append("client ");
+        sb.append("ORDER ");
+        sb.append("BY ");
+        sb.append("clientid ");
+        this.logger.trace(sb.toString());
+        String receivedData = executeSql(sb.toString());
+        if(receivedData != null) {
+            if (!receivedData.trim().isEmpty()) {
+                ids = new ParseSqlClient().parseId(receivedData);
+                if(!ids.isEmpty()) {
+                    for (Long id : ids) {
+                        clients.add(getSqlClient(id));
+                    }
+                    if (clients.isEmpty()) {
+                        clients = null;
+                    }
+                }
+            }
+        } else {
+            clients = null;
+        }
+        return clients;
     }
 
     @Override
@@ -519,6 +625,148 @@ public class BaculaConsole5 extends AbstractBaculaConsole implements BaculaConso
             this.logger.error(ex.getLocalizedMessage());
         }
         return statusClientRunning;
+    }
+    
+    @Override
+    public String getListJobsRestore(Long jobid) {
+        String receivedData = "";
+        String listJobs = null;
+        try {
+            receivedData = this.getConnection().sendAndReceive(".bvfs_get_jobids jobid=" + jobid + " all");
+            if(!receivedData.isEmpty()) {
+                listJobs = new ParseDirectories().parseListJobids(receivedData);
+            }
+        } catch (IOException | InterruptedException | BaculaInvalidDataSize | BaculaNoInteger | BaculaCommandException ex) {
+            this.logger.error(ex.getLocalizedMessage());
+        }
+        return listJobs;
+    }
+    
+    @Override
+    public BaculaDirectory getRootDirectory(String listJobs, Integer limit, Integer offset) {
+        BaculaDirectory directory = new BaculaDirectory();
+        String receivedData = "";
+        try {
+            if(!listJobs.isEmpty()) {
+                logger.trace(".bvfs_lsdir jobid=$ path=\"\" limit=$ offset=$", listJobs,limit, offset);
+                
+                receivedData = this.getConnection().sendAndReceive(".bvfs_lsdir jobid="+listJobs+" path=\"\" limit="+limit+" offset="+offset);
+                
+                directory = new ParseDirectories().parseRootDirectory(receivedData);
+                receivedData = this.getConnection().sendAndReceive(".bvfs_lsfiles jobid="+listJobs+" path=\"\" limit="+limit+" offset="+offset);
+                if(receivedData!=null) {
+                    if(!receivedData.isEmpty()) {
+                        new ParseDirectories().parseFiles(receivedData, directory);
+                    }
+                }
+            }
+        } catch (IOException | InterruptedException | BaculaInvalidDataSize | BaculaNoInteger | BaculaCommandException ex) {
+            this.logger.error(ex.getLocalizedMessage());
+        }
+        return directory;
+    }
+
+    @Override
+    public BaculaDirectory browseDirectory(String listJobs, Long pathid, String client, Integer limit, Integer offset) {
+        BaculaDirectory directory = new BaculaDirectory();
+        String receivedData = "";
+        try {
+            if(!listJobs.isEmpty() && pathid != null) {
+                
+                receivedData = this.getConnection().sendAndReceive(".bvfs_lsdir jobid=" + listJobs + " pathid=" + pathid + " limit=" + limit + " offset=" + offset);
+                
+                directory = new ParseDirectories().parseDirectories(receivedData);
+                
+                receivedData = this.getConnection().sendAndReceive(".bvfs_lsfiles jobid=" + listJobs+" pathid=" + pathid + " limit=" + limit + " offset=" + offset);
+                
+                if(receivedData!=null) {
+                    if(!receivedData.isEmpty()) {
+                        new ParseDirectories().parseFiles(receivedData, directory);
+                        for(int i=0; i<directory.getFiles().size();i++) {
+                            directory.getFiles().get(i).setFileVersions(getFileVersions(listJobs, pathid,directory.getFiles().get(i).getFileNameId() , client));
+                        }
+                    }
+                }
+            }
+        } catch (IOException | InterruptedException | BaculaInvalidDataSize | BaculaNoInteger | BaculaCommandException ex) {
+            this.logger.error(ex.getLocalizedMessage());
+        }
+        //".bvfs_lsdir jobid=72 pathid=5 limit=500 offset=0"
+        logger.trace("diretorio: {}"+directory);
+        return directory;
+    }
+
+    @Override
+    public List<BaculaFileVersions> getFileVersions(String listJobs, Long pathid, Long fileNameId, String client) {
+        List<BaculaFileVersions> fileVersions = null;
+        String receivedData = "";
+        try {
+            if(!listJobs.isEmpty() && pathid != null && fileNameId != null && client != null) {
+                receivedData = this.getConnection().sendAndReceive(".bvfs_versions jobid=" + listJobs + " pathid=" + pathid + " fnid=" + fileNameId + " client=" + client + " versions");
+                if(receivedData != null) {
+                    if(!receivedData.isEmpty()) {
+                        fileVersions = new ParseDirectories().parseFileVersions(receivedData);
+                    }
+                }
+            }
+        } catch (IOException | InterruptedException | BaculaInvalidDataSize | BaculaNoInteger | BaculaCommandException ex) {
+            this.logger.error(ex.getLocalizedMessage());
+        }
+        return fileVersions;
+    }
+
+    @Override
+    public BaculaRestoreFileDefault getBaculaRestoreFileDefault() {
+        BaculaRestoreFileDefault restoreFileDefault = null;
+        try {
+            String receivedData = this.getConnection().sendAndReceive(".defaults job=\"RestoreFiles\"");
+            restoreFileDefault = new ParseRestoreFileDefault().parse(receivedData);
+        } catch (IOException | InterruptedException | BaculaInvalidDataSize | BaculaNoInteger | BaculaCommandException ex) {
+            Logger.getLogger(BaculaConsole5.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return restoreFileDefault;
+    }
+
+    @Override
+    public Boolean createTableRestore(List<BaculaDirectory> selectedDirectories, List<BaculaFile> selectedFiles, List<BaculaFileVersions> selectedFileVersions, String listJobs) {
+        Boolean createTable = false;
+        try{
+            String command = new ParseTableRestore().createCommand(selectedDirectories, selectedFiles, selectedFileVersions, listJobs);
+            if(command != null) {
+                if(!command.isEmpty()) {
+                    String receivedData = this.getConnection().sendAndReceive(command);
+                    createTable = receivedData.contains("OK");
+                }
+            }
+        } catch (IOException | InterruptedException | BaculaInvalidDataSize | BaculaNoInteger | BaculaCommandException ex) {
+            Logger.getLogger(BaculaConsole5.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return createTable;
+    }
+
+    @Override
+    public void cleanTable() {
+        try {
+            String receivedData = this.getConnection().sendAndReceive(".bvfs_cleanup path=b2123");
+        } catch (IOException | InterruptedException | BaculaInvalidDataSize | BaculaNoInteger | BaculaCommandException ex) {
+            Logger.getLogger(BaculaConsole5.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @Override
+    public BaculaRestoreJob runRestore(BaculaRestoreFileDefault restoreFileDefault) {
+        BaculaRestoreJob restoreJob = null;
+        logger.trace("BaculaRestoreFileDefault: {}",restoreFileDefault);
+        try {
+            if(restoreFileDefault != null) {
+                String receivedData = this.getConnection().sendAndReceive("restore client=" + restoreFileDefault.getClient() + " storage=" + restoreFileDefault.getStorage() + " where=\"" + restoreFileDefault.getWhere() + "\" file=\"?b2123\" when=\"" + restoreFileDefault.getWhen() + "\" done yes");
+                restoreJob = new ParseRestoreJob().parse(receivedData);
+                logger.trace("Fez a Restauração");
+            }
+        } catch (IOException | InterruptedException | BaculaInvalidDataSize | BaculaNoInteger | BaculaCommandException ex) {
+            Logger.getLogger(BaculaConsole5.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return restoreJob;
     }
 
 }
