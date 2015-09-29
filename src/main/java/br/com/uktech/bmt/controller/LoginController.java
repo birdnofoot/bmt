@@ -53,4 +53,10 @@ public class LoginController implements BasicModuleController {
         return mav;
     }
     
+    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    public ModelAndView logout() {
+        ModelAndView mav = new ModelAndView("login/index");
+        mav.addObject("logout", "logout");
+        return mav;
+    }
 }

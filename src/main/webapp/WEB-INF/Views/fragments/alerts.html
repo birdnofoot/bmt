@@ -26,17 +26,33 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <meta name="author" content="Uhlig &amp; Korovsky Tecnologia Ltda - ME"/>
 
         <link rel="icon" href="../../../images/favicon.gif" th:href="@{/images/favicon.gif}"/>
+        <link rel="stylesheet" href="../../../css/bootstrap.css" th:href="@{/css/bootstrap.min.css}"/>
+        <link rel="stylesheet" href="../../../css/bmt.css" th:href="@{/css/bmt.css}"/>
     </head>
     <body>
-        <div th:fragment="alert (type, title, message)" role="alert">
+        <div th:fragment="alert (type, title, message)" role="alertdialog">
             <div th:switch="${type}"> 
-                <span th:case="success"><strong th:text=" ${title}">Alert Title</strong></span>
-                <span th:case="info"><strong th:text=" ${title}">Alert Title</strong></span>
-                <span th:case="warning"><strong th:text=" ${title}">Alert Title</strong></span>
-                <span th:case="danger"><strong th:text=" ${title}">Alert Title</strong></span>
+                <div th:case="success" class="alert alert-success fade in">
+                    <h4 th:text="${title}">Alert Message Success</h4>
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <p th:text="${message}">Test</p>
+                </div>
+                <div th:case="info" class="alert alert-info fade in">
+                    <h4 th:text="${title}">Alert Message Info</h4>
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <p th:text="${message}">Test</p>
+                </div>
+                <div th:case="warning" class="alert alert-warning fade in">
+                    <h4 th:text="${title}">Alert Message Warning</h4>
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <p th:text="${message}">Test</p>
+                </div>
+                <div th:case="danger" class="alert alert-danger fade in">
+                    <h4 th:text="${title}">Alert Message Danger</h4>
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <p th:text="${message}">Test</p>
+                </div>
             </div>
-            <hr class="message-inner-separator"/>
-            <p th:text="${message}">Test</p>
         </div>
     </body>
 </html>

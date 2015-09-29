@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.security.authentication.AccountExpiredException;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -29,6 +30,7 @@ import org.springframework.security.authentication.LockedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.SpringSecurityMessageSource;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -50,6 +52,8 @@ public class BMTAuthenticationProvider implements AuthenticationProvider {
     @Autowired
     private PasswordEncoder passwordEncoder;
     
+    protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
+    
     @Override
     public Authentication authenticate(Authentication a) throws AuthenticationException {
         String username = a.getName();
@@ -58,41 +62,48 @@ public class BMTAuthenticationProvider implements AuthenticationProvider {
         UserDetails user = this.userDetails.loadUserByUsername(username);
         
         if (user == null) {
-            logger.debug("{exception.account.notfound}");
-            throw new BadCredentialsException("{exception.account.notfound}");
+            String message = this.messages.getMessage("AbstractUserDetailsAuthenticationProvider.badCredentials", "AbstractUserDetailsAuthenticationProvider.badCredentials");
+            logger.debug(message);
+            throw new BadCredentialsException(message);
         }
         
         if (!user.getUsername().equals(username))
         {
-            logger.debug("{exception.account.wrongpassword}");
-            throw new BadCredentialsException("{exception.account.wrongpassword}");
+            String message = this.messages.getMessage("AbstractUserDetailsAuthenticationProvider.badCredentials", "AbstractUserDetailsAuthenticationProvider.badCredentials");
+            logger.debug(message);
+            throw new BadCredentialsException(message);
         }
             
         if (!passwordEncoder.matches(password, user.getPassword()))
         {
-            logger.debug("{exception.account.wrongpassword}");
+            String message = this.messages.getMessage("AbstractUserDetailsAuthenticationProvider.badCredentials", "AbstractUserDetailsAuthenticationProvider.badCredentials");
+            logger.debug(message);
             logger.debug("Password: " + passwordEncoder.encode(password));
-            throw new BadCredentialsException("{exception.account.wrongpassword}");
+            throw new BadCredentialsException(message);
         }
         
         if (user.isEnabled() == false) {
-            logger.debug("{exception.account.disabled}");
-            throw new DisabledException("{exception.account.disabled}");
+            String message = this.messages.getMessage("AbstractUserDetailsAuthenticationProvider.disabled", "AbstractUserDetailsAuthenticationProvider.disabled");
+            logger.debug(message);
+            throw new DisabledException(message);
         }
         
         if (user.isAccountNonLocked() == false) {
-            logger.debug("{exception.account.locked}");
-            throw new LockedException("{exception.account.locked}");
+            String message = this.messages.getMessage("AbstractUserDetailsAuthenticationProvider.locked", "AbstractUserDetailsAuthenticationProvider.locked");
+            logger.debug(message);
+            throw new LockedException(message);
         }
         
         if (user.isAccountNonExpired() == false) {
-            logger.debug("{exception.account.expired}");
-            throw new AccountExpiredException("{exception.account.expired}");
+            String message = this.messages.getMessage("AbstractUserDetailsAuthenticationProvider.expired", "AbstractUserDetailsAuthenticationProvider.expired");
+            logger.debug(message);
+            throw new AccountExpiredException(message);
         }
         
         if (user.isCredentialsNonExpired() == false) {
-            logger.debug("{exception.account.credentials.expired}");
-            throw new CredentialsExpiredException("{exception.account.credentials.expired}");
+            String message = this.messages.getMessage("AbstractUserDetailsAuthenticationProvider.credentialsExpired", "AbstractUserDetailsAuthenticationProvider.credentialsExpired");
+            logger.debug(message);
+            throw new CredentialsExpiredException(message);
         }
 
         logger.info("login in " + user.getUsername());

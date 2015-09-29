@@ -26,15 +26,67 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <meta name="author" content="Uhlig &amp; Korovsky Tecnologia Ltda - ME"/>
 
         <link rel="icon" href="../../../images/favicon.gif" th:href="@{/images/favicon.gif}"/>
+        <link rel="stylesheet" href="../../../css/bootstrap.css" th:href="@{/css/bootstrap.min.css}"/>
+        <link rel="stylesheet" href="../../../css/bmt.css" th:href="@{/css/bmt.css}"/>
     </head>
     <body>
-        <nav role="navigation" th:fragment="navbar">
-            <form accept-charset="UTF-8" role="form" th:action="@{/logout}" method="post">
-                <button id="logoutbutton" name="logoutbutton" type="submit">Logout</button>
-            </form>
-            <a href="#" th:href="@{/}">Home</a>
-            <a href="#" th:href="@{/system/user}" sec:authorize="hasAnyRole('ROLE_SYSTEM_USER_READ')">System/User</a>
-            <a href="#" th:href="@{/bacula/director}" sec:authorize="hasAnyRole('ROLE_BACULA_DIRECTOR_READ')">Bacula/Director</a>
+        
+        <nav th:fragment="navbar" class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a role="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar-collapse-1" aria-expanded="false">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+                    <a class="navbar-brand" href="#" th:href="@{/}">Brand</a>
+                </div>
+                <div class="collapse navbar-collapse" id="bs-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                        <li th:classappend="${category == 'dashboard' ? 'active' : ''}"><a href="#" th:href="@{/}" th:text="#{navbar.dashboard[dashboard]}">Dashboard</a></li>
+                        <li class="dropdown" th:classappend="${category == 'system' ? 'active' : ''}" sec:authorize="hasAnyRole('ROLE_SYSTEM_USER_READ', 'ROLE_SYSTEM_MODULE_READ')">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#" >
+                                <span th:text="#{navbar.system[system]}">System</span>
+                                <span class="glyphicon glyphicon-chevron-down"></span>
+                            </a>
+                            <ul id="dropdown-menu-system" class="dropdown-menu">
+                                <li role="presentation" sec:authorize="hasRole('ROLE_SYSTEM_USER_READ')">
+                                    <a role="menuitem" tabindex="-1" href="#" th:href="@{/system/user}" th:text="#{navbar.system[user]}">User Management</a>
+                                </li>
+                                <li role="presentation" sec:authorize="hasRole('ROLE_SYSTEM_MODULE_READ')">
+                                    <a role="menuitem" tabindex="-1" href="#" th:href="@{/system/module}" th:text="#{navbar.system[module]}">System Module Management</a>
+                                </li>
+                                
+                            </ul>
+                        </li>
+                        <li th:classappend="${category == 'bacula' ? 'active' : ''}" sec:authorize="hasAnyRole('ROLE_BACULA_DIRECTOR_READ')">
+                            <a href="#" th:href="@{/bacula/director}" th:text="#{navbar.bacula[director]}">Director</a>
+                        </li>
+                    </ul>
+                    <form class="navbar-form navbar-right" accept-charset="UTF-8" role="form" th:action="@{/logout}" method="post">
+                        <button type="submit" class="btn btn-default" th:text="#{navbar.command[logout]}">Logout</button>
+                    </form>
+                </div>
+            </div>
         </nav>
+        
+        <div th:fragment="navbar-dashboard(directors)" >
+            <!--tr th:if="${page != null}" th:each="user : ${page}"-->
+            <ul class="nav nav-pills nav-stacked">
+                <li role="presentation" class="active"><a href="#">Home</a></li>
+                <li role="presentation" th:if="${directors != null}" th:each="director : ${directors}">
+                    <a href="#" data-toggle="collapse" th:attr="data-target='#'+${director.name}" class="collapsed">
+                        <span class="glyphicon glyphicon-cloud"></span><span th:text="${director.name}">Director</span><span class="caret pull-right"></span>
+                    </a>
+                    <div th:id="${director.name}" class="collapse" style="height: 0px;">
+                        <ul class="nav nav-list">
+                            <li><a href="#" th:text="${director.id}">Submenu1.1</a></li>
+                            <li><a href="#">Submenu1.2</a></li>
+                            <li><a href="#">Submenu1.3</a></li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </div>
     </body>
 </html>
