@@ -1,9 +1,3 @@
-package br.com.uktech.bmt.bacula.bean.dot;
-
-
-import java.io.Serializable;
-import java.util.Objects;
-
 /*
  * Copyright (C) 2015 Uhlig e Korovsky Tecnologia Ltda - ME
  *
@@ -20,6 +14,11 @@ import java.util.Objects;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+package br.com.uktech.bmt.bacula.bean.dot;
+
+import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * 

@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package br.com.uktech.bmt.bacula.bean;
+package br.com.uktech.bmt.dto.bacula;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -26,7 +26,7 @@ import java.util.Objects;
  * 
  * @author João Paulo Siqueira <joao.siqueira@uktech.com.br>
  */
-public class BaculaRestoreFile implements Serializable {
+public class BaculaRestoreFileDto implements Serializable {
     
     private Long device;
     private Long inode;
@@ -45,11 +45,11 @@ public class BaculaRestoreFile implements Serializable {
     private Long flags;
     private Long data;
     
-    public BaculaRestoreFile(){
+    public BaculaRestoreFileDto(){
         
     }
     
-    public BaculaRestoreFile(Map<String, Long> stat) {
+    public BaculaRestoreFileDto(Map<String, Long> stat) {
         this.device = stat.get("Device");
         this.inode = stat.get("Inode");
         this.mode = stat.get("Mode");
@@ -67,7 +67,7 @@ public class BaculaRestoreFile implements Serializable {
         this.flags = stat.get("Flags");
         this.data = stat.get("Data");
     }
-
+    
     public Long getDevice() {
         return device;
     }
@@ -198,23 +198,23 @@ public class BaculaRestoreFile implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 79 * hash + Objects.hashCode(this.device);
-        hash = 79 * hash + Objects.hashCode(this.inode);
-        hash = 79 * hash + Objects.hashCode(this.mode);
-        hash = 79 * hash + Objects.hashCode(this.numberOfHardLinks);
-        hash = 79 * hash + Objects.hashCode(this.userIdOfOwner);
-        hash = 79 * hash + Objects.hashCode(this.groupIdOfOwner);
-        hash = 79 * hash + Objects.hashCode(this.deviceType);
-        hash = 79 * hash + Objects.hashCode(this.totalSizeInBytes);
-        hash = 79 * hash + Objects.hashCode(this.blocksize);
-        hash = 79 * hash + Objects.hashCode(this.numberOfBlocksAllocated);
-        hash = 79 * hash + Objects.hashCode(this.timeOfLastAccess);
-        hash = 79 * hash + Objects.hashCode(this.timeOfLastModification);
-        hash = 79 * hash + Objects.hashCode(this.timeOfLastChange);
-        hash = 79 * hash + Objects.hashCode(this.linkFi);
-        hash = 79 * hash + Objects.hashCode(this.flags);
-        hash = 79 * hash + Objects.hashCode(this.data);
+        int hash = 3;
+        hash = 97 * hash + Objects.hashCode(this.device);
+        hash = 97 * hash + Objects.hashCode(this.inode);
+        hash = 97 * hash + Objects.hashCode(this.mode);
+        hash = 97 * hash + Objects.hashCode(this.numberOfHardLinks);
+        hash = 97 * hash + Objects.hashCode(this.userIdOfOwner);
+        hash = 97 * hash + Objects.hashCode(this.groupIdOfOwner);
+        hash = 97 * hash + Objects.hashCode(this.deviceType);
+        hash = 97 * hash + Objects.hashCode(this.totalSizeInBytes);
+        hash = 97 * hash + Objects.hashCode(this.blocksize);
+        hash = 97 * hash + Objects.hashCode(this.numberOfBlocksAllocated);
+        hash = 97 * hash + Objects.hashCode(this.timeOfLastAccess);
+        hash = 97 * hash + Objects.hashCode(this.timeOfLastModification);
+        hash = 97 * hash + Objects.hashCode(this.timeOfLastChange);
+        hash = 97 * hash + Objects.hashCode(this.linkFi);
+        hash = 97 * hash + Objects.hashCode(this.flags);
+        hash = 97 * hash + Objects.hashCode(this.data);
         return hash;
     }
 
@@ -226,7 +226,7 @@ public class BaculaRestoreFile implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final BaculaRestoreFile other = (BaculaRestoreFile) obj;
+        final BaculaRestoreFileDto other = (BaculaRestoreFileDto) obj;
         if (!Objects.equals(this.device, other.device)) {
             return false;
         }
@@ -280,7 +280,7 @@ public class BaculaRestoreFile implements Serializable {
 
     @Override
     public String toString() {
-        return "BaculaRestoreFile{" + "device=" + device + ", inode=" + inode + ", mode=" + mode + ", numberOfHardLinks=" + numberOfHardLinks + ", userIdOfOwner=" + userIdOfOwner + ", groupIdOfOwner=" + groupIdOfOwner + ", deviceType=" + deviceType + ", totalSizeInBytes=" + totalSizeInBytes + ", blocksize=" + blocksize + ", numberOfBlocksAllocated=" + numberOfBlocksAllocated + ", timeOfLastAccess=" + timeOfLastAccess + ", timeOfLastModification=" + timeOfLastModification + ", timeOfLastChange=" + timeOfLastChange + ", linkFi=" + linkFi + ", flags=" + flags + ", data=" + data + '}';
+        return "BaculaRestoreFileDto{" + "device=" + device + ", inode=" + inode + ", mode=" + mode + ", numberOfHardLinks=" + numberOfHardLinks + ", userIdOfOwner=" + userIdOfOwner + ", groupIdOfOwner=" + groupIdOfOwner + ", deviceType=" + deviceType + ", totalSizeInBytes=" + totalSizeInBytes + ", blocksize=" + blocksize + ", numberOfBlocksAllocated=" + numberOfBlocksAllocated + ", timeOfLastAccess=" + timeOfLastAccess + ", timeOfLastModification=" + timeOfLastModification + ", timeOfLastChange=" + timeOfLastChange + ", linkFi=" + linkFi + ", flags=" + flags + ", data=" + data + '}';
     }
-
+    
 }
