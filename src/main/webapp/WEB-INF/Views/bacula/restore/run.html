@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<!--
+Copyright (C) 2015 Uhlig e Korovsky Tecnologia Ltda - ME
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<html>
+    <head th:replace="fragments/header :: head">
+        <title th:text="#{system.name}">Bacula Manager Tool</title>
+
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <meta name="description" content=""/>
+        <meta name="author" content="Uhlig &amp; Korovsky Tecnologia Ltda - ME"/>
+
+        <link rel="icon" href="../../../images/favicon.gif" th:href="@{/images/favicon.gif}"/>
+        <link rel="stylesheet" href="../../../css/bootstrap.css" th:href="@{/css/bootstrap.min.css}"/>
+        <link rel="stylesheet" href="../../../css/bmt.css" th:href="@{/css/bmt.css}"/>
+    </head>
+    <body>
+        <div id="container">
+            <nav th:replace="fragments/navbar :: navbar">&nbsp;</nav>
+            <div class="container-fluid">
+                <div class="row">
+                    
+                    <div class="col-md-4">
+                        
+                        <a class="btn btn-default" href="#" th:href="@{'/bacula/restore/'+${directorId}+'/'+${clientName}+'/'+${jobId}+'/'+${listJobs}+'/'+${current.pathId}}" role="button">
+                            Return
+                        </a>
+                        
+                    </div>
+                    
+                    <div class="col-md-4">
+                        
+                    </div>
+                    
+                    <div class="col-md-4">
+                        
+                    </div>
+                    
+                </div>
+                
+                <br/>
+                
+                <div class="row">
+                    
+                    <div class="col-md-8">
+                        <ul class="list-group">
+                            <li class="list-group-item">Form</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <ul class="list-group">
+                            <li class="list-group-item">Selected</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                
+                <div class="row">
+                    
+                    <div class="col-md-8">
+                        
+                        <form action="#" th:action="@{'/bacula/restore/run/'+${directorId}+'/'+${clientName}+'/'+${jobId}}" th:object="${fileDefaultDto}" method="post">
+                            <fieldset>
+                                <input type="text" hidden="hidden" th:value="*{job}" th:field="*{job}" />
+                                <input type="text" hidden="hidden" th:value="*{pool}" th:field="*{pool}" />
+                                <input type="text" hidden="hidden" th:value="*{messages}" th:field="*{messages}" />
+                                <input type="text" hidden="hidden" th:value="*{client}" th:field="*{client}" />
+                                <input type="text" hidden="hidden" th:value="*{level}" th:field="*{level}" />
+                                <input type="text" hidden="hidden" th:value="*{type}" th:field="*{type}" />
+                                <input type="text" hidden="hidden" th:value="*{fileset}" th:field="*{fileset}" />
+                                <input type="checkbox" hidden="hidden" th:checked="*{enabled}" th:field="*{enabled}" />
+                                <input type="text" hidden="hidden" th:value="*{catalog}" th:field="*{catalog}" />
+                                <div>
+                                    <label th:text="'Storage'">storage</label>
+                                    <div>
+                                        <select th:field="*{storage}" >
+                                            <option type="text" th:each="s : ${storages}" th:value="${s.storage}" th:text="${s.storage}"/>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label th:text="'Where'">where</label>
+                                    <div>
+                                        <input type="text" th:value="*{where}" th:field="*{where}" />
+                                    </div>
+                                </div>
+                                <div>
+                                    <label th:text="'When'">port</label>
+                                    <div>
+                                        <input type="text" th:value="*{when}" th:field="*{when}" />
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <div>
+                                <div>
+                                    <button type="submit" name="action" value="submit">Run</button>
+                                </div>
+                            </div>
+                        </form>
+                        
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <table class="table table-striped">
+                            <tr>
+                                <th>Type</th>
+                                <th>Name</th>
+                                <th>Action</th>
+                            </tr>
+                            <tr th:each="sd : ${selectedDirectories}">
+                                <td th:text="'Paste'"/>
+                                <td th:text="${sd.path}"/>
+                                <td th:text="'Remover'"/>
+                            </tr>
+                            <tr th:each="sf : ${selectedFiles}">
+                                <td th:text="'File'"/>
+                                <td th:text="${sf.path}"/>
+                                <td th:text="'Remover'"/>
+                            </tr>
+                            <tr th:each="sfv : ${selectedFileVersions}">
+                                <td th:text="'FileVersion'"/>
+                                <td th:text="${sfv.path}+' '+${sfv.jobId}"/>
+                                <td th:text="'Remover'"/>
+                            </tr>
+                        </table>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer th:replace="fragments/footer :: footer">
+            <script src="../../../js/jquery-2.1.4.js" th:src="@{/js/jquery-2.1.4.min.js}"></script>
+            <script src="../../../js/bootstrap.js" th:src="@{/js/bootstrap.min.js}"></script>
+            <script src="../../../js/bmt.js" th:src="@{/js/bmt.js}"></script>
+            <p>Footer</p>
+        </footer>
+    </body>
+</html>

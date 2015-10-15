@@ -91,11 +91,12 @@ public class DirectorController extends BasicBaculaController {
     }
     
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
-    public ModelAndView edit(HttpServletRequest request, HttpServletResponse response) {
+    public ModelAndView edit(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
         logger.debug("Edit a Bacula Director ");
         ModelAndView mav;
         mav = new ModelAndView("bacula/director/edit");
-
+        DirectorDto baculadir = baculaDirectorService.getBaculaDirectorById(id);
+        mav.addObject("baculadir", baculadir);
         return mav;
     }
     
@@ -103,8 +104,15 @@ public class DirectorController extends BasicBaculaController {
     public ModelAndView update(@Valid DirectorDto baculadir, BindingResult result, HttpServletRequest request, HttpServletResponse response) {
         logger.debug("Update a Bacula Director ");
         ModelAndView mav;
-        mav = new ModelAndView("bacula/director/edit");
-
+        if (result.hasErrors()) {
+            mav = new ModelAndView("bacula/director/edit");
+            mav.addObject("org.springframework.validation.BindingResult.baculadir", result);
+            mav.addObject("baculadir", baculadir);
+        } else {
+            DirectorDto baculadirdto = baculaDirectorService.save(baculadir);
+            mav = new ModelAndView("redirect:/bacula/director");
+            mav.addObject("save", baculadirdto);
+        }
         return mav;
     }
     
@@ -113,7 +121,23 @@ public class DirectorController extends BasicBaculaController {
         logger.debug("Deleting a Bacula Director ");
         ModelAndView mav;
         mav = new ModelAndView("bacula/director/delete");
-        
+        DirectorDto baculadir = baculaDirectorService.getBaculaDirectorById(id);
+        mav.addObject("baculadir", baculadir);
+        return mav;
+    }
+    
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    public ModelAndView deleteDirector(@Valid DirectorDto baculadir, BindingResult result, HttpServletRequest request, HttpServletResponse response) {
+        logger.debug("Update a Bacula Director ");
+        ModelAndView mav;
+        if (result.hasErrors()) {
+            mav = new ModelAndView("bacula/director/edit");
+            mav.addObject("org.springframework.validation.BindingResult.baculadir", result);
+            mav.addObject("baculadir", baculadir);
+        } else {
+            baculaDirectorService.delete(baculadir);
+            mav = new ModelAndView("redirect:/bacula/director");
+        }
         return mav;
     }
     

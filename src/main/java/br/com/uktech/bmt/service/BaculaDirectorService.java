@@ -35,5 +35,5 @@ public interface BaculaDirectorService {
     public List<DirectorDto> searchAllBaculaDirectors();
     //Adicionar Dto do baculaSD
     public BaculaStatusDirector getStatusDirector(DirectorDto baculadirdto);
-    
+    public void delete(DirectorDto baculadirdto);
 }

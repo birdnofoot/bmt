@@ -33,6 +33,7 @@ public class BaculaFileDto implements Serializable {
     private Long jobId;
     private BaculaRestoreFileDto LStat;
     private String path;    //Nome do Arquivo ou diretório
+    private Boolean selected;
     
     BaculaDirectoryDto parent;
     
@@ -102,6 +103,14 @@ public class BaculaFileDto implements Serializable {
         this.fileVersions = fileVersions;
     }
 
+    public Boolean getSelected() {
+        return selected;
+    }
+
+    public void setSelected(Boolean selected) {
+        this.selected = selected;
+    }
+    
     @Override
     public int hashCode() {
         int hash = 7;
@@ -113,6 +122,7 @@ public class BaculaFileDto implements Serializable {
         hash = 89 * hash + Objects.hashCode(this.path);
         hash = 89 * hash + Objects.hashCode(this.parent);
         hash = 89 * hash + Objects.hashCode(this.fileVersions);
+        hash = 89 * hash + Objects.hashCode(this.selected);
         return hash;
     }
 
@@ -149,12 +159,15 @@ public class BaculaFileDto implements Serializable {
         if (!Objects.equals(this.fileVersions, other.fileVersions)) {
             return false;
         }
+        if (!Objects.equals(this.selected, other.selected)) {
+            return false;
+        }
         return true;
     }
 
     @Override
     public String toString() {
-        return "BaculaFileDto{" + "pathId=" + pathId + ", fileNameId=" + fileNameId + ", fileId=" + fileId + ", jobId=" + jobId + ", LStat=" + LStat + ", path=" + path + ", parent=" + parent + ", fileVersions=" + fileVersions + '}';
+        return "BaculaFileDto{" + "pathId=" + pathId + ", fileNameId=" + fileNameId + ", fileId=" + fileId + ", jobId=" + jobId + ", LStat=" + LStat + ", path=" + path + ", parent=" + parent + ", fileVersions=" + fileVersions + ", selected=" + selected + '}';
     }
     
 }

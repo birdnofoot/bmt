@@ -20,12 +20,14 @@ import br.com.uktech.bmt.bacula.BaculaConsole;
 import br.com.uktech.bmt.bacula.BaculaConsoleFactory;
 import br.com.uktech.bmt.bacula.bean.BaculaClient;
 import br.com.uktech.bmt.bacula.bean.BaculaStatusClient;
+import br.com.uktech.bmt.bacula.bean.dot.BaculaDotClient;
 import br.com.uktech.bmt.bacula.bean.dot.BaculaDotStatusClientRunning;
 import br.com.uktech.bmt.bacula.exceptions.BaculaAuthenticationException;
 import br.com.uktech.bmt.bacula.exceptions.BaculaCommunicationException;
 import br.com.uktech.bmt.bacula.exceptions.BaculaDirectorNotSupported;
 import br.com.uktech.bmt.dto.bacula.BaculaClientDto;
 import br.com.uktech.bmt.dto.bacula.BaculaStatusClientDto;
+import br.com.uktech.bmt.dto.bacula.dot.BaculaDotClientDto;
 import br.com.uktech.bmt.dto.bacula.dot.BaculaDotStatusClientRunningDto;
 import br.com.uktech.bmt.dto.model.director.DirectorDto;
 import java.util.ArrayList;
@@ -118,6 +120,29 @@ public class BaculaClientServiceImpl implements BaculaClientService{
             this.logger.error(ex.getLocalizedMessage());
         }
         return statusClientRunningDto;
+    }
+
+    @Override
+    public List<BaculaDotClientDto> getListDotClientDtos(DirectorDto baculadirdto) {
+        List<BaculaDotClientDto> clientDtos = new ArrayList<>();
+        List<BaculaDotClient> clients = null;
+        BaculaDotClientDto clientDto;
+        try{
+            BaculaConsole console = consoleFactory.getConsole(baculadirdto.getName(), baculadirdto.getHostname(), baculadirdto.getPort(), baculadirdto.getPassword());
+            if (console != null) {
+                clients = console.getListDotClients();
+                if(clients != null) {
+                    for (BaculaDotClient client : clients) {
+                        clientDto = new BaculaDotClientDto();
+                        mapper.map(client,clientDto);
+                        clientDtos.add(clientDto);
+                    }
+                }
+            }
+        } catch (BaculaCommunicationException | BaculaAuthenticationException | BaculaDirectorNotSupported ex) {
+            this.logger.error(ex.getLocalizedMessage());
+        }
+        return clientDtos;
     }
     
 }

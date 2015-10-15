@@ -32,7 +32,7 @@ public class ParseRestoreJob {
     
     private final Logger logger = LoggerFactory.getLogger(ParseRestoreJob.class);
     
-    public static final String REGEX_RESTORE_JOB_LIST = "^\\w*\\s{8,}\\w*\\s{8,}\\w*$";
+    public static final String REGEX_RESTORE_JOB_LIST = "(\\w+)\\s+(\\w+)\\s+(\\w+)";
     public static final String REGEX_RESTORE_JOB_FILE_NUMBERS = "(\\d*)\\sfiles\\sselected\\sto\\sbe\\srestored\\.";
     public static final String REGEX_RESTORE_JOB_JOB_QUEUED = "Job\\squeued\\.\\sJobId=(\\d*)";
     
@@ -47,21 +47,32 @@ public class ParseRestoreJob {
         Matcher mat = null;
         String temp = null;
         
+        Boolean aux = false;
+        
         do{
             temp = p.getToken(Constants.CR);
             if(temp != null) {
                 temp = temp.trim();
                 this.logger.trace("Processando Linha: {}", temp);
                 
-                if(temp.matches(ParseRestoreJob.REGEX_RESTORE_JOB_LIST)) {
-                    pat = Pattern.compile(ParseRestoreJob.REGEX_RESTORE_JOB_LIST);
-                    mat = pat.matcher(temp);
-                    if(mat.find()) {
-                        baculaRestoreJob.getVolumes().add(mat.group(1));
-                        baculaRestoreJob.getStorages().add(mat.group(2));
-                        baculaRestoreJob.getSdDevices().add(mat.group(3));
+                if(temp.matches("\\={2,}")) {
+                    aux = true;
+                }
+                if(temp.matches("Volumes\\smarked\\swith")) {
+                    aux = false;
+                }
+                if(aux) {
+                    if(temp.matches(ParseRestoreJob.REGEX_RESTORE_JOB_LIST)) {
+                        pat = Pattern.compile(ParseRestoreJob.REGEX_RESTORE_JOB_LIST);
+                        mat = pat.matcher(temp);
+                        if(mat.find()) {
+                            baculaRestoreJob.getVolumes().add(mat.group(1));
+                            baculaRestoreJob.getStorages().add(mat.group(2));
+                            baculaRestoreJob.getSdDevices().add(mat.group(3));
+                        }
                     }
-                } else if(temp.matches(ParseRestoreJob.REGEX_RESTORE_JOB_FILE_NUMBERS)) {
+                }
+                if(temp.matches(ParseRestoreJob.REGEX_RESTORE_JOB_FILE_NUMBERS)) {
                     pat = Pattern.compile(ParseRestoreJob.REGEX_RESTORE_JOB_FILE_NUMBERS);
                     mat = pat.matcher(temp);
                     if(mat.find()) {

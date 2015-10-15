@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<!--
+Copyright (C) 2015 Uhlig e Korovsky Tecnologia Ltda - ME
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<html>
+    <head th:replace="fragments/header :: head">
+        <title th:text="#{system.name}">Bacula Manager Tool</title>
+
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <meta name="description" content=""/>
+        <meta name="author" content="Uhlig &amp; Korovsky Tecnologia Ltda - ME"/>
+
+        <link rel="icon" href="../../../images/favicon.gif" th:href="@{/images/favicon.gif}"/>
+        <link rel="stylesheet" href="../../../css/bootstrap.css" th:href="@{/css/bootstrap.min.css}"/>
+        <link rel="stylesheet" href="../../../css/bmt.css" th:href="@{/css/bmt.css}"/>
+    </head>
+    <body>
+        <div id="container">
+            <nav th:replace="fragments/navbar :: navbar">&nbsp;</nav>
+            <div class="container-fluid">
+                 
+                <div class="row">
+                    
+                    <div class="col-md-4">
+                        
+                        <div class="dropdown">
+                            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <label th:if="${clientName==null}" th:text="Clients" />
+                                <label th:if="${clientName!=null}" th:text="${clientName}" />
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                <li type="text" th:each="c : ${clientDtos}"  th:value="${c.client}"><a href="#" th:href="@{'/bacula/restore/'+${directorId}+'/'+${c.client}}" th:text="${c.client}"/></li>
+                            </ul>
+                        </div>
+                        
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="dropdown">
+                            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <label th:if="${jobId==null}" th:text="Jobs" />
+                                <label th:if="${jobId!=null}" th:text="${jobId}" />
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                <li type="text" th:each="j : ${jobToRestoreDtos}"  th:value="${j.id}"><a href="#" th:href="@{'/bacula/restore/'+${directorId}+'/'+${clientName}+'/'+${j.id}}" th:text="${j.name}+' '+${j.starttime}+' '+${j.id}"/></li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <!--<a class="btn btn-default" th:attrappend="${(directorId!=null)and(clientName!=null)and(jobId!=null) ? disabled=disabled : }" href="#" th:href="@{'/bacula/restore/run/'+${directorId}+'/'+${clientName}+'/'+${listJobs}}" role="button">
+                            Restore
+                        </a>-->
+                        <div th:if="${directorId!=null}and${clientName!=null}and${jobId!=null}">
+                            <div th:if="${selectedDirectories!=null}or${selectedFiles!=null}or${selectedFileVersions!=null}">
+                                <a class="btn btn-default" href="#" th:href="@{'/bacula/restore/run/'+${directorId}+'/'+${clientName}+'/'+${jobId}}" role="button">
+                                    Restore
+                                </a>
+                            </div>
+                        </div>
+                        <div th:if="${directorId==null}or${clientName==null}or${jobId==null}">
+                            <div th:if="${selectedDirectories==null}and${selectedFiles==null}and${selectedFileVersions==null}">
+                                <a class="btn btn-default" href="#" role="button">
+                                    Restore
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                
+                <br/>
+                
+                <div class="row">
+                    
+                    <div class="col-md-8">
+                        <ol class="breadcrumb">
+                            <li><div th:if="${current != null}"><a href="#" th:text="${current.path}" /></div><div th:if="${current == null}">Directory</div></li>
+                        </ol>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <ul class="list-group">
+                            <li class="list-group-item">Selected</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <br/>
+                
+                <div class="row">
+                    
+                    <div class="col-md-8">
+                        
+                        <table class="table table-striped">
+                            <tr>
+                                <th>Type</th>
+                                <th>Name</th>
+                                <th>Size</th>
+                                <th>Date</th>
+                                <th>Action</th>
+                            </tr>
+                            
+                            <div th:if="${current != null}">
+                                
+                                <tr th:if="${current.parent != null}">
+                                    <td th:text="Paste" />
+                                    <td><a href="#" th:text="${current.parent.path}" th:href="@{'/bacula/restore/'+${directorId}+'/'+${clientName}+'/'+${jobId}+'/'+${listJobs}+'/'+${current.parent.pathId}}"/></td>
+                                    <td th:text="${current.parent.LStat.totalSizeInBytes}" />
+                                    <td th:text="${current.parent.LStat.timeOfLastModification}" />
+                                    
+                                </tr>
+                                
+                                <div th:if="${current.child != null}">
+                                    <form id="form"  th:object="${current}" method="post" th:action="@{'/bacula/restore/'+${directorId}+'/'+${clientName}+'/'+${jobId}+'/'+${listJobs}+'/'+${current.pathId}}" >
+                                        <tr th:each="c, ix : ${current.child}">
+                                            
+                                            <td th:text="Paste" />
+                                            <td><a href="#" th:text="${c.path}" th:href="@{'/bacula/restore/'+${directorId}+'/'+${clientName}+'/'+${jobId}+'/'+${listJobs}+'/'+${c.pathId}}"/></td>
+                                            <td th:text="${c.LStat.totalSizeInBytes}" />
+                                            <td th:text="${c.LStat.timeOfLastChange}" />
+                                            <td>
+                                                <fieldset>
+                                                    <input type="hidden" th:field="*{child[__${ix.index}__].pathId}" th:value="${c.pathId}"></input>
+                                                    <input type="hidden" th:field="*{child[__${ix.index}__].jobId}" th:value="${c.jobId}"></input>
+                                                    <input type="checkbox" th:field="*{child[__${ix.index}__].selected}" th:value="${c.selected}" th:checked="${c.selected}" onclick="form.submit();"></input>
+                                                </fieldset>
+                                            </td>
+                                        </tr>
+                                    </form>
+                                </div>
+                                
+                                
+                                <div th:if="${current.files != null}">
+                                    <form id="form2"  th:object="${current}" method="post" th:action="@{'/bacula/restore/'+${directorId}+'/'+${clientName}+'/'+${jobId}+'/'+${listJobs}+'/'+${current.pathId}}" >
+                                        
+                                        <tr th:each="f, idx : ${current.files}">
+
+                                            <td th:text="File" />
+                                            <td th:text="${f.path}" />
+                                            <td th:text="${f.LStat.totalSizeInBytes}" />
+                                            <td th:text="${f.LStat.timeOfLastChange}" />
+
+                                            <td>
+                                                
+                                                <fieldset>
+                                                    <input type="hidden" th:field="*{files[__${idx.index}__].pathId}" th:value="${f.pathId}"></input>
+                                                    <input type="hidden" th:field="*{files[__${idx.index}__].fileId}" th:value="${f.fileId}"></input>
+                                                    <input type="hidden" th:field="*{files[__${idx.index}__].jobId}" th:value="${f.jobId}"></input>
+                                                    <input type="checkbox" th:field="*{files[__${idx.index}__].selected}" th:value="${f.selected}" th:checked="${f.selected}" onclick="form2.submit();"></input>
+                                                </fieldset>
+                                                
+                                                <div class="dropdown">
+                                                    
+                                                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        Versions
+                                                        <span class="caret"></span>
+                                                    </button>
+                                                    
+                                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                                        <li type="text" th:each="v, i : ${f.fileVersions}">
+                                                            
+                                                            <input type="hidden" th:field="*{files[__${idx.index}__].fileVersions[__${i.index}__].pathId}" th:value="${v.pathId}" ></input>
+                                                            <input type="hidden" th:field="*{files[__${idx.index}__].fileVersions[__${i.index}__].fileId}" th:value="${v.fileId}" ></input>
+                                                            <input type="hidden" th:field="*{files[__${idx.index}__].fileVersions[__${i.index}__].jobId}" th:value="${v.jobId}" ></input>
+                                                            <input type="hidden" th:field="*{files[__${idx.index}__].fileVersions[__${i.index}__].fileNameId}" th:value="${v.fileNameId}" ></input>
+                                                            <input type="checkbox" th:field="*{files[__${idx.index}__].fileVersions[__${i.index}__].selected}" th:value="${v.selected}" th:checked="${v.selected}" th:text="' Size: '+${v.LStat.totalSizeInBytes}+' JobId: '+${v.jobId}+' VolName: '+${v.volName}+' Date '+${v.LStat.timeOfLastChange}" onclick="submit();"></input>
+                                                            <label/>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                
+                                            </td>
+                                            
+                                        </tr>
+                                        
+                                    </form>
+                                </div>
+                                
+                            </div>
+                        
+                        </table>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <table class="table table-striped">
+                            <tr>
+                                <th>Type</th>
+                                <th>Name</th>
+                                <th>Action</th>
+                            </tr>
+                            <tr th:each="sd : ${selectedDirectories}">
+                                <td th:text="'Paste'"/>
+                                <td th:text="${sd.path}"/>
+                                <td th:text="'Remover'"/>
+                            </tr>
+                            <tr th:each="sf : ${selectedFiles}">
+                                <td th:text="'File'"/>
+                                <td th:text="${sf.path}"/>
+                                <td th:text="'Remover'"/>
+                            </tr>
+                            <tr th:each="sfv : ${selectedFileVersions}">
+                                <td th:text="'FileVersion'"/>
+                                <td th:text="${sfv.path}+' '+${sfv.jobId}"/>
+                                <td th:text="'Remover'"/>
+                            </tr>
+                        </table>
+                        
+                    </div>
+                    
+                </div>
+                
+           </div>
+        </div>
+        
+        <footer th:replace="fragments/footer :: footer">
+            <script src="../../../js/jquery-2.1.4.js" th:src="@{/js/jquery-2.1.4.min.js}"></script>
+            <script src="../../../js/bootstrap.js" th:src="@{/js/bootstrap.min.js}"></script>
+            <script src="../../../js/bmt.js" th:src="@{/js/bmt.js}"></script>
+            <p>Footer</p>
+        </footer>
+        
+    </body>
+</html>

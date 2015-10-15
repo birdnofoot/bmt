@@ -52,7 +52,7 @@ public class PersistenceConfig {
     public EntityManagerFactory entityManagerFactory() 
     {
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-        vendorAdapter.setGenerateDdl(false);
+        vendorAdapter.setGenerateDdl(true);
         vendorAdapter.setShowSql(false);
 
         Properties properties = new Properties();

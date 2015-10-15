@@ -18,6 +18,7 @@ package br.com.uktech.bmt.service;
 
 import br.com.uktech.bmt.dto.bacula.BaculaClientDto;
 import br.com.uktech.bmt.dto.bacula.BaculaStatusClientDto;
+import br.com.uktech.bmt.dto.bacula.dot.BaculaDotClientDto;
 import br.com.uktech.bmt.dto.bacula.dot.BaculaDotStatusClientRunningDto;
 import br.com.uktech.bmt.dto.model.director.DirectorDto;
 import java.util.List;
@@ -33,5 +34,5 @@ public interface BaculaClientService {
     public List<BaculaClientDto> getListClients(DirectorDto baculadirdto);
     public BaculaStatusClientDto getStatusClient(DirectorDto baculadirdto, String clientName);
     public BaculaDotStatusClientRunningDto getDotStatusClient(DirectorDto baculadirdto, String clientName);
-    
+    public List<BaculaDotClientDto> getListDotClientDtos(DirectorDto baculadirdto);
 }

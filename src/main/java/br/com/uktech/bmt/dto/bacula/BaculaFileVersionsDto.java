@@ -34,7 +34,9 @@ public class BaculaFileVersionsDto implements Serializable {
     private String md5;
     private String volName;
     private Integer Inchanger;
-
+    private Boolean selected;
+    private String path;
+    
     public Long getPathId() {
         return pathId;
     }
@@ -99,6 +101,22 @@ public class BaculaFileVersionsDto implements Serializable {
         this.Inchanger = Inchanger;
     }
 
+    public Boolean getSelected() {
+        return selected;
+    }
+
+    public void setSelected(Boolean selected) {
+        this.selected = selected;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+    
     @Override
     public int hashCode() {
         int hash = 5;
@@ -110,6 +128,8 @@ public class BaculaFileVersionsDto implements Serializable {
         hash = 97 * hash + Objects.hashCode(this.md5);
         hash = 97 * hash + Objects.hashCode(this.volName);
         hash = 97 * hash + Objects.hashCode(this.Inchanger);
+        hash = 97 * hash + Objects.hashCode(this.selected);
+        hash = 97 * hash + Objects.hashCode(this.path);
         return hash;
     }
 
@@ -146,12 +166,18 @@ public class BaculaFileVersionsDto implements Serializable {
         if (!Objects.equals(this.Inchanger, other.Inchanger)) {
             return false;
         }
+        if (!Objects.equals(this.selected, other.selected)) {
+            return false;
+        }
+        if (!Objects.equals(this.path, other.path)) {
+            return false;
+        }
         return true;
     }
 
     @Override
     public String toString() {
-        return "BaculaFileVersionsDto{" + "pathId=" + pathId + ", fileNameId=" + fileNameId + ", fileId=" + fileId + ", jobId=" + jobId + ", LStat=" + LStat + ", md5=" + md5 + ", volName=" + volName + ", Inchanger=" + Inchanger + '}';
+        return "BaculaFileVersionsDto{" + "pathId=" + pathId + ", fileNameId=" + fileNameId + ", fileId=" + fileId + ", jobId=" + jobId + ", LStat=" + LStat + ", md5=" + md5 + ", volName=" + volName + ", Inchanger=" + Inchanger + ", selected=" + selected + ", path=" + path +'}';
     }
     
 }

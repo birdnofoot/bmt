@@ -87,6 +87,7 @@ public class Bacula {
             
             List<BaculaDotClient> dotClients = null;
             List<BaculaSqlJobToRestore> jobToRestores = null;
+            
             List<BaculaDirectory> selectedDirectories = new ArrayList<>();
             List<BaculaFile> selectedFiles = new ArrayList<>();
             List<BaculaFileVersions> selectedFileVersions = new ArrayList<>();
@@ -97,10 +98,10 @@ public class Bacula {
             Boolean createTable;
             int select = 1;
             
-            dotClients = console.getListDotClients();
-            String client = dotClients.get(0).getClient();
-            jobToRestores = console.getListSqlJobToRestore(client);
-            listJobs = console.getListJobsRestore(jobToRestores.get(0).getId());
+            dotClients = console.getListDotClients();   //pego uma lista com nome dos clients
+            String client = dotClients.get(0).getClient(); //seleciono um client
+            jobToRestores = console.getListSqlJobToRestore(client); //pegou uma lista de jobs do client
+            listJobs = console.getListJobsRestore(jobToRestores.get(0).getId()); //pego os jobs relacionados
             root = console.getRootDirectory(listJobs, limit, offset);
             current = root;
             directory.put(root.getPathId(), root);

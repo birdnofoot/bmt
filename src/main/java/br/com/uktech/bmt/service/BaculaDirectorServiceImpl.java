@@ -63,7 +63,7 @@ public class BaculaDirectorServiceImpl implements BaculaDirectorService {
         Director baculadir = new Director();
         mapper.map(baculadirdto, baculadir);
         baculadir = repository.save(baculadir);
-        mapper.map(baculadirdto, baculadir);
+        mapper.map(baculadir, baculadirdto);
         return baculadirdto;
     }
 
@@ -121,6 +121,14 @@ public class BaculaDirectorServiceImpl implements BaculaDirectorService {
         List<DirectorDto> directors = null;
         directors = new ArrayList((Collection) repository.findAll());
         return directors;
+    }
+    
+    @Transactional(readOnly = false)
+    @Override
+    public void delete(DirectorDto baculadirdto) {
+        Director baculadir = new Director();
+        mapper.map(baculadirdto, baculadir);
+        repository.delete(baculadir);
     }
     
 }

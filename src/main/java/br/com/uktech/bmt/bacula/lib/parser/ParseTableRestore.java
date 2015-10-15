@@ -39,46 +39,52 @@ public class ParseTableRestore {
         List<Long> hardlinks = new ArrayList<>();
 
         if(selectedDirectories != null) {
-            for (BaculaDirectory next : selectedDirectories) {
-                if(!dirids.contains(next.getPathId())) {
-                    dirids.add(next.getPathId());
-                    String jbs[] = listJobs.split(Pattern.quote(","));
-                    for (String jb : jbs) {
-                        jobids.add(Long.parseLong(jb));
+            if(!selectedDirectories.isEmpty()) {
+                for (BaculaDirectory next : selectedDirectories) {
+                    if(!dirids.contains(next.getPathId())) {
+                        dirids.add(next.getPathId());
+                        String jbs[] = listJobs.split(Pattern.quote(","));
+                        for (String jb : jbs) {
+                            jobids.add(Long.parseLong(jb));
+                        }
                     }
                 }
             }
         }
 
         if(selectedFiles!=null) {
-            for (BaculaFile next : selectedFiles) {
-                if(!jobids.contains(next.getJobId())&&!next.getJobId().equals(0)) {
-                    jobids.add(next.getJobId());
-                }
-                if(!fileids.contains(next.getFileId())) {
-                    fileids.add(next.getFileId());
-                }
-                if(next.getLStat().getLinkFi()!=0) {
-                    if(!hardlinks.contains(next.getLStat().getLinkFi())) {
-                        hardlinks.add(next.getJobId());
-                        hardlinks.add(next.getLStat().getLinkFi());
+            if(!selectedFiles.isEmpty()) {
+                for (BaculaFile next : selectedFiles) {
+                    if(!jobids.contains(next.getJobId())&&!next.getJobId().equals(0)) {
+                        jobids.add(next.getJobId());
+                    }
+                    if(!fileids.contains(next.getFileId())) {
+                        fileids.add(next.getFileId());
+                    }
+                    if(next.getLStat().getLinkFi()!=0) {
+                        if(!hardlinks.contains(next.getLStat().getLinkFi())) {
+                            hardlinks.add(next.getJobId());
+                            hardlinks.add(next.getLStat().getLinkFi());
+                        }
                     }
                 }
             }
         }
 
         if(selectedFileVersions != null) {
-            for (BaculaFileVersions next : selectedFileVersions) {
-                if(!jobids.contains(next.getJobId())&&!next.getJobId().equals(0)) {
-                    jobids.add(next.getJobId());
-                }
-                if(!fileids.contains(next.getFileId())) {
-                    fileids.add(next.getFileId());
-                }
-                if(next.getLStat().getLinkFi()!=0) {
-                    if(!hardlinks.contains(next.getLStat().getLinkFi())) {
-                        hardlinks.add(next.getJobId());
-                        hardlinks.add(next.getLStat().getLinkFi());
+            if(!selectedFileVersions.isEmpty()) {
+                for (BaculaFileVersions next : selectedFileVersions) {
+                    if(!jobids.contains(next.getJobId())&&!next.getJobId().equals(0)) {
+                        jobids.add(next.getJobId());
+                    }
+                    if(!fileids.contains(next.getFileId())) {
+                        fileids.add(next.getFileId());
+                    }
+                    if(next.getLStat().getLinkFi()!=0) {
+                        if(!hardlinks.contains(next.getLStat().getLinkFi())) {
+                            hardlinks.add(next.getJobId());
+                            hardlinks.add(next.getLStat().getLinkFi());
+                        }
                     }
                 }
             }

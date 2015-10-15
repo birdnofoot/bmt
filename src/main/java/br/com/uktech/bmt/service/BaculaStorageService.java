@@ -18,6 +18,7 @@ package br.com.uktech.bmt.service;
 
 import br.com.uktech.bmt.dto.bacula.BaculaStatusStorageDto;
 import br.com.uktech.bmt.dto.bacula.BaculaStorageDto;
+import br.com.uktech.bmt.dto.bacula.dot.BaculaDotStorageDto;
 import br.com.uktech.bmt.dto.model.director.DirectorDto;
 import java.util.List;
 
@@ -30,5 +31,6 @@ public interface BaculaStorageService {
     public BaculaStorageDto newStorage();
     public List<BaculaStorageDto> getListStorage(DirectorDto baculadirdto);
     public BaculaStatusStorageDto getStatusStorage(DirectorDto baculadirdto, String nameStorage);
+    public List<BaculaDotStorageDto> getListStoragesDto(DirectorDto baculadirdto);
     
 }

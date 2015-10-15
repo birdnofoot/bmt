@@ -729,9 +729,11 @@ public class BaculaConsole5 extends AbstractBaculaConsole implements BaculaConso
 
     @Override
     public Boolean createTableRestore(List<BaculaDirectory> selectedDirectories, List<BaculaFile> selectedFiles, List<BaculaFileVersions> selectedFileVersions, String listJobs) {
+        this.logger.trace("Entra no Método createTableRestore");
         Boolean createTable = false;
         try{
             String command = new ParseTableRestore().createCommand(selectedDirectories, selectedFiles, selectedFileVersions, listJobs);
+            this.logger.trace("Comando para Criar a tabela: "+command);
             if(command != null) {
                 if(!command.isEmpty()) {
                     String receivedData = this.getConnection().sendAndReceive(command);

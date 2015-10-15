@@ -21,11 +21,13 @@ import br.com.uktech.bmt.bacula.BaculaConsole;
 import br.com.uktech.bmt.bacula.BaculaConsoleFactory;
 import br.com.uktech.bmt.bacula.bean.BaculaStatusStorage;
 import br.com.uktech.bmt.bacula.bean.BaculaStorage;
+import br.com.uktech.bmt.bacula.bean.dot.BaculaDotStorage;
 import br.com.uktech.bmt.bacula.exceptions.BaculaAuthenticationException;
 import br.com.uktech.bmt.bacula.exceptions.BaculaCommunicationException;
 import br.com.uktech.bmt.bacula.exceptions.BaculaDirectorNotSupported;
 import br.com.uktech.bmt.dto.bacula.BaculaStatusStorageDto;
 import br.com.uktech.bmt.dto.bacula.BaculaStorageDto;
+import br.com.uktech.bmt.dto.bacula.dot.BaculaDotStorageDto;
 import br.com.uktech.bmt.dto.model.director.DirectorDto;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -100,6 +102,23 @@ public class BaculaStorageServiceImpl implements BaculaStorageService{
             Logger.getLogger(BaculaStorageServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return statusStorageDto;
+    }
+
+    @Override
+    public List<BaculaDotStorageDto> getListStoragesDto(DirectorDto baculadirdto) {
+        List<BaculaDotStorageDto> dotStorageDtos = new ArrayList<>();
+        List<BaculaDotStorage> dotStorages = null;
+        try {
+            BaculaConsole console = consoleFactory.getConsole(baculadirdto.getName(), baculadirdto.getHostname(), baculadirdto.getPort(), baculadirdto.getPassword());
+            if (console != null) {
+                dotStorages = console.getListDotStorage();
+                mapper.map(dotStorages, dotStorageDtos);
+            }
+        }
+        catch (BaculaAuthenticationException | BaculaDirectorNotSupported | BaculaCommunicationException ex) {
+            Logger.getLogger(BaculaStorageServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return dotStorageDtos;
     }
 
 }
