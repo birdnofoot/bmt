@@ -14,62 +14,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package br.com.uktech.bmt.model;
 
+package br.com.uktech.bmt.dto.model.client;
+
+import br.com.uktech.bmt.dto.model.director.DirectorDto;
 import java.io.Serializable;
-import java.util.List;
 import java.util.Objects;
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
 
 /**
- *
- * @author Carlos Alberto Cipriano Korovsky <carlos.korovsky@uktech.com.br>
+ * 
+ * @author João Paulo Siqueira <joao.siqueira@uktech.com.br>
  */
-@Entity
-@Table(schema = "public",
-        name = "bacula_director",
-        indexes = {
-            @Index(name = "idx_id_bacula_director", columnList = "id_bacula_director")
-        }
-)
-@SequenceGenerator(name = "BaculaDirectorIdGenerator", sequenceName = "seq_bacula_director", initialValue = 1, allocationSize = 1)
-public class Director implements Serializable {
+public class ClientDto implements Serializable {
     
-    @Id
-    @Column(name = "id_bacula_director", nullable = false)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BaculaDirectorIdGenerator")
     private Long id;
-    
-    @Column(name = "name", nullable = false, unique = true, length = 100)
     private String name;
-    
-    @Column(name = "hostname", nullable = false, unique = false, length = 100)
     private String hostname;
-
-    @Column(name = "port", nullable = false, unique = false, length = 100)
-    private Integer port = 9101;
-
-    @Column(name = "password", nullable = false, unique = false, length = 256)
+    private Integer port;
     private String password;
-    
-    @Column(name = "enabled", nullable = false)
-    @Basic(fetch = FetchType.EAGER)
     private Boolean enabled;
-    
-    @OneToMany(targetEntity = Client.class, cascade=CascadeType.ALL, mappedBy="director", fetch = FetchType.LAZY)
-    private List<Client> clients;
-    
+    private Boolean autoprune;
+    private Integer priority;
+    private DirectorDto directorDto;
+
     public Long getId() {
         return id;
     }
@@ -118,23 +85,42 @@ public class Director implements Serializable {
         this.enabled = enabled;
     }
 
-    public List<Client> getClients() {
-        return clients;
+    public Boolean getAutoprune() {
+        return autoprune;
     }
 
-    public void setClients(List<Client> clients) {
-        this.clients = clients;
+    public void setAutoprune(Boolean autoprune) {
+        this.autoprune = autoprune;
     }
-    
+
+    public Integer getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Integer priority) {
+        this.priority = priority;
+    }
+
+    public DirectorDto getDirectorDto() {
+        return directorDto;
+    }
+
+    public void setDirectorDto(DirectorDto directorDto) {
+        this.directorDto = directorDto;
+    }
+
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 41 * hash + Objects.hashCode(this.id);
-        hash = 41 * hash + Objects.hashCode(this.name);
-        hash = 41 * hash + Objects.hashCode(this.hostname);
-        hash = 41 * hash + Objects.hashCode(this.port);
-        hash = 41 * hash + Objects.hashCode(this.password);
-        hash = 41 * hash + Objects.hashCode(this.enabled);
+        hash = 11 * hash + Objects.hashCode(this.id);
+        hash = 11 * hash + Objects.hashCode(this.name);
+        hash = 11 * hash + Objects.hashCode(this.hostname);
+        hash = 11 * hash + Objects.hashCode(this.port);
+        hash = 11 * hash + Objects.hashCode(this.password);
+        hash = 11 * hash + Objects.hashCode(this.enabled);
+        hash = 11 * hash + Objects.hashCode(this.autoprune);
+        hash = 11 * hash + Objects.hashCode(this.priority);
+        hash = 11 * hash + Objects.hashCode(this.directorDto);
         return hash;
     }
 
@@ -146,7 +132,7 @@ public class Director implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final Director other = (Director) obj;
+        final ClientDto other = (ClientDto) obj;
         if (!Objects.equals(this.id, other.id)) {
             return false;
         }
@@ -165,12 +151,21 @@ public class Director implements Serializable {
         if (!Objects.equals(this.enabled, other.enabled)) {
             return false;
         }
+        if (!Objects.equals(this.autoprune, other.autoprune)) {
+            return false;
+        }
+        if (!Objects.equals(this.priority, other.priority)) {
+            return false;
+        }
+        if (!Objects.equals(this.directorDto, other.directorDto)) {
+            return false;
+        }
         return true;
     }
 
     @Override
     public String toString() {
-        return "BaculaDirector{" + "id=" + id + ", name=" + name + ", hostname=" + hostname + ", port=" + port + ", password=" + password + ", enabled=" + enabled + '}';
+        return "ClientDto{" + "id=" + id + ", name=" + name + ", hostname=" + hostname + ", port=" + port + ", password=" + password + ", enabled=" + enabled + ", autoprune=" + autoprune + ", priority=" + priority + ", directorDto=" + directorDto + '}';
     }
-
+    
 }

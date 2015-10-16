@@ -16,13 +16,18 @@
  */
 package br.com.uktech.bmt.model.repository;
 
+import br.com.uktech.bmt.model.Client;
 import br.com.uktech.bmt.model.Director;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 /**
  *
- * @author Carlos Alberto Cipriano Korovsky <carlos.korovsky@uktech.com.br>
+ * @author João Paulo Siqueira <joao.siqueira@uktech.com.br>
  */
-public interface BaculaDirectorRepository extends PagingAndSortingRepository<Director, Long> {
+public interface BaculaClientRepository extends PagingAndSortingRepository<Client, Long> {
     
+    public Iterable<Client> findByDirector(Director director);
+    public Page<Client> findByDirector(Director director, Pageable p);
     
 }

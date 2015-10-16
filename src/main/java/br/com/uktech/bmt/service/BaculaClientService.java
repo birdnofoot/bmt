@@ -20,8 +20,11 @@ import br.com.uktech.bmt.dto.bacula.BaculaClientDto;
 import br.com.uktech.bmt.dto.bacula.BaculaStatusClientDto;
 import br.com.uktech.bmt.dto.bacula.dot.BaculaDotClientDto;
 import br.com.uktech.bmt.dto.bacula.dot.BaculaDotStatusClientRunningDto;
+import br.com.uktech.bmt.dto.model.client.ClientDto;
 import br.com.uktech.bmt.dto.model.director.DirectorDto;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 /**
  *
@@ -29,8 +32,16 @@ import java.util.List;
  */
 public interface BaculaClientService {
     
-    public BaculaClientDto newClient();
-    //Retornar um Dto
+    //Métodos Model
+    public ClientDto newClient();
+    public ClientDto save(ClientDto clientDto);
+    public void delete(ClientDto clientDto);
+    public Page<ClientDto> searchAllBaculaClients(Pageable p);
+    public ClientDto getBaculaClientById(Long id);
+    public List<ClientDto> searchAllClients();
+    
+    
+    //Métodos Bacula
     public List<BaculaClientDto> getListClients(DirectorDto baculadirdto);
     public BaculaStatusClientDto getStatusClient(DirectorDto baculadirdto, String clientName);
     public BaculaDotStatusClientRunningDto getDotStatusClient(DirectorDto baculadirdto, String clientName);

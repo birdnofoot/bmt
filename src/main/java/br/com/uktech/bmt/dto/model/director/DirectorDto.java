@@ -26,15 +26,10 @@ import java.util.Objects;
 public class DirectorDto implements Serializable {
 
     private Long id;
-    
     private String name;
-    
     private String hostname;
-    
     private Integer port;
-    
     private String password;
-    
     private Boolean enabled;
 
     public Long getId() {

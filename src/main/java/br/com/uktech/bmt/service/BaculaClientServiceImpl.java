@@ -29,13 +29,20 @@ import br.com.uktech.bmt.dto.bacula.BaculaClientDto;
 import br.com.uktech.bmt.dto.bacula.BaculaStatusClientDto;
 import br.com.uktech.bmt.dto.bacula.dot.BaculaDotClientDto;
 import br.com.uktech.bmt.dto.bacula.dot.BaculaDotStatusClientRunningDto;
+import br.com.uktech.bmt.dto.model.client.ClientDto;
 import br.com.uktech.bmt.dto.model.director.DirectorDto;
+import br.com.uktech.bmt.model.Client;
+import br.com.uktech.bmt.model.repository.BaculaClientRepository;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import org.dozer.Mapper;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,7 +51,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author João Paulo Siqueira <joao.siqueira@uktech.com.br>
  */
 @Service("BaculaClientService")
-public class BaculaClientServiceImpl implements BaculaClientService{
+public class BaculaClientServiceImpl implements BaculaClientService {
     
     private final org.slf4j.Logger logger = LoggerFactory.getLogger(BaculaClientServiceImpl.class);
     
@@ -52,12 +59,74 @@ public class BaculaClientServiceImpl implements BaculaClientService{
     private BaculaConsoleFactory consoleFactory;
     
     @Autowired
+    private BaculaClientRepository repository;
+    
+    @Autowired
     private Mapper mapper;
     
     @Override
-    public BaculaClientDto newClient() {
-        return new BaculaClientDto();
+    public ClientDto newClient() {
+        return new ClientDto();
     }
+    
+    
+    @Transactional(readOnly = false)
+    @Override
+    public ClientDto save(ClientDto clientDto) {
+        Client client = new Client();
+        mapper.map(clientDto, client);
+        client = repository.save(client);
+        mapper.map(client, clientDto);
+        return clientDto;
+    }
+    
+    @Transactional(readOnly = false)
+    @Override
+    public void delete(ClientDto clientDto) {
+        Client client = new Client();
+        mapper.map(clientDto, client);
+        repository.delete(client);
+    }
+    
+    @Transactional(readOnly = true)
+    @Override
+    public Page<ClientDto> searchAllBaculaClients(Pageable p) {
+        List <ClientDto> clients = new ArrayList<>();
+        Page<Client> baculaClients = repository.findAll(p);
+        ClientDto clientDto;
+        Iterator<Client> itr = baculaClients.getContent().iterator();
+        while(itr.hasNext()) {
+            clientDto = new ClientDto();
+            mapper.map(itr.next(), clientDto);
+            clients.add(clientDto);
+        }
+        Page<ClientDto> page = null;
+        if (!clients.isEmpty()) {
+            page = new PageImpl<>(clients, p, baculaClients.getTotalElements());
+        }        
+        return page;
+    }
+    
+    @Transactional(readOnly = true)
+    @Override
+    public ClientDto getBaculaClientById(Long id) {
+        ClientDto clientDto = null;
+        Client client = repository.findOne(id);
+        if (client != null) {
+            clientDto = new ClientDto();
+            mapper.map(client, clientDto);
+        }
+        return clientDto;
+    }
+    
+    @Override
+    public List<ClientDto> searchAllClients() {
+        List<ClientDto> clients = null;
+        clients = new ArrayList((Collection) repository.findAll());
+        return clients;
+    }
+    
+    //Métodos do bacula
     
     @Transactional(readOnly = true)
     @Override

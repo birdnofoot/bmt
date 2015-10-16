@@ -33,4 +33,8 @@ public interface PagingAndSortingRepository<T, ID extends Serializable> extends 
   Iterable<T> findAll(Sort sort);
 
   Page<T> findAll(Pageable pageable);
+  
+  //Erro nesse método
+  //Page<T> findAll(Sort sort, Pageable pageable);
+  
 }

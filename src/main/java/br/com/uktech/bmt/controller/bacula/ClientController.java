@@ -18,6 +18,7 @@ package br.com.uktech.bmt.controller.bacula;
 
 import br.com.uktech.bmt.dto.bacula.BaculaClientDto;
 import br.com.uktech.bmt.dto.bacula.BaculaStatusClientDto;
+import br.com.uktech.bmt.dto.model.client.ClientDto;
 import br.com.uktech.bmt.dto.model.director.DirectorDto;
 import br.com.uktech.bmt.service.BaculaClientService;
 import br.com.uktech.bmt.service.BaculaDirectorService;
@@ -67,6 +68,18 @@ public class ClientController extends BasicBaculaController {
         }
         mav.addObject("directorId", directorId);
         mav.addObject("clients", clients);
+        return mav;
+    }
+    
+    @RequestMapping(value = "/add/{directorId}", method = RequestMethod.GET)
+    public ModelAndView add(@PathVariable Long directorId, HttpServletRequest request, HttpServletResponse response) {
+        logger.debug("Adding a new Bacula Director ");
+        ModelAndView mav;
+        ClientDto clientDto;
+        mav = new ModelAndView("bacula/client/add");
+        clientDto = baculaClientService.newClient();
+        mav.addObject("clientDto", clientDto);
+        mav.addObject("directorId", directorId);
         return mav;
     }
     
