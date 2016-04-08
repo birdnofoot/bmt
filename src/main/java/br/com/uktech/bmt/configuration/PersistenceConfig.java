@@ -16,14 +16,18 @@
  */
 package br.com.uktech.bmt.configuration;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.lookup.JndiDataSourceLookup;
 import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -48,40 +52,47 @@ public class PersistenceConfig {
 
     }
     
-    @Bean
-    public EntityManagerFactory entityManagerFactory() 
-    {
-        HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-        vendorAdapter.setGenerateDdl(false);
-        vendorAdapter.setShowSql(false);
-
+        private Properties getAdditionalProperties() {
         Properties properties = new Properties();
-        properties.setProperty("hibernate.generate_statistics", "false");
-        properties.setProperty("hibernate.bytecode.use_reflection_optimizer", "true");
-        properties.setProperty("hibernate.id.new_generator_mappings", "true");
+        properties.setProperty("hibernate.show_sql", "false");
+        properties.setProperty("hibernate.format_sql", "true");
         properties.setProperty("hibernate.hbm2ddl.auto", "create-drop");
         properties.setProperty("hibernate.hbm2ddl.import_files", 
                           "/META-INF/sql/system_module_data.sql,"
                         + "/META-INF/sql/system_user_data.sql,"
                         + "/META-INF/sql/system_user_permission.sql,"
                         + "/META-INF/sql/bacula_director.sql");
-        
-        LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
-        factory.setJpaVendorAdapter(vendorAdapter);
-        factory.setDataSource(dataSource());
-        factory.setPackagesToScan("br.com.uktech.bmt.model");
-        factory.setJpaProperties(properties);
-        factory.afterPropertiesSet();
-        //factory.setLoadTimeWeaver(new InstrumentationLoadTimeWeaver());
-
-        return factory.getObject();
+        return properties;
+    }
+    
+    private String[] getPackagesToScan() {
+        List<String> packages = new ArrayList<>();
+        packages.add("br.com.uktech.bmt.model");
+        return packages.toArray(new String[packages.size()]);
     }
     
     @Bean
-    public PlatformTransactionManager transactionManager() 
-    {
-        JpaTransactionManager txManager = new JpaTransactionManager();
-        txManager.setEntityManagerFactory(entityManagerFactory());
-        return txManager;
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+        LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
+        em.setDataSource(dataSource());
+        em.setPackagesToScan(this.getPackagesToScan());
+
+        JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+        em.setJpaVendorAdapter(vendorAdapter);
+        em.setJpaProperties(this.getAdditionalProperties());
+
+        return em;
+    }
+    
+    @Bean
+    public PlatformTransactionManager transactionManager(EntityManagerFactory emf){
+        JpaTransactionManager transactionManager = new JpaTransactionManager();
+        transactionManager.setEntityManagerFactory(emf);
+        return transactionManager;
+    }
+
+    @Bean
+    public PersistenceExceptionTranslationPostProcessor exceptionTranslation(){
+        return new PersistenceExceptionTranslationPostProcessor();
     }
 }

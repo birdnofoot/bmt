@@ -49,7 +49,7 @@ public class BmtApplicationInitializer implements WebApplicationInitializer {
         sc.addFilter("OpenEntityManagerInViewFilter", getOpenEntityManagerInViewFilter()).addMappingForUrlPatterns(null, true, MAPPING_URL);
         sc.addFilter("securityFilter", getDelegatingFilterProxy()).addMappingForUrlPatterns(null, true, MAPPING_URL);
         
-        ServletRegistration.Dynamic dispatcher = sc.addServlet("BmtServlet", new DispatcherServlet(context));
+        ServletRegistration.Dynamic dispatcher = sc.addServlet("LoversBookServlet", new DispatcherServlet(context));
         dispatcher.setLoadOnStartup(1);
         dispatcher.setAsyncSupported(Boolean.TRUE);
         dispatcher.addMapping(MAPPING_URL);
